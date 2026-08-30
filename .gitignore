@@ -1,0 +1,13 @@
+.git.nosync
+.DS_Store
+
+# Local editorial harness and work records
+AGENTS.md
+VOICE_CARD.md
+EDITOR_POLICY.md
+ATTRIBUTIONS.md
+writing-status.json
+outlines/
+_research/
+_workspace/
+scripts/
