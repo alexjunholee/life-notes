@@ -10,4 +10,5 @@ writing-status.json
 outlines/
 _research/
 _workspace/
-scripts/
+scripts/*
+!scripts/build_guide.py

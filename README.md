@@ -9,49 +9,51 @@
 연구직은 제품, 인프라, 현장, 기술 관리와 나란히 놓인 여러 경로 가운데
 하나다.
 
+[**가이드 (guide.html)**](guide.html) · [「연구노트」](../research-notes/guide.html) · [「대학원노트」](../grad-notes/guide.html)
+
 ## 차례
 
 ### 1부. 무엇을 위해 고르는가
 
 1. [어떤 선택을 할 것인가](chapter_01_what_to_choose.md)
-2. [행복은 한 점수가 아니다](chapter_02_multidimensional_happiness.md)
-3. [내 선택 기준을 만든다](chapter_03_decision_criteria.md)
-4. [좋은 선택과 좋은 결과는 다르다](chapter_04_decision_vs_outcome.md)
+2. [여러 칸으로 된 행복](chapter_02_multidimensional_happiness.md)
+3. [내 선택 기준 만들기](chapter_03_decision_criteria.md)
+4. [좋은 선택과 좋은 결과 가르기](chapter_04_decision_vs_outcome.md)
 
-### 2부. 모를 때는 탐색한다
+### 2부. 모를 때의 탐색
 
 5. [선택지가 비슷해 보일 때](chapter_05_similar_options.md)
-6. [흥미는 자라고, 반복된 선호는 남는다](chapter_06_developing_interests.md)
+6. [자라는 흥미와 남는 선호](chapter_06_developing_interests.md)
 7. [랜덤 워크](chapter_07_random_walk.md)
 8. [탐색을 끝내고 한곳을 고르는 시점](chapter_08_commit.md)
 
-### 3부. 직업은 삶의 조건이다
+### 3부. 삶의 조건인 직업
 
-9. [직업명 말고 하루를 본다](chapter_09_job_by_day.md)
+9. [직업명 말고 하루 보기](chapter_09_job_by_day.md)
 10. [만들기, 고치기, 운영하기](chapter_10_build_fix_operate.md)
 11. [제약이 충돌할 때](chapter_11_constraints_tradeoffs.md)
 12. [직업을 고를 때 같이 계산할 것](chapter_12_job_conditions.md)
 13. [같은 직무, 다른 팀](chapter_13_team_conditions.md)
 14. [엔지니어의 여러 경로](chapter_14_engineering_paths.md)
 
-### 4부. 선택지를 늘리는 사람이 된다
+### 4부. 선택지를 늘리는 사람 되기
 
 15. [넓게 볼 때와 깊게 팔 때](chapter_15_breadth_depth.md)
-16. [실패를 디버깅한다](chapter_16_failure_debugging.md)
+16. [실패 디버깅하기](chapter_16_failure_debugging.md)
 17. [헛소리를 잘한다](chapter_17_babble_selling.md)
-18. [사람을 통해 선택지를 넓힌다](chapter_18_people_options.md)
+18. [사람을 통해 선택지 넓히기](chapter_18_people_options.md)
 
-### 5부. 들어간 뒤에도 다시 고른다
+### 5부. 들어간 뒤에 다시 고르기
 
-19. [첫 직장이 평생을 결정하지는 않는다](chapter_19_first_job.md)
+19. [첫 직장 보는 법](chapter_19_first_job.md)
 20. [계속할 이유와 그만둘 이유](chapter_20_stay_or_leave.md)
 21. [조직 변화와 다음 선택지 준비](chapter_21_organizational_change.md)
 
-### 6부. 오래 살 수 있는 선택인가
+### 6부. 오래 살 수 있는 선택
 
-22. [번아웃은 개인의 의지만으로 설명되지 않는다](chapter_22_burnout.md)
+22. [번아웃과 조직 조건](chapter_22_burnout.md)
 23. [도움을 구할 시점과 경로](chapter_23_mental_health_help.md)
-24. [행복을 직업 하나에 맡기지 않는다](chapter_24_happiness_beyond_work.md)
+24. [직업 하나에 맡기지 않는 행복](chapter_24_happiness_beyond_work.md)
 
 ## 필요한 곳부터 읽기
 

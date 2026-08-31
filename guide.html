@@ -1,0 +1,3432 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Life Notes</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #ffffff;
+  --bg-alt: #f5f5f7;
+  --bg-sidebar: #f5f5f7;
+  --bg-code: #f5f5f7;
+  --bg-surface: #f5f5f7;
+
+  --text: #1d1d1f;
+  --text-body: rgba(0, 0, 0, 0.8);
+  --text-muted: rgba(0, 0, 0, 0.56);
+  --text-tertiary: rgba(0, 0, 0, 0.48);
+  --text-heading: #1d1d1f;
+
+  --accent: #0071e3;
+  --link: #0066cc;
+
+  --border: rgba(0, 0, 0, 0.08);
+  --border-strong: rgba(0, 0, 0, 0.16);
+
+  --sidebar-width: 300px;
+  --topbar-height: 52px;
+  --progress-height: 3px;
+
+  --shadow-elev: rgba(0, 0, 0, 0.22) 3px 5px 30px 0px;
+}
+
+html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+body {
+  font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Pretendard', system-ui, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  font-size: 17px;
+  line-height: 1.47;
+  letter-spacing: -0.022em;
+  color: var(--text);
+  background: var(--bg);
+  overflow-x: hidden;
+  font-feature-settings: "kern", "liga", "calt";
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+#progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: var(--progress-height);
+  background: linear-gradient(90deg, #0071e3, #2997ff);
+  z-index: 10000;
+  width: 0%;
+}
+
+#topbar {
+  position: fixed;
+  top: var(--progress-height);
+  left: 0;
+  right: 0;
+  height: var(--topbar-height);
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  z-index: 1000;
+}
+
+#topbar .menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text);
+  font-size: 22px;
+  cursor: pointer;
+  margin-right: 12px;
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+
+#topbar .menu-toggle:hover { background: rgba(0,0,0,0.04); }
+
+#topbar .title {
+  font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', sans-serif;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text-heading);
+  letter-spacing: -0.022em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#topbar .back-link {
+  margin-left: 16px;
+  color: var(--link);
+  text-decoration: none;
+  font-size: 13.5px;
+  font-weight: 500;
+  white-space: nowrap;
+  padding: 7px 14px;
+  border-radius: 980px;
+  border: 1px solid var(--border);
+  letter-spacing: -0.014em;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+#topbar .back-link:hover {
+  background: rgba(0, 113, 227, 0.06);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* Language toggle — inline link style (no box) */
+#topbar .lang-toggle {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  letter-spacing: -0.010em;
+}
+#topbar .lang-toggle a {
+  color: var(--text-muted);
+  text-decoration: none;
+  padding: 4px 2px;
+  transition: color 0.15s;
+  cursor: pointer;
+}
+#topbar .lang-toggle a:hover { color: var(--text); }
+#topbar .lang-toggle a.active {
+  color: var(--text-heading);
+  font-weight: 600;
+}
+#topbar .lang-toggle .sep { color: var(--border-strong); }
+
+#sidebar {
+  position: fixed;
+  top: calc(var(--progress-height) + var(--topbar-height));
+  left: 0;
+  width: var(--sidebar-width);
+  height: calc(100vh - var(--topbar-height) - var(--progress-height));
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,0,0,0.16) transparent;
+}
+
+#sidebar::-webkit-scrollbar { width: 6px; }
+#sidebar::-webkit-scrollbar-track { background: transparent; }
+#sidebar::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.16); border-radius: 3px; }
+
+#search-box {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.6);
+  flex-shrink: 0;
+}
+
+#search-input {
+  width: 100%;
+  padding: 9px 12px;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 13.5px;
+  outline: none;
+  font-family: inherit;
+  letter-spacing: -0.016em;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+#search-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.15); }
+#search-input::placeholder { color: var(--text-muted); }
+
+#toc-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 0 32px;
+}
+
+#toc-container::-webkit-scrollbar { width: 4px; }
+#toc-container::-webkit-scrollbar-track { background: transparent; }
+#toc-container::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 2px; }
+
+/* Chapter level (h1) */
+.toc-item {
+  display: block;
+  padding: 8px 16px 8px 20px;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: -0.014em;
+  border-left: 3px solid transparent;
+  transition: color 0.15s, background 0.15s, border-color 0.15s;
+  cursor: pointer;
+}
+
+/* Section (h2) */
+.toc-item.toc-h2 {
+  padding: 5px 16px 5px 36px;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--text-muted);
+  letter-spacing: -0.012em;
+}
+
+.toc-item.toc-h2 + .toc-item:not(.toc-h2) { margin-top: 6px; }
+
+.toc-item:hover {
+  color: var(--text);
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.toc-item.toc-h2:hover { color: var(--text); }
+
+.toc-item.active {
+  color: var(--accent);
+  border-left-color: var(--accent);
+  background: rgba(0, 113, 227, 0.08);
+  font-weight: 700;
+}
+
+.toc-item.toc-h2.active {
+  font-weight: 500;
+  color: var(--accent);
+}
+
+.toc-item.toc-part {
+  padding: 14px 16px 8px 20px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-heading);
+  letter-spacing: 0;
+}
+
+.toc-item.toc-part:not(:first-child) { margin-top: 16px; }
+
+.toc-item.toc-chapter {
+  padding: 6px 16px 6px 31px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: 0;
+}
+
+.toc-item.toc-section {
+  padding: 4px 16px 4px 46px;
+  font-size: 12.5px;
+  font-weight: 400;
+  color: var(--text-muted);
+  letter-spacing: 0;
+}
+
+.toc-item.toc-section:hover { color: var(--text); }
+
+.toc-item.toc-section.active {
+  font-weight: 500;
+  color: var(--accent);
+}
+
+.toc-item.toc-hidden { display: none; }
+
+.toc-no-results {
+  padding: 20px 16px;
+  color: var(--text-muted);
+  font-size: 13.5px;
+  text-align: center;
+  display: none;
+  letter-spacing: -0.014em;
+}
+
+#main-content {
+  margin-left: var(--sidebar-width);
+  margin-top: calc(var(--progress-height) + var(--topbar-height));
+  min-height: calc(100vh - var(--topbar-height) - var(--progress-height));
+  padding: 56px 56px 96px;
+}
+
+#content {
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+#loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  color: var(--text-muted);
+}
+
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+#content h1, #content h2, #content h3, #content h4, #content h5, #content h6 {
+  font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Pretendard', sans-serif;
+  color: var(--text-heading);
+  font-feature-settings: "ss01", "kern";
+  scroll-margin-top: 72px;
+}
+
+#content h1 {
+  font-size: 48px;
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: -0.018em;
+  margin: 0 0 28px 0;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+#content h1:not(:first-of-type) {
+  margin-top: 96px;
+}
+
+#content h1 + blockquote {
+  border-left: none;
+  background: transparent;
+  text-align: center;
+  font-size: 18px;
+  color: var(--text-muted);
+  padding: 8px 0 24px;
+  letter-spacing: -0.018em;
+}
+
+#content h2 {
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1.10;
+  letter-spacing: -0.014em;
+  margin: 56px 0 18px 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+#content h3 {
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.16;
+  letter-spacing: -0.012em;
+  margin: 40px 0 12px 0;
+}
+
+#content h4 {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.22;
+  letter-spacing: -0.010em;
+  margin: 28px 0 10px 0;
+}
+
+#content h5, #content h6 {
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.3;
+  margin: 24px 0 8px 0;
+}
+
+#content p { margin: 0 0 16px 0; color: var(--text-body); }
+
+#content a {
+  color: var(--link);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+#content a:hover { text-decoration: underline; text-underline-offset: 2px; }
+
+#content ul, #content ol {
+  margin: 0 0 16px 0;
+  padding-left: 28px;
+}
+
+#content li { margin-bottom: 6px; color: var(--text-body); }
+#content li > ul, #content li > ol { margin-top: 6px; margin-bottom: 6px; }
+
+#content hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 56px 0;
+}
+
+#content strong { color: var(--text); font-weight: 600; }
+
+#content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  margin: 12px 0;
+}
+
+#content code {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+  font-size: 0.82em;
+  letter-spacing: 0;
+}
+
+#content :not(pre) > code {
+  background: var(--bg-code);
+  padding: 2px 6px;
+  border-radius: 5px;
+  color: var(--text);
+}
+
+#content pre {
+  background: var(--bg-code);
+  border: none;
+  border-radius: 12px;
+  padding: 18px 20px;
+  overflow-x: auto;
+  margin: 0 0 20px 0;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+#content pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
+}
+
+#content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 20px 0;
+  font-size: 15px;
+  display: block;
+  overflow-x: auto;
+}
+
+#content thead { background: var(--bg-surface); }
+
+#content th {
+  padding: 12px 16px;
+  text-align: left;
+  color: var(--text-heading);
+  font-weight: 600;
+  font-size: 14px;
+  border-bottom: 1px solid var(--border-strong);
+  letter-spacing: -0.012em;
+}
+
+#content td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-body);
+  letter-spacing: -0.016em;
+}
+
+#content tbody tr:hover { background: rgba(0, 113, 227, 0.04); }
+
+#content blockquote {
+  border-left: 3px solid var(--accent);
+  background: var(--bg-surface);
+  padding: 14px 22px;
+  margin: 0 0 20px 0;
+  border-radius: 0 8px 8px 0;
+  color: var(--text-body);
+}
+
+#content blockquote p { margin-bottom: 8px; }
+#content blockquote p:last-child { margin-bottom: 0; }
+
+#content blockquote strong { color: var(--accent); }
+
+.katex { font-size: 1.05em; }
+.katex-display { overflow-x: auto; overflow-y: hidden; padding: 4px 0; margin: 20px 0; }
+
+::selection { background: rgba(0, 113, 227, 0.20); color: var(--text); }
+
+mark.search-highlight {
+  background: rgba(0, 113, 227, 0.18);
+  color: inherit;
+  padding: 1px 3px;
+  border-radius: 3px;
+}
+
+/* About This Document (university-math style) */
+.about-document {
+  margin: 0 0 56px 0;
+  padding: 24px 28px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+.about-document h2 {
+  border-bottom: none !important;
+  margin: 0 0 14px 0 !important;
+  padding-bottom: 0 !important;
+  font-size: 24px !important;
+  line-height: 1.18 !important;
+}
+.about-document h3 {
+  color: var(--link) !important;
+  margin-top: 22px !important;
+}
+.about-document table { margin-top: 10px !important; }
+.about-document p:last-child,
+.about-document ul:last-child { margin-bottom: 0 !important; }
+.about-document .source-tag {
+  color: var(--text-muted);
+  font-size: 14px;
+  margin-top: 18px;
+}
+
+/* Guide Overview (at top of content) */
+.guide-overview {
+  margin: 0 0 80px 0;
+  padding: 0 0 48px 0;
+  border-bottom: 1px solid var(--border);
+}
+.guide-overview .overview-header { margin-bottom: 44px; }
+.guide-overview .overview-title {
+  font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Pretendard', sans-serif;
+  font-size: 48px;
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: -0.018em;
+  color: var(--text-heading);
+  margin: 0 0 10px 0;
+}
+.overview-group {
+  margin-top: 44px;
+  padding-left: 22px;
+  border-left: 2px solid var(--border);
+}
+.overview-group:first-child { margin-top: 0; }
+.overview-group-label {
+  font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Pretendard', sans-serif;
+  font-size: 24px;
+  font-weight: 650;
+  line-height: 1.22;
+  color: var(--text-heading);
+  letter-spacing: 0;
+  margin: 0 0 8px 0;
+}
+.overview-group-intro {
+  max-width: 760px;
+  color: var(--text-muted);
+  font-size: 16px;
+  line-height: 1.62;
+  margin: 0 0 22px 0;
+}
+.overview-chapter { margin: 0 0 16px 14px; }
+.overview-chapter:last-child { margin-bottom: 0; }
+.overview-chapter-link {
+  font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Pretendard', sans-serif;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text-heading);
+  text-decoration: none;
+  letter-spacing: 0;
+  display: inline-block;
+}
+.overview-chapter-link:hover { color: var(--accent); }
+.overview-chapter-num {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-right: 10px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+#content .part-intro {
+  margin: 92px 0 34px;
+  padding: 42px 0 30px;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.guide-overview + .part-intro,
+.about-document + .part-intro { margin-top: 70px; }
+
+#content .part-kicker {
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+#content h1.part-title {
+  font-size: 52px;
+  font-weight: 650;
+  line-height: 1.07;
+  letter-spacing: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+#content .part-intro p {
+  max-width: 760px;
+  color: var(--text-muted);
+  font-size: 18px;
+  line-height: 1.68;
+  margin: 18px 0 0 0;
+}
+
+#content h1.chapter-heading,
+#content h1.excerpt-heading {
+  font-size: 34px;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: 0;
+  margin-top: 56px;
+  padding-bottom: 10px;
+}
+
+#content .part-intro + h1.chapter-heading,
+#content .part-intro + h1.excerpt-heading {
+  margin-top: 36px;
+}
+
+@media (max-width: 900px) {
+  #content h1.part-title { font-size: 40px; }
+  #content h1.chapter-heading,
+  #content h1.excerpt-heading { font-size: 30px; }
+}
+
+@media (max-width: 600px) {
+  .overview-group { padding-left: 16px; }
+  .overview-group-label { font-size: 21px; }
+  #content .part-intro { margin-top: 72px; padding: 34px 0 26px; }
+  #content h1.part-title { font-size: 32px; }
+  #content .part-intro p { font-size: 16px; }
+  #content h1.chapter-heading,
+  #content h1.excerpt-heading { font-size: 28px; }
+}
+@media (max-width: 1024px) {
+  #main-content { padding-left: 40px; padding-right: 40px; }
+}
+
+@media (max-width: 900px) {
+  #topbar .menu-toggle { display: block; }
+
+  #sidebar {
+    transform: translateX(-100%);
+    box-shadow: none;
+  }
+
+  #sidebar.open {
+    transform: translateX(0);
+    box-shadow: var(--shadow-elev);
+  }
+
+  #sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 998;
+  }
+
+  #sidebar-overlay.visible { display: block; }
+
+  #main-content { margin-left: 0; padding: 24px 24px 56px; }
+
+  #content h1 { font-size: 36px; }
+  #content h2 { font-size: 26px; margin-top: 44px; }
+  #content h3 { font-size: 20px; }
+  #content h4 { font-size: 17px; }
+}
+
+@media (max-width: 600px) {
+  body { font-size: 16px; }
+  #content h1 { font-size: 30px; }
+  #content h2 { font-size: 22px; }
+  #content h3 { font-size: 18px; }
+  #main-content { padding: 20px 20px 48px; }
+}
+
+@media print {
+  #progress-bar, #topbar, #sidebar, #sidebar-overlay, #search-box, .menu-toggle { display: none !important; }
+  #main-content { margin: 0 !important; padding: 0 !important; }
+  #content { max-width: 100%; color: #000; }
+  #content h1, #content h2, #content h3, #content h4, #content strong { color: #000; }
+  #content a { color: #1a0dab; text-decoration: underline; }
+  #content pre, #content code { background: #f5f5f7; color: #000; border: none; }
+  #content blockquote { background: #f5f5f7; border-left-color: #999; }
+  #content table { border: 1px solid #ccc; }
+  #content th, #content td { border: 1px solid #ccc; }
+  body { background: #fff; }
+}
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<div id="topbar">
+  <button class="menu-toggle" id="menu-toggle" aria-label="목차" aria-controls="sidebar" aria-expanded="false">&#9776;</button>
+  <span class="title" id="topbar-title">Life Notes</span>
+  <div class="lang-toggle" id="lang-toggle" aria-hidden="true"></div>
+  <a href="../" class="back-link">← repos</a>
+</div>
+
+<div id="sidebar-overlay"></div>
+
+<nav id="sidebar" aria-label="문서 목차">
+  <div id="search-box">
+    <input type="text" id="search-input" aria-label="챕터 및 섹션 검색" placeholder="챕터/섹션 검색... (Ctrl+K)">
+  </div>
+  <div id="toc-container"></div>
+  <div class="toc-no-results" id="toc-no-results">검색 결과 없음</div>
+</nav>
+
+<main id="main-content">
+  <div id="loading">
+    <div class="spinner"></div>
+    <span id="loading-text">가이드 렌더링 중...</span>
+  </div>
+  <div id="content" style="display:none;"></div>
+</main>
+
+<textarea id="md-source-ko" style="display:none;">
+<div class="about-document">
+<h2>About This Document</h2>
+
+<h3>범위</h3>
+<p>인생은 선택의 연속이고 우리는 행복해지고 싶다. 어떤 선택을 할 것인가? 한번 전략적으로 접근해 보자.</p>
+<p>이 책은 진로를 정하지 못한 공학계열 학부생과 초기 경력 엔지니어를 위한 자료 기반 요약 안내서다. 정답인 직업을 골라 주는 대신, 행복을 이루는 조건을 나누고 모르는 것을 확인한 뒤 한동안 실행하고 다시 판단하는 방법을 다룬다. 연구직은 제품, 인프라, 현장, 기술 관리와 나란히 놓인 여러 경로 가운데 하나다.</p>
+
+<p class="source-tag">자매 문서: <a href="../research-notes/guide.html">연구노트</a> · <a href="../grad-notes/guide.html">대학원노트</a></p>
+</div>
+
+# Ch.1 — 어떤 선택을 할 것인가
+
+인생은 선택의 연속이고 우리는 행복해지고 싶다. 어떤 선택을 할 것인가? 한번 전략적으로 접근해 보자.
+
+전략이 필요한 이유는 답이 숨어 있어서가 아니다. 원하는 조건을 모두 주는 선택지는 드물고, 결과도 미리 알 수 없다. 오래 고민해도 새 정보가 들어오지 않으면 같은 장단점만 되풀이하게 된다. 그러므로 선택의 질을 평가할 때는 정답 여부보다 결정 당시 무엇을 지키려 했는지, 무엇을 몰랐는지, 언제 다시 보기로 했는지를 먼저 살핀다.
+
+> 지금 이 선택으로 어떤 삶을 만들려고 하는가?
+
+## 선택의 한 바퀴
+
+이 책에서 반복해서 쓸 순서는 다섯 칸이다.
+
+| 단계 | 할 일 | 다음 단계로 넘어갈 때 남길 것 |
+|---|---|---|
+| 바닥 | 건강, 안전, 생활비처럼 깨지면 선택을 유지하기 어려운 조건을 찾는다 | 탈락시킬 조건 |
+| 방향 | 이번 시기에 더 얻고 싶은 것을 정한다 | 우선할 방향 한두 개 |
+| 탐색 | 선택을 뒤집을 만큼 중요한 빈칸을 줄인다 | 새로 확인한 사실과 남은 의문 |
+| 실행 | 충분한 선택 하나에 시간과 행동을 배정한다 | 실행 구간과 첫 행동 |
+| 재검토 | 결과와 과정을 나누어 보고 계속·수정·중단을 정한다 | 바꿀 조건과 다음 검토일 |
+
+다섯 칸을 한 번 채웠다고 끝나지는 않는다. 재검토에서 얻은 정보가 다음 바닥과 방향을 바꿀 수 있다. 다만 매일 처음으로 돌아가지는 않는다. 각 단계에서 다음 단계로 넘길 기록 하나만 있어도 고민과 실행을 구분할 수 있다.
+
+## 바닥과 방향 먼저 고르기
+
+행복은 한 점수로 계산되지 않는다. OECD의 웰빙 틀도 소득, 건강, 일, 주거, 관계, 안전처럼 서로 다른 생활 조건을 따로 본다. 이 틀은 개인의 정답표가 아니다. 여기서는 빠뜨린 조건을 찾는 목록으로만 쓰고, 각 조건을 읽는 법은 Ch.2로 넘긴다.
+
+선택 앞에서는 먼저 바닥을 적는다. 건강이나 안전, 최소 생활비, 돌봄과 체류 조건처럼 다른 장점으로 쉽게 메울 수 없는 것들이다. 그 위에서 이번 시기의 방향을 한두 개 고른다. 기술을 쌓을 때인지, 생활을 안정시킬 때인지, 더 많은 책임이나 자율성을 시험할 때인지에 따라 같은 선택지의 의미가 달라진다. 행복의 여러 요소와 우선순위는 Ch.2에서, 바닥과 방향을 실제 비교 기준으로 내리는 법은 Ch.3에서 다룬다.
+
+직업을 고르면 직무만 따라오는 것도 아니다. 급여, 근무시간, 사는 곳, 함께 일할 사람, 고용 안정성, 퇴근 뒤 남는 체력이 한꺼번에 바뀐다. 그러므로 회사 이름이나 직무명 하나를 점수로 매기기 전에 그 선택이 바꿀 하루를 적어야 한다. Part 3에서는 엔지니어의 실제 과업과 조직 조건을 이 단위로 살핀다.
+
+## 움직여서 모르는 것 줄이기
+
+선택을 막는 빈칸은 생각만으로 채워지지 않을 때가 많다. 실제 업무를 모르면 현직자에게 시간 배분과 책임을 묻고, 내가 그 작업을 견디는지 모르면 작은 프로젝트나 현장 경험으로 확인한다. 한 번의 시도로 직업 전체를 판정할 수는 없지만, 다음 질문은 더 정확해진다.
+
+비슷한 경험만 반복하면 비슷한 정보만 들어온다. 그래서 이 책은 가끔 현재 경로 밖의 경험을 작게 섞는 일을 **랜덤 워크**라고 부른다. 수학의 random walk나 강화학습의 탐색 정책과 같은 뜻은 아니다. 아무 데나 큰 결정을 내리라는 말도 아니다. 손실 상한과 종료일을 정한 작은 탐색이라는 뜻이며, 기술 용어와의 경계와 실행 카드는 Ch.7에서 따로 다룬다.
+
+탐색에는 다른 사람의 반응도 필요하다. 덜 다듬어진 생각을 가설이라고 표시해 밖에 내놓고, 무엇을 확인할지 말하고, 작은 시험에 필요한 도움을 구한다. 이 책에서 **헛소리를 잘한다**는 말은 이 능력을 가리킨다. **셀링**도 근거 없는 확신을 파는 일이 아니라 상대가 다음 행동을 판단할 수 있도록 문제와 시험을 설명하는 일이다. Ch.17에서 생성, 선택, 검증, 요청의 순서로 풀어 쓴다.
+
+## 고른 뒤 실행 구간 주기
+
+필요한 정보를 어느 정도 모았고 바닥을 넘는 선택지가 있다면 한곳을 고른다. 완전한 확신은 시작 조건이 아니다. 무엇을 해도 비슷해 보인다면 되돌릴 수 있는 쪽, 다음 판단에 쓸 능력이나 정보를 남기는 쪽으로 먼저 움직일 수 있다.
+
+**결정했으면 한동안 돌아보지 마라.** 다른 선택지를 영원히 버리라는 말이 아니다. 한 학기, 인턴 한 번, 프로젝트 한 주기처럼 실제 작업과 피드백이 생길 구간 동안 비교를 닫으라는 뜻이다. 그동안에는 첫 행동을 달력에 넣고, 막혔을 때 누구에게 무엇을 물을지도 정한다. 탐색을 닫을 기준과 실행 계약은 Ch.8에 있다.
+
+다만 바닥이 깨지면 정해 둔 날짜를 기다리지 않는다. 건강과 안전이 나빠졌거나, 약속받은 역할과 실제 일이 크게 다르거나, 되돌리기 어려운 손실이 빠르게 커질 때는 결정을 다시 연다. 어려운 하루와 구조적인 문제를 구분하는 일은 이후의 이직·중단 장에서 이어진다.
+
+## 결과가 나온 뒤 볼 것
+
+좋은 과정이 언제나 좋은 결과를 만들지는 않는다. Baron과 Hershey의 실험에서는 판단 과정이 같아도 좋은 결과가 붙은 결정을 더 높게 평가하는 경향이 나타났다. 실제 진로를 추적한 연구는 아니지만, 결과를 안 뒤 당시 판단과 새 정보를 섞어 보기 쉽다는 경고는 남는다. 자세한 근거와 적용 범위는 Ch.4에서 다룬다.
+
+재검토에서는 두 줄이면 된다.
+
+```text
+당시 정보로 고칠 수 있었던 과정:
+이번 결과로 새로 알게 된 조건:
+```
+
+첫 줄은 다음 결정의 준비 방식을 바꾸고, 둘째 줄은 선택지에 대한 예상을 갱신한다. 결과 편향과 복기 기록은 Ch.4에서 자세히 다룬다.
+
+이 책의 나머지 장은 이 한 바퀴의 빈칸을 채운다. Part 1은 행복·기준·결과 평가, Part 2는 선택지가 비슷할 때의 진단부터 흥미·랜덤 워크·몰입까지 이어진다. 엔지니어의 실제 하루와 여러 경로, 성장·실패·셀링·관계는 Part 3과 4에 있다. 첫 직장 뒤의 이직과 중단은 Part 5, 번아웃·정신건강·일 밖의 행복은 Part 6의 몫이다.
+
+처음부터 전부 읽고 결정할 필요는 없다. 지금 막힌 칸으로 가면 된다. 무엇을 원하는지 흐리면 Ch.2–3, 정보가 부족하면 Ch.5–7, 골랐는데 계속 비교한다면 Ch.8, 직업의 실제 조건을 모르면 Ch.9–14에서 시작한다. 한 바퀴를 돌고 나면 평생의 답 대신 다음에 실행할 선택과 다시 볼 조건이 남는다.
+
+---
+
+**출처.** [OECD, *How's Life? 2024*](https://doi.org/10.1787/90ba854a-en), [Baron & Hershey (1988), “Outcome Bias in Decision Evaluation”](https://doi.org/10.1037/0022-3514.54.4.569)을 참조했다. 다섯 단계 표와 두 줄 재검토는 이 책의 전체 구조를 독자가 한 장에 사용할 수 있도록 정리한 도구다.
+
+# Ch.2 — 여러 칸으로 된 행복
+
+선택을 잘하려면 무엇을 좋게 만들려는지부터 알아야 한다. 그런데 행복하다는
+말에는 여러 질문이 섞여 있다. 요즘 기분이 괜찮은가. 내 삶에 대체로 만족하는가.
+하는 일이 가치 있다고 느끼는가. 건강, 돈, 시간, 관계는 버틸 만한가. 이
+질문들의 답은 함께 좋아지기도 하지만 따로 움직이기도 한다.
+
+서로 다른 답이 나왔을 때 무엇을 행복이라고 부를 것인가.
+
+## 오늘의 기분과 삶 전체의 평가
+
+OECD의 주관적 웰빙 측정 지침은 삶의 평가, 정서, 유다이모니아를 나눈다.
+삶의 평가는 자기 삶 전체를 돌아보고 내리는 판단이다. 정서는 비교적 짧은
+기간에 겪은 즐거움, 걱정, 분노, 평온 같은 경험을 묻는다. 유다이모니아는
+자신이 제대로 기능하는지, 하는 일이 가치 있다고 느끼는지와 관련된다.
+
+셋을 구분하는 이유는 학술 용어를 늘리기 위해서가 아니다. 힘들지만 가치
+있는 일을 하는 시기가 있다. 생활은 안정됐는데 하루가 무기력한 때도 있다.
+오늘 기분이 나쁘다는 이유만으로 삶 전체를 실패로 판정하면 고칠 대상을 찾기
+어렵다. 반대로 목표가 의미 있다는 말로 매일 쌓이는 피로를 덮어도 안 된다.
+
+Busseri는 삶의 만족, 긍정 정서, 부정 정서의 관계를 다룬 40개 표본,
+34,298명의 자료를 메타분석했다. 세 측면은 예상한 방향으로 중간 정도
+관련됐고, 주관적 웰빙이라는 상위 개념을 이루면서도 서로 구별됐다. 긍정
+정서가 많으면 부정 정서가 자동으로 사라지는 것도 아니다. OECD 지침 역시
+두 정서를 따로 묻도록 권한다.
+
+이 연구들은 개인에게 행복 점수를 계산해 주지 않는다. 삶의 만족 40점,
+기분 30점, 의미 30점처럼 더하라는 결론도 없다. 쓸 수 있는 결론은 더
+소박하다. 서로 다른 질문을 하나의 “괜찮다”로 뭉개지 말자는 것이다.
+
+## 감정 밖의 생활 조건
+
+OECD의 *How’s Life? 2024*는 현재의 웰빙을 소득과 자산, 일과 일자리의 질,
+주거, 건강, 지식과 기술, 환경, 주관적 웰빙, 안전, 일과 삶의 균형, 사회적
+연결, 시민 참여로 살핀다. 앞으로 그 삶을 유지할 바탕인 자연·경제·인적·사회적
+자원은 따로 본다.
+
+국가와 사회를 비교하려고 만든 틀이므로 개인의 선택표와 같지는 않다. 그래도
+빠뜨린 조건을 찾는 데는 쓸 만하다. 급여가 오르면 소득은 좋아진다. 통근이
+길어져 수면과 관계에 쓸 시간이 줄어들 수 있다. 새 기술을 배우는 자리는 인적
+자원을 늘리지만 당장의 안정성을 낮출 수 있다. 어느 하나만 보고 “전체적으로
+좋아졌다”고 말하면 다른 칸에서 생긴 손실이 사라진다.
+
+행복이 여러 요소로 이루어졌다는 말은 돈이나 직업이 중요하지 않다는 뜻이
+아니다. 돈은 주거와 건강, 안전, 선택 가능한 시간을 바꾼다. 직업은 하루의
+시간표와 사람, 사는 곳을 함께 바꾼다. 다만 돈과 직업 하나로 나머지를 대신
+계산할 수 없다는 뜻이다.
+
+## 자율성·유능감·관계성을 질문으로 쓰기
+
+Martela와 동료들은 유럽사회조사 27개국의 15세 이상 48,550명을 분석했다.
+자율성, 유능감, 관계성 욕구의 충족을 묶은 값은 행복, 삶의 만족, 삶의 의미와
+양의 관계를 보였고 우울 증상과는 음의 관계를 보였다. 소득과 사회경제적
+위치 등을 통제한 뒤에도 관련이 남았다.
+
+표본은 각 나라의 확률표집으로 모았지만 연구 설계는 한 시점의 횡단조사다.
+자율성이 높아서 행복한지, 행복한 사람이 자기 삶을 더 자율적이라고 평가하는지
+이 자료만으로는 가를 수 없다. 개별 욕구를 잰 척도의 신뢰도도 낮았다. 따라서
+“세 욕구를 채우면 행복해진다”라고 쓰면 연구보다 멀리 나간다.
+
+선택 앞에서는 세 개를 예측이 아니라 질문으로 쓰는 편이 낫다.
+
+- 내가 정할 수 있는 일의 범위는 어디까지인가.
+- 배우고 능숙해졌다는 피드백을 받을 수 있는가.
+- 도움을 청하고 의견이 달라도 함께 지낼 관계가 있는가.
+
+학교나 회사의 이름은 같아도 이 답은 팀과 역할에 따라 달라진다. 그래서
+직함보다 그곳에서 보내게 될 하루를 물어야 한다.
+
+## 행복 계기판
+
+계기판은 총점을 내지 않는다. 경고등이 켜진 곳과 이번 선택이 움직일 곳을
+찾는다.
+
+| 볼 것 | 적을 질문 |
+|---|---|
+| 생활의 바닥 | 건강, 수면, 안전, 생활비, 돌봄 가운데 이미 깨진 것은 무엇인가 |
+| 삶의 평가 | 지금 생활을 1년 더 이어도 괜찮다고 보는가. 아니라면 가장 큰 이유는 무엇인가 |
+| 정서 | 최근에 자주 겪은 좋은 감정과 힘든 감정은 각각 무엇인가 |
+| 의미와 기능 | 가치 있다고 느끼는 일, 늘고 있다고 느끼는 능력은 무엇인가 |
+| 시간과 관계 | 회복과 관계를 위해 실제로 남는 시간이 있는가 |
+| 미래의 선택지 | 이 선택이 돈, 기술, 건강, 사람 가운데 무엇을 쌓거나 깎는가 |
+
+모든 칸을 좋게 만드는 선택은 드물다. 이 표의 목적도 그런 선택을 찾아내는
+것이 아니다. 먼저 바닥이 깨진 칸을 찾고, 이번 시기에 올리고 싶은 두 칸을
+고른다. 나머지 칸에서 어느 정도 손실까지 감수할지도 적는다. 그러면 “더
+행복한 선택”이라는 막연한 비교가 어느 생활 조건을 얻고 무엇을 내주는지로
+바뀐다.
+
+정신건강은 이 점검표와 별개로 다뤄야 한다. 부정 정서가 많거나 행복 점수가
+낮다고 해서 정신질환을 진단할 수 없다. 기능 손상과 지속되는 우울·불안,
+위기 상황은 23장에서 공식 기준과 도움 경로를 따로 살핀다. 여기서는 선택의
+손익을 구분하는 데까지만 간다.
+
+행복은 하나의 답이 아니어서 어렵다. 그래도 나눠 보면 손댈 곳이 생긴다.
+기분이 문제인지, 생활의 바닥이 깨졌는지, 의미는 있지만 회복할 시간이 없는지
+구별해야 다음 선택의 기준도 정할 수 있다.
+
+---
+
+**출처.** [OECD, *How’s Life? 2024*](https://doi.org/10.1787/90ba854a-en),
+[OECD, *Guidelines on Measuring Subjective Well-being 2025*](https://doi.org/10.1787/9203632a-en),
+[Busseri (2018), “Examining the Structure of Subjective Well-Being Through
+Meta-analysis…”](https://doi.org/10.1016/j.paid.2017.10.003), [Martela et al.
+(2023), “Needs and Well-Being Across Europe”](https://doi.org/10.1177/19485506221113678)을
+참조했다. 행복 계기판과 항목별 우선순위는 이 자료를 개인 선택에 적용하려고
+만든 도구다.
+
+# Ch.3 — 내 선택 기준 만들기
+
+선택지를 먼저 보면 기준이 흔들린다. 이름이 알려진 곳을 보면 명성이 중요해
+보이고, 높은 급여를 보면 돈의 비중이 올라간다. 좋아 보이는 선택지의 장점을
+나중에 기준이라고 부르기 시작하면 비교표는 그 선택을 정당화하는 도구가 된다.
+
+무엇을 비교하기 전에 무엇을 지키려는지부터 정한다.
+
+## 대안보다 가치 먼저 적기
+
+의사결정 연구자 Ralph Keeney는 대안을 목적이 아니라 가치를 이루는 수단으로 보자고
+제안했다. 주어진 선택지 A와 B를 비교하는 데서 시작하지 않고, 이 결정에서
+달성하려는 가치가 무엇인지 먼저 밝힌다. 그러면 기존 선택지를 평가할 기준이
+생길 뿐 아니라 둘의 장점을 일부 합친 새 대안도 찾을 수 있다.
+
+이 접근은 규범적 의사결정 분석이다. 실제 진로 선택자들을 무작위로 나눠
+한 집단의 행복이나 경력 성과가 더 좋아졌는지 시험한 연구가 아니다. 따라서
+“가치부터 적으면 좋은 직업을 고른다”고 단정할 수는 없다. 그래도 이 순서는 선택지의
+매력에 끌려 기준을 사후에 바꾸는 일을 막는 데 유용하다.
+
+가치라는 말도 그대로 두면 너무 크다. 성장, 안정, 워라밸을 적고 끝내면 어느
+선택지에나 비슷한 말을 붙일 수 있다. 실제 생활에서 확인할 수 있게 내려야
+한다. 성장은 “6개월마다 더 어려운 문제를 맡고 피드백을 받는다”, 안정은
+“예상하지 못한 소득 중단을 몇 달까지 감당할 수 있다”, 시간은 “평일 저녁
+몇 번을 지키고 싶은가”처럼 적는다.
+
+## 바닥과 방향 가르기
+
+기준은 네 묶음이면 충분하다.
+
+| 구분 | 역할 | 적을 내용 |
+|---|---|---|
+| 바닥 | 깨지면 탈락시킨다 | 건강, 안전, 생활비, 돌봄, 체류 조건, 최소한의 존중 |
+| 방향 | 이번 시기에 더 얻고 싶은 것을 고른다 | 기술, 책임, 자율성, 사람, 해 보고 싶은 일 |
+| 비용 | 장점을 얻기 위해 감수할 상한을 정한다 | 시간, 돈, 이동, 초보로 지낼 기간, 불확실성 |
+| 시간 범위 | 지금과 나중의 손익을 나눈다 | 6개월의 생활, 몇 년 뒤 남을 능력과 선택지 |
+
+바닥은 가중치로 보상하지 않는다. 건강을 유지하기 어려운 자리를 높은 명성으로
+메우거나, 생활이 불가능한 보수를 흥미 점수로 상쇄하면 실제로 선택을 유지할
+수 없다. 먼저 바닥을 통과시킨다. 이후 방향과 비용을 놓고 비교한다.
+
+방향은 두세 개면 된다. 이번 결정에서 실제로 집중할 것만 남긴다. 모든 것을
+중요하다고 쓰면 어느 것도 기준이 아니다.
+배우는 속도를 먼저 볼 시기가 있고, 건강을 회복하고 생활을 안정시키는 일이
+먼저인 시기도 있다. 기준은 성격검사 결과처럼 평생 고정되지 않는다.
+
+시간 범위를 넣으면 당장 힘든 선택과 장기적으로 나쁜 선택을 구분할 수 있다.
+초보라서 느린 기간은 지나갈 수 있다. 수면을 계속 깎아야만 유지되는 구조는
+시간이 해결하지 않을 수 있다. “지금 싫다”와 “오래 살 수 없다”를 같은 말로
+쓰지 않는 이유다.
+
+## 최고 대신 충분한 선택 찾기
+
+Herbert Simon은 정보와 계산 능력이 제한된 사람이 모든 대안을 비교해 최댓값을
+찾는다는 가정을 문제 삼았다. 사람은 일정한 포부수준을 정하고 그것을 만족하는
+대안을 찾을 수 있다. 만족화는 게으르게 타협한다는 말이 아니다. 탐색 비용과
+시간이 실제로 드는 상황에서 언제 비교를 멈출지 정하는 방식이다.
+
+직업을 고를 때 모든 회사와 팀을 알 수 없다. 입사 전에는 상사와 동료, 실제
+업무의 상당 부분도 모른다. 그 상태에서 100점짜리를 찾겠다고 하면 정보를
+얻기보다 순위를 계속 바꾸기 쉽다. 바닥을 넘고 이번 방향을 충분히 만족하며,
+틀렸을 때 감당할 수 있는 선택이 나오면 한 구간을 실행할 수 있다.
+
+결정 전에 다음 한 장을 작성한다.
+
+```text
+이번 결정:
+
+반드시 지킬 바닥:
+-
+-
+
+이번 시기에 원하는 방향 두 가지:
+-
+-
+
+감수할 비용과 상한:
+-
+
+지금 확인하지 못한 것:
+-
+
+이 빈칸을 확인할 가장 싼 방법:
+-
+
+충분한 선택이라고 판단할 조건:
+-
+
+결정 뒤 다시 볼 날짜:
+```
+
+이 양식은 Keeney, Simon, OECD의 틀을 묶어 이 장에서 만든 것이다. 검증된
+심리척도도 아니고 점수를 넣으면 정답을 내는 알고리즘도 아니다. 기준과
+빈칸을 같은 종이에 올려놓는 데 목적이 있다.
+
+## 순위가 뒤집히는 이유 보기
+
+비교표가 필요하면 숫자를 쓸 수 있다. 다만 7점과 8점의 차이를 측정 장비가
+낸 값처럼 믿지 않는다. 가중치를 조금 바꿔 본다. 성장의 비중을 낮추거나
+통근 비용을 올렸을 때 순위가 바로 뒤집힌다면 결론은 “A가 82점으로 우세”가
+아니다. 결정이 몇 가지 불확실한 가정에 달려 있다는 뜻이다. 그 가정을
+확인할 자료를 찾거나, 어느 쪽을 골라도 큰 차이가 없음을 받아들이면 된다.
+
+민감도 검사는 점수를 여러 번 계산하는 일이 아니다. 먼저 바닥을 통과한 후보만
+남긴 뒤, 확실하지 않은 기준 하나의 가중치나 값을 현실적으로 가능한 범위
+안에서 바꿔 본다. 순위가 그대로라면 그 가정은 당장 더 조사할 필요가 적다.
+순위가 뒤집히는 값은 어디인가? 그 경계값을 다음에 확인할 질문으로 옮긴다.
+
+예를 들어 통근시간이 주 2일 출근을 가정할 때는 A가 낫고 주 5일이면 B가
+낫다면, 종합점수의 소수점보다 실제 출근 원칙을 확인해야 한다. 성과급을 전액
+받을 때만 순위가 바뀐다면 최근 지급 범위를 묻는다. 성장 가능성처럼 숫자로
+바꾸기 어려운 항목은 신입이 맡은 최근 과업과 피드백 주기를 확인한다. 결론을
+뒤집는 정보부터 찾으면 조사 범위가 줄어든다.
+
+선택지가 많아서 막힌 것인지, 정보와 기준이 비어서 막힌 것인지는 Ch.5에서
+따로 진단한다. 여기서는 후보 수를 줄이기 전에 내가 쓴 기준과 가정이 결론을
+얼마나 흔드는지만 본다.
+
+기준표를 다 쓴 뒤에는 이 선택이 실패해도 왜 골랐는지 설명할 수 있는지
+확인한다. 설명 가능성과 결과 예측은 별개다. 이 설명은 결과가 나온 뒤 무엇을 배울지
+정하는 데 쓴다.
+
+---
+
+**출처.** [OECD, *How’s Life? 2024*](https://doi.org/10.1787/90ba854a-en),
+[Keeney (1996), “Value-focused Thinking”](https://doi.org/10.1016/0377-2217(96)00004-5),
+[Simon (1955), “A Behavioral Model of Rational Choice”](https://doi.org/10.2307/1884852)을
+참조했다. 기준표와 민감도 검사는 이 자료를 실제 선택에 적용하려고 이 장에서
+구성한 도구다. 이 출처들은 도구 자체의 효과크기나 예측 타당도를 제공하지 않는다.
+
+# Ch.4 — 좋은 선택과 좋은 결과 가르기
+
+결과가 좋으면 과거의 판단도 영리해 보인다. 결과가 나쁘면 그때 알 수 없던
+정보까지 놓친 것처럼 느껴진다. 결과가 나온 뒤 무엇을 평가하고 무엇을 고칠
+것인가.
+
+## 같은 결정에 다른 결과를 붙인 실험
+
+Jonathan Baron과 John Hershey는 학부생에게 불확실한 의료 결정과 금전 선택을
+제시했다. 참가자들은 결정자가 판단할 때 가진 관련 정보를 모두 받았다.
+결정의 과정은 같게 두고 결과만 성공과 실패로 바꿨다. 다섯 실험에서 참가자들은
+결과가 좋을 때 사고 과정과 결정자의 능력을 더 높게 평가했고, 그 사람에게
+다시 결정을 맡기려는 의향도 더 컸다. 금전 선택에서는 고르지 않은
+대안의 사후 결과까지 평가에 영향을 주었다.
+
+이것이 결과 편향이다. 결과를 알고 나면 그 정보가 당시에도 판단의 일부였던
+것처럼 과정을 평가한다. 논문은 가상 시나리오를 읽은 학부생의 판단을 다뤘다.
+실제 채용이나 이직 결정을 추적한 연구는 아니다. 다만 결정 당시 정보가 같아도
+결과 지식이 평가를 바꾼다는 현상은 실험 안에서 분명했다.
+
+진로에서는 결과와 선택 사이에 내가 정하지 못한 변수가 많다. 경기, 조직
+개편, 배정된 팀, 함께 일하는 사람, 우연히 맡은 첫 업무가 결과를 바꾼다.
+준비 없이 고른 자리도 잘 풀릴 수 있다. 결과만 보고 복기하면 좋은 운을
+실력으로, 나쁜 운을 판단 실패로 잘못 해석한다. 그 해석이 다음 판단에 남는다.
+
+## 복기를 두 번 읽기
+
+첫 번째 복기에서는 결과를 가린다. 결정한 날까지 알 수 있던 자료만 놓고
+과정을 본다.
+
+- 지켜야 할 바닥과 이번 방향을 적었는가.
+- 현실적인 다른 선택지를 함께 보았는가.
+- 모르는 항목을 모른다고 표시했는가.
+- 실패 비용과 빠져나올 길을 확인했는가.
+- 결정 이유와 다시 볼 조건을 남겼는가.
+
+여기서 빠진 것이 과정의 결함이다. 당시 확인할 수 있던 팀의 근무 방식을
+묻지 않았다면 정보 수집을 고친다. 건강이 바닥이라고 적어 놓고 무시했다면
+기준 적용을 고친다. 당시에 알 수 없던 조직 폐쇄가 일어났다면 그
+사건을 과거의 태만으로 바꾸지 않는다.
+
+두 번째 복기에서 결과를 연다. 이번에는 결과가 다음 선택에 주는 정보를
+찾는다. 예상한 위험이 실제로 얼마나 자주, 얼마나 크게 일어났는가. 좋다고
+본 조건이 생활에서도 좋았는가. 특정 회사의 사건인지 비슷한 자리에서 반복될
+구조인지 구분한다.
+
+과정 평가와 결과 학습은 나누어 본다. Baron과
+Hershey도 과거에 내린 결정 하나의 질을 평가할 때 결과가 무관한 경우와, 반복되는
+비슷한 결정의 확률을 결과로 갱신할 수 있는 경우를 구분했다. 결과는 버리지 않고
+다음 판단의 자료로 쓴다.
+다만 그 결과로 당시 판단의 질을 소급해 바꾸지는 않는다.
+
+## 한 번과 반복을 다르게 보기
+
+한 번의 결과에는 운의 비중이 클 수 있다. 같은 유형의 결과가 반복되면 얘기가
+달라진다. 입사 전마다 업무 범위를 확인했는데도 여러 자리에서 약속과 실제가
+계속 달랐다면 질문의 방식이나 정보원을 바꿔야 한다. 한 팀에서 겪은
+문제를 직업 전체의 본질로 넓히면 표본 하나로 진로를 닫게 된다.
+
+반복을 볼 때는 사건의 단위를 맞춘다. ‘엔지니어 일이 힘들었다’처럼 크게 묶으면
+배울 수 없다. 일정 변경이 잦았는지, 운영 대기가 수면을 깎았는지, 낯선 코드를
+읽는 일이 힘들었는지 나눈다. 다음 선택에서 바꿀 수 있는 조건까지 내려가야
+결과가 정보가 된다.
+
+좋은 결과도 같은 방식으로 본다. 일이 잘 풀렸다면 무엇이 재현 가능한지 묻는다.
+준비한 기술, 도움을 구한 방식, 팀의 리뷰 문화는 다음에도 찾거나 연습할 수
+있다. 우연히 좋은 프로젝트를 배정받은 일은 감사할 수 있지만 선택 능력으로
+계산하지 않는다.
+
+## 당시 정보를 보존하는 결정 기록
+
+결과를 알고도 그 전의 생각을 정확히 복원하기는 어렵다. 결정 전에 짧게
+기록해 두면 두 번 읽는 복기가 가능해진다.
+
+```text
+[결정 전]
+무엇을 얻으려 하는가:
+무엇을 포기하지 않을 것인가:
+현재 아는 사실:
+아직 모르는 사실:
+가장 걱정하는 실패와 예상 범위:
+계속·수정·중단을 가를 신호:
+다시 검토할 날짜:
+
+[결과를 가리고]
+당시 과정에서 빠진 질문:
+당시 정보로도 달리 판단할 수 있었던 지점:
+
+[결과를 열고]
+예상과 달랐던 사실:
+다음 결정의 확률·기준·질문에서 바꿀 것:
+이번 한 사례로는 아직 말할 수 없는 것:
+```
+
+이 장에서 검토한 자료에서는 결정 일지 자체가 의사결정의 질을 높인다는 강한
+개입 근거를 확인하지 못했다. 이 양식은 효과가 입증된 처방이 아니라, 결과가 과거 기억을
+덮기 전에 당시 정보를 보존하는 실용 장치다.
+
+복기가 끝나면 과거의 나를 유죄나 무죄로 선고할 필요가 없다. 그 판결은 다음
+선택에 별 도움이 되지 않는다. 고칠 수 있었던 과정 하나와 새로 얻은 정보
+하나를 남기면 된다. 결과가 좋았다는 이유로
+무모한 과정을 반복하지 않고, 결과가 나빴다는 이유로 합리적인 선택을 전부
+버리지 않는 데 이 구분의 쓸모가 있다.
+
+---
+
+**출처.** [Baron & Hershey (1988), “Outcome Bias in Decision
+Evaluation”](https://doi.org/10.1037/0022-3514.54.4.569)을 참조했다. 두 번
+읽는 복기와 결정 기록 양식은 이 실험의 구분을 실제 선택에 적용하려고 이
+장에서 구성했으며, 그 양식 자체의 효과를 검증한 연구는 아니다.
+
+# Ch.5 — 선택지가 비슷해 보일 때
+
+선택지가 비슷해 보인다는 말은 결론이 아니다. 비교할 기준이 없을 때도,
+직업에 관한 정보가 없을 때도, 들은 말이 서로 맞지 않을 때도 사람은 “다
+비슷하다”고 말한다. 정말 차이가 작을 수도 있다. 이 네 가지 경우에 필요한 행동은
+서로 다르다.
+
+먼저 물을 것은 지금 결정이 어디에서 막혔는지다.
+
+## ‘결정을 못 하겠다’ 풀어 쓰기
+
+Gati, Krausz, Osipow는 진로 결정의 어려움을 크게 준비 부족, 정보 부족,
+일관되지 않은 정보로 분류했다. 처음에는 진로 상담을 받은 200명과 상담가
+10명의 응답을 참고해 분류와 문항을 만들었다. 이어 진로 선택을 시작하던
+이스라엘 청년 259명과 미국 대학생 304명에게 44문항 질문지를 사용했다.
+
+준비 부족에는 결정을 시작할 동기가 약한 상태, 진로 밖에서도 결정을 오래
+미루는 성향, 직업에 관한 비현실적인 믿음이 들어간다. 정보 부족은 결정하는
+방법, 자기 자신, 직업, 정보를 구할 방법을 모르는 경우다. 정보 충돌에는
+믿기 어려운 자료, 내 기준 사이의 갈등, 가족이나 중요한 사람과의 갈등이
+포함된다.
+
+이 분류는 병명도 성격 판정도 아니다. “우유부단한 사람”이라고 이름 붙이기
+전에 다음 질문을 좁히는 도구다. 결정할 이유가 납득되지 않는다면 직무 정보를
+백 개 더 모아도 움직이지 않는다. 실제 업무를 모른다면 가치관 검사를 다시
+해도 빈칸이 남는다. 부모의 기대와 내 생활 조건이 충돌한다면 연봉 표만으로는
+결론이 안 난다.
+
+분류의 구조는 뒤의 대규모 자료에서도 검토됐다. Levin과 동료들은 영어판
+질문지를 스스로 작성한 7개국 32,556명의 자료에 확인적 요인분석을 적용했다.
+원래의 세 묶음과 열 개의 범주는 대체로 지지됐고 국가, 성별, 연령에 걸친 척도
+불변성도 확인됐다. 결정 상태에 따른 불변성은 지지되지 않았다. 영어 온라인
+질문에 자발적으로 응한 표본이라는 제한도 있다. 여러 나라에서 분류가 비슷하게
+작동했다는 근거이지, 점수에 따라 정해진 처방을 내릴 수 있다는 근거는 아니다.
+
+## ‘정보가 없다’ 나누기
+
+자기에 관한 정보와 환경에 관한 정보는 다르다. 내가 오래 집중하는 작업,
+싫어도 견딜 수 있는 불편, 도움을 청하는 방식은 자신을 관찰해야 안다. 어느
+직무에서 실제로 무엇을 하고, 초기에 어떤 책임을 맡고, 한 주의 시간이 어떻게
+쓰이는지는 환경을 조사해야 안다.
+
+Kleine, Schmitt, Wisse는 대학생의 진로 탐색 연구 103개, 109개 독립 표본과
+34,969명을 메타분석했다. 이 연구에서 탐색은 자신과 환경에 관한 진로 정보를
+모으는 행동이다. 전체 탐색은 진로 결정 확신(r_c=.22), 스스로 느낀
+고용가능성(r_c=.35)과 각각 관련됐다. 자기 탐색과 환경 탐색도 서로
+관련됐지만 같은 행동은 아니었다.
+
+효과의 방향을 조심해서 읽어야 한다. 포함 연구의 대부분은 한 시점의 상관을
+다뤘다. 탐색해서 결정이 쉬워졌을 수도 있고, 자기효능감이 높고 이미 방향이
+잡힌 학생이 탐색을 더 했을 수도 있다. 고용가능성도 실제 채용 결과가 아니라
+학생이 느낀 가능성이다. “탐색을 많이 하면 취업을 잘한다”는 결론은 이
+메타분석에 없다.
+
+그럼에도 빈칸에 맞는 행동을 고르는 데는 쓸 수 있다. 업무 내용을 모르면 여러
+채용 공고와 팀 문서를 비교하고, 경력 단계가 다른 현직자에게 하루의 작업을
+묻는다. 내가 그 작업을 견디는지 모르면 짧게 직접 해 본다. 조직의 속도와
+피드백 방식은 개인 프로젝트보다 인턴, 현장실습, 팀 프로젝트가 더 가까운
+정보를 준다. 어떤 방법도 직업 전체를 보여 주지는 않는다. 알아낸 것과 여전히
+모르는 것을 구분해야 한다.
+
+## 충돌하는 말에 출처 붙이기
+
+같은 직무를 두고 누구는 여유롭다 하고 누구는 매일 급하다고 말한다. 둘 중
+한 사람이 틀렸다고 볼 필요는 없다. 회사, 팀, 제품 단계, 경력, 담당 책임이
+다르면 하루도 달라진다. “백엔드는 이렇다”처럼 직업 전체의 특징으로 합치지
+말고, 그 말이 나온 조건을 붙인다.
+
+내 기준끼리 충돌할 때도 있다. 빠르게 배우고 싶지만 업무 강도는 낮기를 바랄
+수 있다. 높은 급여와 짧은 통근이 서로 다른 선택지에 놓일 수 있다. 이때 더
+많은 정보가 갈등을 없애 주지는 않는다. 무엇을 얻기 위해 어느 비용까지 낼지
+정해야 한다. 3장에서 적은 바닥과 이번 시기의 방향으로 돌아갈 자리다.
+
+타인의 기대와 충돌한다면 사실 문제와 결정권 문제를 분리한다. 취업 전망이나
+생활비처럼 확인할 수 있는 주장은 자료로 본다. 누구의 기대를 우선할지는
+자료가 대신 결정하지 못한다. 다만 그 선택의 비용을 누가 지는지는 분명히
+해야 한다.
+
+## 정말 차이가 작을 때
+
+필요한 정보를 모았는데도 두 선택지가 비슷하다면 없는 차이를 만들어 낼 이유가
+없다. Scheibehenne와 동료들의 선택 과부하 메타분석에서는 50개 실험, 63개
+조건, 5,036명을 합친 평균 효과가 사실상 0에 가까웠고 연구 사이 차이가 컸다.
+선택지 수가 많다는 사실만으로 결정이 나빠진다고 말할 수 없었다.
+
+비슷한 선택지 사이에서는 정밀한 점수보다 하방을 본다. 바닥을 깨뜨릴 가능성이
+어느 쪽에서 큰가. 틀렸을 때 잃는 시간과 돈은 감당할 만한가. 다른 선택으로
+옮길 수 있는가. 어느 쪽이 다음 판단에 더 좋은 정보를 남기는가. 모두 비슷하다면
+작은 차이나 우연한 계기로 하나를 고르는 것도 잘못이 아니다. 중요한 것은
+선택하지 않은 길을 매일 다시 채점하느라 고른 쪽의 경험을 만들지 못하는
+상태를 끝내는 일이다.
+
+## 다음 한 번의 행동
+
+결정표를 또 만들기보다 아래 여섯 줄만 적는다.
+
+```text
+지금 막힌 종류: 준비 / 자기 정보 / 환경 정보 / 정보 충돌 / 기준 충돌 / 실제 차이가 작음
+결정을 막는 문장 하나:
+그 문장에서 확인 가능한 사실:
+사실이 아니라 내가 정해야 할 기준:
+이번 주에 할 행동 하나:
+그 행동 뒤에도 남을 질문:
+```
+
+행동은 한 번에 하나만 고른다. 현직자에게 묻는다면 “어떤가요” 대신 실제
+시간 배분과 책임을 묻는다. 직접 해 본다면 직업 전체의 적합성을 판정하려
+하지 말고, 모르던 작업 하나를 확인한다. 기준 충돌이라면 정보를 더 모으기
+전에 감수할 비용의 상한을 정한다.
+
+선택지가 비슷한 것이 문제가 아닐 수 있다. 어떤 선택도 완벽하게 확신할 만큼
+알 수 없다는 사실을 받아들이지 못해 비교가 계속될 수도 있다. 빈칸 하나를
+줄이고, 남은 차이가 작으면 한 구간을 고른다. 다음 장부터는 직접 해 보기
+전에는 잘 보이지 않는 흥미와, 경험에 변이를 넣는 방법을 다룬다.
+
+---
+
+**출처.** [Gati, Krausz, & Osipow (1996), “A Taxonomy of Difficulties in
+Career Decision Making”](https://doi.org/10.1037/0022-0167.43.4.510),
+[Levin et al. (2020), “Testing the Structure of the Career Decision-Making
+Difficulties Questionnaire…”](https://doi.org/10.1016/j.jvb.2019.103365),
+[Kleine, Schmitt, & Wisse (2021), “Students’ Career Exploration: A
+Meta-analysis”](https://doi.org/10.1016/j.jvb.2021.103645),
+[Scheibehenne, Greifeneder, & Todd (2010), “Can There Ever Be Too Many
+Options?”](https://doi.org/10.1086/651235)를 참조했다. ‘다음 한 번의 행동’
+양식은 연구의 분류를 실제 행동으로 옮기려고 본문용으로 정리했다.
+
+# Ch.6 — 자라는 흥미와 남는 선호
+
+“좋아하는 일을 하라”는 말은 좋아하는 일이 이미 완성되어 있다는 가정을
+숨긴다. 아직 해 보지 않은 일에는 강한 흥미가 없기 쉽다. 반대로 몇 번 재미를
+느꼈다고 그 일이 오래 맞을 것이라고 단정할 수도 없다.
+
+지금의 흥미를 존중하면서 해 보지 않은 일을 너무 일찍 제외하지 않으려면
+무엇을 증거로 삼아야 할까.
+
+## 흥미의 시작과 발달
+
+Hidi와 Renninger는 여러 연구를 묶어 흥미가 발달하는 과정을 네 단계로
+설명했다. 무언가가 잠깐 주의를 끄는 ‘촉발된 상황적 흥미’가 첫 단계다. 다시
+참여할 이유와 지원이 생기면 ‘유지된 상황적 흥미’가 된다. 지식과 가치가
+쌓이고 스스로 다시 찾기 시작하면 ‘초기 개인적 흥미’, 더 오래 지속되고
+깊은 지식과 결합하면 ‘잘 발달한 개인적 흥미’로 간다.
+
+흥미가 처음부터 저절로 이어져야 하는 것은 아니다. 초반에는
+설명해 주는 사람, 적당한 난이도, 다시 해 볼 기회가 흥미를 붙든다. 잘 몰라서
+재미없는 상태와 알아도 관심이 없는 상태는 다르다. 한 번 듣고 끌리지 않았다는
+이유만으로 적합성 판단을 끝내지 않아도 된다.
+
+다만 네 단계는 연구를 정리한 이론 모형이다. 모든 사람이 같은 순서와 속도로
+움직인다는 임상 경로가 아니다. 노출을 반복하면 어떤 일이든 좋아하게 된다는
+실험 결과도 아니다. 단계 이름은 현재 상태를 설명하는 말이지, 다음
+단계로 반드시 올라가야 한다는 지시가 아니다.
+
+## 흥미가 자라는 범위
+
+O’Keefe, Dweck, Walton은 대학생을 대상으로 상관연구와 실험 다섯 건을
+수행했다. 앞의 연구에서는 자신의 흥미가 고정돼 있다고 믿는 정도와 기존
+정체성 밖 주제에 보이는 관심을 살폈다. 뒤의 실험에서는 참가자에게 흥미가
+고정됐다는 관점이나 발달한다는 관점을 담은 글을 읽게 했다.
+
+Study 3에서는 분석에 포함된 학부생 85명이 기존 관심 분야와 잘 맞지 않는
+주제를 접했고, 고정 관점을 읽은 집단은 그 분야에 더 낮은 관심을 보였다
+(상호작용 ηp²=.07). Study 5의 분석 표본 70명은 흥미로운 천문학 글 뒤에 더
+어렵고 기술적인 글을 읽었다. 난관 뒤 관심의 감소는 고정 관점 집단에서 더
+컸으며 이 상호작용도 ηp²=.07이었다.
+
+짧은 글로 믿음을 조작하고 곧바로 자기보고 관심을 잰 소규모 실험이다. 실제로
+전공을 바꾸었는지, 몇 년 뒤 직업을 계속했는지는 알 수 없다. 연구자들도
+현실의 장기 선택에 어떻게 적용되는지는 앞으로 확인할 문제라고 적었다.
+
+여기서 적용할 수 있는 결론의 범위는 좁다. 흥미가 이미 정해져 있다고 믿으면 기존 정체성과
+맞지 않는 분야를 너무 빨리 닫거나, 첫 난관을 “내 일이 아니다”라는 증거로
+읽을 수 있다. 성장 관점을 가지면 어떤 분야든 좋아하게 된다는 보장은 없다.
+
+발달 가능성만 말하면 현재의 관심을 가볍게 다루게 된다. Low와 동료들은
+12세부터 40세까지의 직업 흥미를 추적한 59개 출판물, 114개 종단연구를
+메타분석했다. 직업 흥미의 순위 안정성은 청소년기에서 대학 시기에 크게
+높아졌고 성인 초기에 더 높아졌다. 추적 기간과 연령에 따라 정도는 달랐다.
+
+순위 안정성은 같은 사람의 점수가 전혀 변하지 않는다는 뜻이 아니다.
+집단 안에서 누가 무엇에 상대적으로 더 관심을 보이는지가 시간에 걸쳐 이어지는
+정도를 말한다. 대학 시기는 새로운 경험으로 관심이 발달하는 때이면서, 반복해서
+나타난 선호가 점점 쓸 만한 정보가 되는 때이기도 하다.
+
+그래서 흔히 말하는 “열정은 만들어 간다”는 설명만으로는 부족하다. 흥미에는
+환경과 연습으로 자라는 부분이 있지만 개인차와 안정성도 있다. 맞지 않는 일을
+의지로 좋아하게 만들 책임을 모두 개인에게 돌려서는 안 된다.
+
+## 반복된 반응 기록하기
+
+한 번의 기분으로 진로를 정하지 않으려면 같은 종류의 작업을 몇 차례 해 보고
+반응을 나누어 적는다.
+
+```text
+흥미 관찰 기록
+
+해 본 작업:
+시작 전 기대:
+하는 동안 자꾸 주의가 간 부분:
+막혔을 때 다시 시도하고 싶었는가:
+끝난 뒤 더 알고 싶어진 질문:
+싫었던 작업과 그 이유:
+다음 날 남은 피로와 만족:
+두세 번 반복한 뒤 달라진 점:
+```
+
+‘재미있었다’만 적으면 사람, 칭찬, 새로움, 작업 자체를 구분하기 어렵다.
+무엇이 주의를 붙잡았는지 적는다. 문제를 푸는 과정이 좋았는지, 결과를 다른
+사람에게 설명할 때 좋았는지, 함께한 사람이 좋아서 버틸 만했는지 나눈다.
+싫었던 부분도 직업의 부수 조건인지 반복될 핵심 업무인지 확인한다.
+
+관찰 기간을 무한히 늘릴 필요는 없다. 모형을 조금 더 알아야 재미를 판단할
+수 있는 일도 있고, 몇 차례 뒤에도 핵심 작업이 계속 버거운 일도 있다. 필요한
+기초가 생기기 전까지는 유보하되, 불편을 전부 ‘성장 과정’이라고 미루지 않는다.
+건강과 생활의 바닥이 깨지면 흥미 실험을 계속할 이유가 없다.
+
+지금 좋아하는 일에서 먼저 시작하자. 해 보지 않은 분야는 실제 경험으로
+빈칸을 채운다. 흥미는 마음속에서 찾아내는 답보다 해 보고 다시 해 보면서
+쌓이는 기록에 가깝다. 처음의 끌림과 반복 뒤의 반응을 함께 본다. 검사 결과가
+있다면 검사 결과와 기록 가운데 어느 쪽이 맞는지 겨루지 말고 다음에 시험할 작업을 고르는
+자료로 함께 쓴다.
+
+---
+
+**출처.** [Hidi & Renninger (2006), “The Four-Phase Model of Interest
+Development”](https://doi.org/10.1207/s15326985ep4102_4), [O’Keefe, Dweck,
+& Walton (2018), “Implicit Theories of Interest”](https://doi.org/10.1177/0956797618780643),
+[Low et al. (2005), “The Stability of Vocational Interests From Early
+Adolescence to Middle Adulthood”](https://doi.org/10.1037/0033-2909.131.5.713)을
+참조했다. 흥미 관찰 기록은 세 자료를 개인 선택에 적용해 제안한 기록 양식이다.
+
+# Ch.7 — 랜덤 워크
+
+생각을 보태는 일보다 경험의 폭을 바꿔야 할 때가 있다. 비슷한 수업, 비슷한
+프로젝트, 비슷한 사람만 만나면 판단 자료도 비슷하게 들어온다. 모르는 동안에는
+일부러 변이를 넣어야 한다.
+
+여기서는 그것을 랜덤 워크라고 부른다. 아무 데나 걷자는 말이 아니다. 지금의
+계획만 따라가면 만나지 못할 경험을 작게 섞고, 무엇을 알게 됐는지 회수하자는
+말이다. 큰 손실 없이 선택지에 관한 정보를 어떻게 늘릴 것인가.
+
+## 기술 용어 먼저 구분하기
+
+수학에서 random walk는 확률 규칙에 따라 상태가 이동하는 확률과정이다.
+강화학습의 exploration은 현재 가장 좋아 보이는 행동만 되풀이하지 않고 다른
+행동의 보상과 전이를 알아보는 문제다. Q-learning은 환경 모형을 미리 알지
+못해도 행동가치를 갱신하는 비정책 시간차 제어 알고리즘이다. 셋은 서로 다른
+개념이다.
+
+Watkins와 Dayan의 1992년 원 논문은 이산적인 제어 Markov 과정에서 Q-learning의
+수렴을 다뤘다. 모든 상태-행동 쌍이 반복해서 표집되고 학습률을 비롯한 조건이
+맞으면 행동가치 추정치가 확률 1로 최적값에 수렴한다. 논문은 random walk를
+Q-learning의 핵심이라고 부르지 않는다. 반복 표집 조건도 특정한 무작위
+정책 하나를 뜻하지 않는다.
+
+이 논문은 사람의 진로를 Markov 과정으로 모델링하거나 검증한 연구가 아니다.
+이 장에서도 상태·행동·전이 규칙을 정의하지 않으며, 삶의 결과를 한 보상값으로
+모으지도 않는다. 같은 선택을 반복해 독립된 표본을 얻기도 어렵다. 따라서
+“인생도 Q-learning이니 많이 돌아다니면 최적 진로에 수렴한다”는 말은
+기술적으로도 경험적으로도 성립하지 않는다.
+
+그래도 은유로 남길 직관은 있다. 해 보지 않은 선택지의 가치는 머릿속 계산만으로
+다 알 수 없다. 현재 최선처럼 보이는 길만 계속 따르면 그 밖의 가능성에 관한
+정보는 빈칸으로 남는다. 이 책의 랜덤 워크는 이 한계를 기억하려고 붙인 이름이다.
+
+## 의도된 변이 넣기
+
+탐색의 대상은 직업명보다 넓다. 하는 일의 종류, 함께하는 사람, 결과물을
+보여 주는 상대, 조직의 크기, 일하는 시간과 장소를 바꿔 볼 수 있다. 혼자
+만드는 프로젝트만 했다면 팀의 코드를 읽는 일을 섞는다. 구현만 했다면 운영과
+사용자 피드백을 본다. 익숙한 사람의 조언만 들었다면 다른 경력 단계와 조직의
+사람에게 묻는다.
+
+어느 변이를 넣을지는 지금 모르는 것에서 나온다. “이 분야가 나와 맞는가”는
+너무 커서 한 번에 확인할 수 없다. 요구가 바뀌는 상황을 견디는가, 반복
+디버깅 뒤에도 궁금한 것이 남는가, 다른 사람이 만든 코드를 읽는 일이 어떤가,
+설명과 조율에 쓰는 시간을 받아들일 수 있는가처럼 작업 단위로 내린다.
+
+비용 상한도 먼저 둔다. 학기 전체를 걸기 전에 짧은 과제나 공개 저장소의 작은
+이슈를 해 볼 수 있다. 퇴사 뒤 확인하려던 일을 재직 중 짧은 협업이나 수업으로
+볼 수도 있다. 모든 경험을 싸게 만들 수는 없지만, 되돌릴 수 없는 큰 선택이
+첫 실험이 되지 않게 할 수는 있다.
+
+## 잠정적인 나를 밖에 내놓기
+
+Herminia Ibarra는 상위 역할로 옮겨 가던 전문가 34명을 연구했다. 참여자들은
+역할모델을 관찰한 뒤 가능한 모습을 잠정적으로 시험하고, 자기 기준과 다른
+사람의 반응으로 평가했다. 직업 정체성을 먼저 완성한 다음 행동한 순서가
+아니었다. 새로운 역할을 해 보는 동안 자신에게 맞는 방식을 구체화한 것이다.
+
+귀납적 질적 연구이고 표본도 특정한 전문직 전환자 34명이다. 대학생에게 같은
+결과가 난다는 인과 증거는 아니다. 그래도 작은 역할을 먼저 시험하며 정체성을
+구체화하는 모형을 보여 준다. 성찰만으로 결론을 낸 뒤 진입하는 순서와는 다르다.
+
+잠정적인 역할에는 다른 사람의 반응이 필요하다. 미완성인 생각을 가설과 작은
+제안으로 내놓는 법은 Ch.17의 ‘헛소리’와 셀링에서 다룬다.
+
+## 시도를 끝내 정보로 만들기
+
+Camuffo와 동료들은 기업가에게 이론을 검증 가능한 가설로 바꾸고 실험하게 하는
+훈련을 네 개의 무작위대조시험에서 검토했다. 모두 759개 기업과 11,463개
+관측치를 분석했다. 훈련을 받은 집단에서는 아이디어 중단이 늘었다. 중단된
+아이디어의 객관적인 성공 가능성이 낮았는지를 직접 측정한 결과는 아니다.
+급진적 피벗의 총횟수가 늘어난 것은 아니었다. 횟수별로 보면 처치 집단은
+통제 집단보다 한 번 피벗할 확률이 높고 세 번 이상 피벗할 확률이 낮았다.
+0회와 두 번에서는 뚜렷한 차이가 없었다.
+
+실험 대상은 창업기업이며 대학생의 진로 선택, 진로 만족, 행복은 측정하지
+않았다. 연구자들이 제시한 ‘효율적 탐색’과 ‘방법적 의심’도 직접 확인된 심리
+기제가 아니라 결과에 대한 이론적 해석이다. 따라서 이 결과만으로 랜덤한 진로
+변경을 권할 수는 없다.
+
+개인의 작은 시도에서도 가설을 세우고 관찰할 값을 정한다. 관찰 결과를 미리
+정한 계속·수정·중단 조건과 대조하고, 중단 조건에 해당하면 끝낸다. 시도
+횟수를 세는 대신 틀린 가설을 버린 근거를 남긴다.
+
+```text
+작은 시도 카드
+
+지금 모르는 것 한 문장:
+기존 경험과 다르게 섞을 변이 하나:
+가장 작은 실행:
+시간·돈·건강의 손실 상한:
+관찰할 행동이나 결과:
+끝낼 날짜:
+계속 / 수정 / 중단을 가를 조건:
+밖에 내놓고 반응을 받을 상대:
+```
+
+시도가 끝나면 어떤 정보가 새로 생겼는지 먼저 적는다. 성공과 실패 평가는
+그 뒤에 한다.
+아무것도 배우지 못했다면 규모보다 질문이나 관찰값이 잘못됐을 가능성이 크다.
+정보가 충분히 나왔다면 다음 실험이나 실행으로 옮긴다.
+
+랜덤 워크는 계획이 만든 시야 밖으로 한 걸음 나가 보는 일이다. 계획은 그대로
+두되 그 한 걸음에 손실 상한과 종료일을 붙여 방황과 탐색을 구분한다. 이 장의
+카드가 다루는 단위는 시도 하나다. 여러 시도를 거친 뒤 탐색 전체를 닫고 한
+경로에 시간을 쓸 시점은 Ch.8에서 다룬다.
+
+---
+
+**출처.** [Watkins & Dayan (1992), “Q-learning”](https://doi.org/10.1007/BF00992698),
+[Ibarra (1999), “Provisional Selves”](https://doi.org/10.2307/2667055),
+[Camuffo et al. (2024), “A Scientific Approach to Entrepreneurial
+Decision-making: Large-scale Replication and Extension”](https://doi.org/10.1002/smj.3580)을
+참조했다. ‘랜덤 워크’의 삶에 관한 정의와 작은 시도 카드는 이 책의 구성이다.
+
+# Ch.8 — 탐색을 끝내고 한곳을 고르는 시점
+
+탐색은 선택지를 늘리지만 결과를 만들지는 않는다. 한 분야의 기초를 익히고,
+다른 사람이 쓸 결과물을 내고, 어려운 구간을 지나 보려면 한곳에 시간을 써야
+한다. 조금만 더 알아보겠다는 말이 실행을 미루는 핑계가 되는 때도 온다.
+
+언제 탐색을 닫아야 할까. 연구는 누구에게나 맞는 나이, 시도 횟수, 기간을
+주지 않는다. 이 장에서는 전환의 정답 대신 판단할 근거와 다시 열 조건을
+정한다.
+
+## 탐색과 활용의 보상 시간
+
+James March는 조직학습을 설명하면서 exploration과 exploitation을 구분했다.
+탐색에는 새로운 대안, 실험, 변이, 발견이 들어간다. 활용에는 이미 아는
+것의 정교화, 효율, 실행이 들어간다. 탐색의 성과는 활용의 성과보다 불확실하고
+늦게 나타난다. 탐색을 시작한 조직이 그 성과를 직접 거두지 못할 수도 있다.
+
+March의 논문은 조직의 이론과 계산 모형이다. 대학생의 진로 선택을 시험하지
+않았다. “20대에는 탐색하고 30대에는 활용하라”는 주기도 없다. 다만 단기
+성과만 좇는 체계가 활용에 지나치게 기울 수 있고, 탐색만 계속하는 체계도
+성과를 회수하지 못한다는 긴장을 선명하게 보여 준다.
+
+개인도 탐색과 몰입에서 얻는 정보가 다르다. 새 분야를 맛보는 동안에는 넓은 정보가 생긴다.
+한곳에 머무는 동안에는 초보 단계 뒤의 일, 반복해서 생기는 문제, 책임을 맡을
+때의 생활을 알게 된다. 짧은 체험으로 알 수 없는 정보도 있다. 몰입은 탐색의
+반대가 아니라 더 깊은 정보를 얻는 다음 방식일 수 있다.
+
+## 더 알아볼 가치 재기
+
+탐색을 끝내는 기준은 완전한 확신이 아니다. 다음 질문에 답해 본다.
+
+- 바닥을 넘는 선택지가 하나 이상 있는가.
+- 남은 질문의 답이 현재 선택을 실제로 뒤집을 가능성이 큰가.
+- 그 답을 얻을 방법과 비용이 분명한가.
+- 더 탐색하느라 미루는 실행에서 잃는 것은 무엇인가.
+- 일정 기간 해 보지 않으면 어느 선택지도 평가할 수 없는가.
+
+이 다섯 질문은 March의 구분과 앞 장의 탐색 원리를 엮은 이 책의 판단 도구다.
+개인 진로에서 검증된 중단 알고리즘이 아니다. 그래도 “아직 불안하다”와 “결정을
+바꿀 정보가 남았다”를 가르는 데 쓸 수 있다.
+
+남은 정보가 중요하고 싸게 확인할 수 있다면 한 번 더 탐색한다. 답이 나와도
+선택이 바뀌지 않거나, 정보 수집 비용이 더 크다면 고른다. 어느 선택이든
+바닥을 넘고 차이가 작다면 되돌릴 수 있는 쪽, 다음에도 쓸 능력이 남는 쪽,
+실제 일을 더 가까이 볼 수 있는 쪽을 고를 수 있다. 이것은 우열의 발견보다
+실행의 시작에 가깝다.
+
+## 결정했으면 한동안 돌아보지 마라
+
+결정 뒤에도 고르지 않은 길을 매일 확인하면 선택한 길에는 충분한 시간이
+들어가지 않는다. 결정할 때 한동안 비교를 닫는다. 한 학기, 인턴 기간, 맡은
+프로젝트의 한 주기처럼 실제 작업과 피드백이 생길 구간을 잡는다. 숫자 자체가
+정답은 아니다. 선택의 성격과 손실 가능성에 맞춰 정한다.
+
+비교를 닫았다고 실행이 저절로 되는 것은 아니다. Gollwitzer와 Sheeran은
+실행의도를 다룬 94개 독립 검정, 8,461명을 메타분석했다. “상황 Y가 오면
+행동 X를 한다”는 식의 계획은 목표의도만 둔 경우보다 목표 달성 효과가 컸다(d=.65).
+연구는 목표 행동을 시작하지 못하거나, 방해 때문에 진행 중인 목표를 이어 가지
+못하는 경우를 다뤘다. 잘되지 않는 행동을 제때 중단하지 못하거나 다음 목표에
+필요한 자기조절 역량을 소진하는 경우도 검토했다.
+
+이 메타분석은 어떤 목표를 골라야 하는지 알려 주지 않는다. 올바른 직업을
+선택하게 하거나 장기 경력 성공을 보장하지도 않는다. 선택이 끝난 뒤 행동을
+구체화하는 데만 쓴다. “이번 학기에는 이 분야를 해 보겠다”보다 “월·수 수업
+뒤 두 시간은 구현하고, 막힌 지 30분이 지나면 질문을 기록해 도움을 청한다”가
+실행에 가깝다.
+
+## 몰입의 재검토 날짜
+
+한동안 돌아보지 말라는 말은 새 증거를 보지 말라는 뜻이 아니다. Sleesman과
+동료들은 실패하는 경로에 부정적 피드백 뒤에도 자원을 계속 넣는 몰입 상승을
+166개 독립 표본에서 메타분석했다. 실험실과 현장, 학생과 관리자를 포함했다.
+초기 결정에 대한 개인적 책임은 몰입 지속과 양의 관련을 보였고(ρ=.258),
+예상 후회는 음의 관련을 보였으며(ρ=-.434), 정보 프레이밍도 음의 관련을 보였다(ρ=-.349).
+기회비용을 분명히 드러내고 추가 정보를 얻는 일도
+몰입을 억제하는 요인으로 다뤄졌다.
+
+대부분 실험실 연구와 횡단자료이고 현장 종단연구는 적었다. 매몰비용의 독립
+효과도 프로젝트가 거의 끝났다는 정보와 섞이면 달라졌다. 힘들면 그만두라는
+결론이 아니다. 책임감과 이미 쓴 비용 때문에 새 정보를 무시하지 않도록
+재검토 절차를 결정 전에 두자는 근거다.
+
+정기 재검토일 전에도 바로 열어야 하는 신호가 있다. 건강과 안전, 생활비,
+돌봄, 체류 조건 같은 바닥이 깨졌을 때다. 약속받은 역할과 실제 일이 크게
+다르거나, 계속할수록 되돌리기 어려운 손실이 빠르게 커질 때도 기다리지 않는다.
+반대로 어려운 하루, 다른 선택지의 좋은 소식, 새 정보 없는 불안만으로 매번
+결정을 다시 열면 경험이 쌓이지 않는다.
+
+## 몰입 계약
+
+```text
+이번에 고른 한곳:
+여기서 확인하거나 만들 결과:
+몰입 구간:
+
+시작 행동:
+상황 ______가 오면 행동 ______를 한다.
+
+지킬 바닥:
+정기 재검토일:
+그때 볼 실제 근거:
+
+날짜를 기다리지 않고 다시 열 신호:
+- 건강·안전·생활 조건:
+- 역할과 약속의 중대한 변화:
+- 새로 확인된 기회비용:
+
+재검토일까지 하지 않을 비교:
+```
+
+몰입 계약은 선택을 옳다고 선언하는 문서가 아니다. 비교를 잠시 닫고 실제
+경험을 만들기 위한 약속이다. 재검토일에는 “아직 확신이 있는가”보다 무엇을
+배웠고, 바닥은 지켜졌고, 기회비용은 어떻게 달라졌는지 본다.
+
+탐색의 끝에서 필요한 것은 평생의 답이 아니다. 지금 가진 정보로 한곳을
+고르고, 제대로 해 볼 시간을 주고, 새 근거가 생길 때 다시 여는 일이다.
+결정했으면 한동안 돌아보지 마라. 대신 언제 무엇을 보고 돌아볼지는 결정하는
+날 함께 정해 둔다.
+
+---
+
+**출처.** [March (1991), “Exploration and Exploitation in Organizational
+Learning”](https://doi.org/10.1287/orsc.2.1.71), [Gollwitzer & Sheeran
+(2006), “Implementation Intentions and Goal Achievement”](https://doi.org/10.1016/S0065-2601(06)38002-1),
+[Sleesman et al. (2012), “Cleaning Up the Big Muddy”](https://doi.org/10.5465/amj.2010.0696)을
+참조했다. 전환 질문과 몰입 계약은 세 자료를 개인 선택에 제한적으로 적용한
+본문 도구다.
+
+# Ch.9 — 직업명 말고 하루 보기
+
+학과 이름과 채용 공고의 직무명은 진입할 문을 찾을 때는 쓸모가 있다. 문제는 그 이름만으로 문 안의 하루까지 알 수 없다는 데 있다. 같은 ‘소프트웨어 개발자’라는 직함 안에도 새 기능 설계, 장애 원인 조사, 고객사의 낡은 시스템과 새 서비스를 잇는 일이 함께 들어간다. ‘산업공학 엔지니어’도 생산계획, 품질, 비용, 물류, 자동화 가운데 어디에 놓이느냐에 따라 달력을 채우는 일이 달라진다.
+
+앞에서 만든 선택 전략은 직업 밖의 관계, 건강, 사는 곳에도 쓸 수 있다. 이 부에서는 대학생에게 가장 크고 낯선 사례인 직업을 실제 하루의 단위로 좁혀 본다.
+
+그래서 직업을 고를 때 먼저 물을 질문은 이것이다.
+
+> 직업명을 가리고 월요일부터 금요일까지의 일을 보여 줘도 나는 이 일을 고를까?
+
+미국 노동부의 O*NET은 이름, 과업, 작업 활동, 지식, 기술, 작업 맥락을 직업별로 나누어 보여 준다. 소프트웨어 개발자 항목에는 요구 분석, 설계, 수정, 시험, 문서화, 다른 사람과의 협업이 함께 나온다. 산업공학 엔지니어 항목에는 공정 관찰, 자료 분석, 비용 추정, 품질관리, 생산 조정, 현장 관계자와의 협의가 섞여 있다. ‘코딩을 좋아한다’거나 ‘최적화를 배우고 싶다’는 관심만으로는 실제 하루와 맞는지 아직 알 수 없다.
+
+## 하루를 이루는 과업, 사람, 책임
+
+직업을 조사할 때는 세 층을 나누어 보는 편이 좋다. 첫째는 실제로 맡는 과업이다. 코드를 쓰는가, 도면을 검토하는가, 장비를 측정하는가, 일정을 조정하는가. 둘째는 그 과업을 함께하는 사람이다. 혼자 집중하는 시간과 회의, 고객 응대, 현장 협의의 비율이 여기서 갈린다. 셋째는 결과가 어긋났을 때 지는 책임이다. 다시 계산하면 끝나는지, 밤에 복구해야 하는지, 생산을 세워야 하는지, 사람의 안전과 연결되는지에 따라 같은 과업의 무게가 달라진다.
+
+‘무엇을 만드나요?’만 물으면 보통 완성품 이야기를 듣는다. 그 답에는 기다리는 시간, 권한을 얻는 과정, 반복되는 점검, 일이 깨졌을 때의 대응이 빠지기 쉽다. 실제 하루를 알려면 다음을 함께 확인해야 한다.
+
+| 확인할 것 | 구체적으로 묻는 방식 | 답에서 찾을 단서 |
+|---|---|---|
+| 시간 | 지난주 달력에서 가장 오래 쓴 세 가지는 무엇이었나요? | 직무 설명과 실제 배분의 차이 |
+| 산출물 | 한 주가 끝날 때 무엇이 남나요? | 코드, 문서, 분석, 장비 상태, 의사결정 등 |
+| 협업 | 누구의 답을 기다려야 일이 진행되나요? | 의존 관계와 조정 비용 |
+| 실패 | 가장 자주 되돌아오는 일은 무엇인가요? | 검토, 수정, 장애, 민원, 재작업의 종류 |
+| 리듬 | 예정된 일과 갑자기 생기는 일의 비율은 어느 정도인가요? | 계획 가능성과 긴급 대응 부담 |
+
+이 표는 ‘좋은 직업’을 판정하지 않는다. 자신이 견딜 수 있는 반복과 피하고 싶은 책임을 드러내는 장치다. 긴 집중 시간이 필요한 사람에게 회의가 잦은 직무는 비용이 크다. 반대로 문제를 혼자 오래 붙드는 일이 답답한 사람에게는 조정과 현장 대응이 많은 일이 잘 맞을 수 있다. 두 업무 방식의 차이가 직업의 서열을 뜻하는 것은 아니다.
+
+## 공고에서 실제 일 복원하기
+
+채용 공고는 실제 일을 알아볼 첫 자료이지 최종 답은 아니다. 같은 제목 아래 서로 다른 일을 묶기도 하고, 회사가 바라는 미래의 역할을 현재의 일처럼 적기도 한다. 공고를 읽을 때 명사보다 동사를 표시해 보자. ‘플랫폼’, ‘혁신’, ‘AI’보다 설계한다, 검증한다, 배포한다, 조정한다, 보고한다가 하루에 더 가까운 정보다. 그다음 동사를 산출물과 연결한다. 무엇을 설계하고, 누가 검증하며, 보고서는 누구의 결정에 쓰이는가.
+
+처음에는 산업과 회사 규모가 다른 공고를 세 개쯤 놓고 직함의 범위를 본다. 여러 회사에서 거듭 나오는 동사는 직종에 가까운 단서다. 한 회사에서만 보이는 동사는 그 조직이나 제품에서 생긴 일일 가능성이 있다. 새 공고를 더 읽어도 반복되는 동사와 미확인 항목이 거의 바뀌지 않을 때까지 표본을 늘린다. 여기에 현직자 대화 한 번, 가능하면 작업 현장이나 공개된 업무 문서 하나를 더한다. 인터뷰 준비용 회사 소개를 넘어 실제 작업의 흔적을 찾는 것이다. 공개 저장소의 이슈와 코드 리뷰, 기술 블로그의 장애 회고, 제조 현장의 품질 절차, 직무별 포트폴리오 예시는 완벽하지 않지만 홍보 문구보다 구체적이다.
+
+## ‘하루 표본’ 직접 만들기
+
+관심 직무마다 아래 네 칸을 한 장에 적는다.
+
+1. **반복 과업:** 한 달 안에 여러 번 할 가능성이 큰 일 세 가지
+2. **주요 산출물:** 잘했는지 다른 사람이 확인할 수 있는 결과
+3. **의존 관계:** 일을 시작하거나 끝내려면 답을 받아야 하는 사람
+4. **문제가 생겼을 때:** 일정 지연, 재작업, 긴급 호출, 비용, 안전 문제 가운데 내가 책임지고 처리할 것
+
+빈칸은 추측으로 채우지 않고 ‘미확인’이라고 쓴다. 그 표시가 다음 질문이 된다. 두 직무를 비교할 때도 멋있어 보이는 산출물만 놓지 말고 반복 과업과 깨졌을 때의 일을 함께 놓는다. 입사 전에는 정확한 비율을 알기 어렵지만, 무엇을 모르는지는 알 수 있다.
+
+가능하면 두 명 이상에게 듣는다. 같은 직무라도 경력, 팀 규모, 산업, 제품의 성숙도에 따라 배분이 크게 달라진다. 신입에게 맡기는 일과 5년차가 하는 일도 다르다. ‘보통 하루’를 묻고 나서 ‘마감 직전’과 ‘아무 일 없는 주’가 어떻게 다른지도 물어야 평균에 가려진 변동이 보인다.
+
+## 자료가 말해 주지 못하는 것
+
+O*NET은 직업을 체계적으로 비교하기 좋은 공공 자료다. 직무 분석가의 정보, 직업 전문가와 종사자 자료를 결합해 과업과 작업 맥락을 정리한다. 다만 미국 노동시장의 직업 단위 자료이며, 특정 회사의 팀 문화나 한국의 고용 관행을 그대로 보여 주지 않는다. 하나의 직업 코드 안에서도 산업과 조직에 따른 차이가 크고, 빠르게 바뀌는 도구의 최신 사용 비율까지 보장하지 않는다.
+
+따라서 O*NET의 목록은 체크리스트의 시작점으로 쓴다. 한국의 채용 공고에서 반복 동사를 모으고, 실제 종사자에게 시간·산출물·의존 관계·실패 책임을 확인해 지원하려는 곳에서 실제로 보내는 하루를 다시 그려야 한다. 직업명은 검색어로 남겨 두되, 선택은 하루 표본을 보고 한다.
+
+---
+
+**출처.** [O*NET OnLine, Software Developers](https://www.onetonline.org/link/summary/15-1252.00), [O*NET OnLine, Industrial Engineers](https://www.onetonline.org/link/summary/17-2112.00)
+
+# Ch.10 — 만들기, 고치기, 운영하기
+
+엔지니어의 일은 완성품을 만드는 장면으로 자주 소개된다. 실제 제품과 시스템은 만든 뒤에도 계속 일을 만든다. 시험에서 놓친 문제를 찾고, 사용 환경이 바뀌면 수정하고, 장애가 나면 복구하고, 같은 문제가 되풀이되지 않게 관측 방법과 절차를 손본다. 이 과정은 신제품 개발의 주변부가 아니다. 오래 쓰이는 시스템일수록 고치고 운영하는 비중이 커질 수 있다.
+
+새로 만드는 시간이 적다고 덜 엔지니어다운 일인 것은 아니다. 무엇을 새로 만드는지뿐 아니라 이미 있는 것을 얼마나 오래 책임지는지 봐야 한다.
+
+## 개발 한 번보다 전체 수명주기 보기
+
+제품이나 설비의 수명주기를 일곱 동사로 펼쳐 보면 역할의 차이가 보인다.
+
+**정의한다 → 설계한다 → 구현한다 → 시험한다 → 내보낸다 → 관찰한다 → 복구하고 예방한다**
+
+한 사람이 전부 맡는 팀도 있고 단계마다 담당자가 갈리는 조직도 있다. 소프트웨어 개발자는 요구 분석과 설계, 수정, 시험을 함께 맡을 수 있다. 네트워크·시스템 관리자는 설치와 설정, 성능 관찰, 접근 권한, 장애 진단과 복구에 더 많은 시간을 쓴다. 메카트로닉스 기술자는 자동화 장비를 설치하고 시험하며, 고장 난 부품이나 제어 계통을 진단하고 유지한다. 이 셋은 모두 기술적인 판단을 하지만 결과물, 긴급성, 현장 접촉이 다르다.
+
+업무를 알아볼 때는 다음 ‘책임 경계표’를 채운다. 빈칸이 많을수록 면접이나 현직자 대화에서 물을 것이 남아 있다는 뜻이다.
+
+| 단계 | 내가 직접 하는 일 | 최종 승인자 | 문제가 나면 먼저 움직이는 사람 | 남는 기록 |
+|---|---|---|---|---|
+| 정의·설계 |  |  |  | 요구사항, 도면, 설계 기록 |
+| 구현·설치 |  |  |  | 코드, 부품, 설정, 작업 기록 |
+| 시험·출시 |  |  |  | 시험 결과, 검토 기록, 배포 기록 |
+| 관찰·복구 |  |  |  | 로그, 점검표, 장애 기록 |
+| 재발 방지 |  |  |  | 원인 분석, 자동화, 절차 변경 |
+
+표에는 ‘내가 참여한다’와 ‘내가 책임진다’를 따로 쓴다. 시험 회의에 참석하는 것과 합격 기준을 정하는 것은 다르다. 장애 원인을 분석하는 것과 새벽 호출을 받아 복구하는 것도 다르다. 책임 경계를 모르고 입사하면 기술 분야는 예상과 같아도 생활은 예상과 달라질 수 있다.
+
+## 빈 종이가 거의 없는 만들기
+
+새 제품을 만드는 일도 기존 제약에서 시작한다. 이미 팔린 제품과의 호환, 예산, 인증, 납기, 고객 데이터, 다른 팀이 관리하는 부품과 서비스가 있다. ‘그린필드’라고 불리는 일조차 인력과 일정, 선택한 도구, 운영 환경에서 완전히 자유롭지 않다. 반대로 유지보수에도 설계가 들어간다. 반복 장애를 줄이려고 모니터링을 다시 짜고, 교체하기 어려운 설비의 점검 순서를 바꾸며, 오래된 코드의 경계를 정리하는 일은 새로운 판단을 요구한다.
+
+만들기와 고치기를 창의성의 정도로 나누면 직무를 오해하기 쉽다. 더 유용한 구분은 문제의 시작점과 완료 조건이다. 만들기는 아직 없는 기능이나 성능을 정해진 조건 안에서 실현한다. 고치기는 관찰된 차이를 재현하고 원인을 좁혀 기대 상태로 되돌린다. 운영은 지금 정상인 시스템도 계속 정상일 수 있게 상태를 보고 대응한다. 예방은 같은 문제의 확률이나 피해를 줄이는 변경이다.
+
+각 일에는 다른 답답함이 있다. 만들기는 요구가 자주 바뀌거나 끝이 모호할 수 있다. 고치기는 원인이 자신이 통제할 수 없는 곳에 있거나 재현이 안 될 수 있다. 운영은 잘한 일이 눈에 띄지 않고, 예외 상황이 생활 시간에 침입할 수 있다. 어떤 답답함을 견딜 수 있는지는 관심 기술만큼 중요한 직업 조건이다.
+
+## 면접에서 물을 비율과 예외
+
+‘개발과 유지보수 비율이 어떻게 되나요?’라는 질문은 시작으로 좋지만 평균 하나만 받아서는 부족하다. 다음 순서로 좁혀 간다.
+
+1. 지난 분기에 팀이 낸 결과를 새 기능, 성능 개선, 결함 수정, 운영 자동화로 나누면 어느 쪽이 컸는가.
+2. 입사 첫 6개월에 신입이 맡는 일은 어느 단계인가.
+3. 정상 근무 밖의 대응이 있다면 빈도, 보상, 교대 방식은 어떻게 되는가.
+4. 장애 뒤에 원인 분석과 재발 방지를 할 시간이 실제로 배정되는가.
+5. 오래된 시스템을 바꾸지 못하게 하는 가장 큰 제약은 무엇인가.
+
+답의 숫자가 정확할 필요는 없다. 서로 다른 면접관이 비슷한 설명을 하는지, 구체적인 최근 사례를 말할 수 있는지가 더 중요하다. ‘상황에 따라 다르다’고 하면 어떤 상황에서 누가 결정하는지 한 번 더 묻는다. 특히 온콜, 현장 출동, 교대, 고객 대응은 공고에 짧게 적히거나 빠질 수 있으니 미확인으로 남겨 두지 않는다.
+
+## 대표 직무 자료의 범위
+
+O*NET의 직무 기술은 수명주기의 여러 지점을 비교하는 데 도움이 된다. 소프트웨어 개발자, 네트워크·컴퓨터 시스템 관리자, 메카트로닉스 기술자의 과업 목록을 나란히 놓으면 설계·시험·관찰·복구가 직업마다 어떤 비중과 형태로 나타나는지 볼 수 있다. 그러나 이 자료는 특정 회사의 업무 비율을 측정한 시간일지가 아니다. 직업 코드 안의 대표 과업을 모은 것이므로 ‘개발자는 설계, 관리자는 운영’처럼 사람을 단정하는 근거로 쓰면 안 된다.
+
+또한 한국의 근무시간, 교대 규칙, 외주 구조, 직급별 권한은 회사마다 따로 확인해야 한다. 공공 직무 자료로 수명주기 지도를 만들고, 지원할 조직의 최근 프로젝트와 면접 답으로 책임 경계를 덧그린다.
+
+직무를 비교하고 나면 마지막에는 제품명이 아니라 책임의 끝을 적는다. 출시까지인지, 안정화까지인지, 장애 복구와 재발 방지까지인지가 분명해야 그 일이 내 생활에 어디까지 들어오는지도 보인다.
+
+---
+
+**출처.** [O*NET OnLine, Software Developers](https://www.onetonline.org/link/summary/15-1252.00), [O*NET OnLine, Network and Computer Systems Administrators](https://www.onetonline.org/link/summary/15-1244.00), [O*NET OnLine, Electro-Mechanical and Mechatronics Technologists and Technicians](https://www.onetonline.org/link/summary/17-3024.00)
+
+# Ch.11 — 제약이 충돌할 때
+
+원하는 성능을 모두 얻을 수 있다면 선택은 계산 문제가 된다. 엔지니어가 실제로 마주치는 결정은 대개 그렇지 않다. 일정을 당기면 시험 시간이 줄어들 수 있고, 안전 여유를 크게 잡으면 비용이나 무게가 늘 수 있으며, 기능 추가가 운영 부담으로 이어질 때도 있다. ABET의 공학 교육 인증 기준도 공학 설계를 여러 제약 안에서 해법을 만드는 과정으로 설명한다. 공중보건과 안전, 복지뿐 아니라 세계적·문화적·사회적·환경적·경제적 요인을 고려하도록 요구한다.
+
+요구가 서로 충돌할 때 무엇을 반드시 지키고, 무엇을 바꿀 것인가. 개인의
+선택 기준은 3장에서 다뤘다. 여기서는 기술적 선택의 비용을 누가 언제 치르는지,
+어느 가정이 결론을 뒤집는지를 기준으로 범위를 좁힌다.
+
+## 요구사항의 지위 나누기
+
+모든 요구를 같은 줄에 세우면 협상하면 안 되는 것까지 점수로 거래하게 된다.
+법규와 안전 기준, 사용자의 기본 권리, 계약상 반드시 지킬 성능은 먼저
+분리한다. 이를 통과하지 못한 안은 비용이나 속도의 가중치를 조절해 살려
+내는 후보가 아니다.
+
+그 위에서 처리 속도, 정확도, 사용 편의, 납기, 유지보수성의 목표를 비교한다.
+비용에는 돈만 들어가지 않는다. 개발 시간, 운영자가 계속 쏟아야 하는 주의, 에너지, 복구
+난이도, 공급망 의존도도 자원이다. 아직 측정하지 않은 항목은 점수를 매기지
+말고 검증 방법부터 붙인다.
+
+공학 결정 기록에는 아래 다섯 줄이면 된다.
+
+| 확인할 것 | 물을 질문 | 남길 기록 |
+|---|---|---|
+| 규제·안전 제약 | 통과 여부를 무엇으로 검증하는가 | 적용 기준, 시험 결과, 미통과 항목 |
+| 목표 성능 | 좋아졌다고 판정할 값은 무엇인가 | 비교값과 측정 조건 |
+| 부담 주체와 시점 | 개발·운영·사용자 가운데 누가 언제 값을 치르는가 | 비용이 이동하는 경로 |
+| 결론을 뒤집는 경계값 | 어떤 값부터 다른 안이 유리한가 | 낙관·기준·비관 범위와 추가 시험 |
+| 결정권과 이의제기권 | 누가 승인하고 누가 문제를 다시 올릴 수 있는가 | 승인자, 검토자, 재검토 조건 |
+
+총점부터 내면 안전 1점과 비용 1점이 같은 뜻인 것처럼 보일 수 있다. 제약을
+먼저 통과시키고, 측정하지 않은 값은 작은 시험으로 보낸다. 남은 안에서는
+평균점보다 결론을 뒤집는 경계값과 비용의 이동을 본다.
+
+## 트레이드오프에서 값을 치르는 쪽
+
+기술적 선택은 여러 사람에게 같은 결과를 주지 않는다. 개발 기간을 줄인 결정의 비용을 나중에 운영자가 장애 대응으로 낼 수 있다. 제품 가격을 낮추면서 설치 절차가 복잡해지면 고객이나 현장 기술자가 시간을 쓴다. 계산 성능을 높이면서 에너지 소비를 늘리고 장비를 더 자주 교체하게 만들 수도 있다. ‘전체적으로 효율적’이라는 말만으로는 이 이동이 보이지 않는다.
+
+따라서 각 비용 옆에 부담 주체와 시점을 쓴다. 지금의 팀, 다음 분기의 팀, 사용자, 협력사, 지역사회 가운데 누구에게 가는가. 되돌리기 어려운 선택이라면 나중에 맡을 사람이 변경 권한을 잃지 않게 하고, 판단에 필요한 정보도 남겨야 한다. 결정 기록은 결정을 정당화하는 문서가 아니라, 당시 무엇을 알고 누구에게 어떤 부담이 갈 것으로 보았는지 나중에 점검할 자료다.
+
+불확실한 수치를 억지로 한 값으로 만들 필요도 없다. 낙관·기준·비관 범위를 두거나, 결과를 뒤집는 경계값을 찾는다. ‘배터리 수명이 이 값보다 짧으면 후보 B가 낫다’처럼 쓰면 추가 시험의 목적이 생긴다. 모든 불확실성을 없앤 뒤 결정하려 하면 일정이 선택을 대신한다. 결론에 영향을 주는 미확인 항목부터 줄이는 편이 낫다.
+
+## 회의에서 주장보다 가정 붙이기
+
+회의 전에는 후보를 많이 만드는 것보다 바닥과 결정권자를 확인한다. 회의에서는 찬반을 사람별로 받아 적는 대신 각 의견이 기대는 가정과 자료를 붙인다. 두 주장이 달라지는 조건은 무엇인가? 시험할 수 있으면 담당자와 기한을 정하고, 시험 비용이 결정 지연보다 크면 불확실성을 남긴 채 고르되 재검토 조건까지 기록해 둔다.
+
+결정 기록은 나중에 책임을 피하려고 만들지 않는다. 법규가 바뀌거나,
+예상한 사용량을 넘거나, 핵심 가정이 틀렸다는 자료가 들어오면 무엇을
+다시 검토할지 남긴다. 일반적인 재검토에는 8장의 몰입 계약을
+쓰되, 공학 결정에서는 안전 기준과 검증 결과를 재검토 신호로 삼는다.
+
+## 이런 결정을 직업으로 삼기
+
+ABET 문서는 미국의 공학 교육 프로그램을 인증하기 위한 기준이다. 실제 회사의 의사결정을 관찰한 연구도, 산업별 안전 표준도 아니다. 여기서는 공학 선택이 기술 성능 하나의 최적화가 아니라는 출발점만 가져왔다.
+
+진로를 고르는 사람에게 더 중요한 질문은 표를 완벽하게 채우는 법이 아니다. 서로 충돌하는 요구를 자주 다루는 일이 흥미로운가. 일정과 비용 때문에 포기할 것을 설명하고, 그 비용이 다른 사람에게 넘어가는지도 확인할 수 있는가. 자료가 부족해도 책임자를 정해 결정을 내리고, 안전이나 권리의 문제라면 다시 이의를 제기할 수 있는가.
+
+현직자에게는 최근에 성능·일정·비용이 충돌했던 결정 하나를 물어본다. 무엇을
+끝까지 지켰고 무엇을 포기했는지, 결과에 따른 책임을 누가 맡았는지가 답에
+나오면 그 자리에서 반복해 맡을 판단과 부담이 보인다. 기술이 흥미롭다는
+것만으로는 알기 어려운 직업 조건이다.
+
+---
+
+**출처.** [ABET, Criteria for Accrediting Engineering Programs, 2025–2026](https://www.abet.org/accreditation/accreditation-criteria/criteria-for-accrediting-engineering-programs-2025-2026/)
+
+# Ch.12 — 직업을 고를 때 같이 계산할 것
+
+직무 내용이 마음에 들어도 그 일을 담고 있는 조건이 맞지 않으면 오래 하기 어렵다. 급여는 중요하지만 혼자 움직이지 않는다. 계약의 안정성, 실제 근무시간, 통근, 근무 장소를 정할 권한, 예측하지 못한 호출, 휴가를 쓸 수 있는지, 아플 때 멈출 수 있는지가 한 묶음으로 생활을 만든다.
+
+연봉이 올라도 삶이 나빠질 수 있는 조건부터 물어야 한다. 막연히 ‘워라밸’을 묻기보다 조건을 항목별로 확인해야 답이 나온다. OECD의 직업 질 프레임워크는 일의 질을 소득의 질, 노동시장 안전성, 작업환경의 질로 나누어 본다. 많이 받는가, 일자리를 잃었을 때 얼마나 큰 위험을 지는가, 일을 하며 어떤 요구를 받고 어떤 자원을 쓸 수 있는가를 한 지표로 뭉개지 않는다. 개인의 구직에서도 이 구분이 쓸 만하다.
+
+## 제안서의 숫자를 한 주의 생활로 바꾸기
+
+입사 조건을 비교할 때는 ‘좋음/보통/나쁨’보다 **확정·변동·미확인**으로 적는다. 계약서와 사규에서 확인한 것은 확정, 성과나 배치에 따라 달라지는 것은 변동, 면접에서 답을 듣지 못한 것은 미확인이다.
+
+| 조건 | 확정된 것 | 변동하는 것 | 아직 물어볼 것 |
+|---|---|---|---|
+| 보상 | 기본급, 지급일, 고정 수당 | 성과급, 주식, 교대·출장 수당 | 산정 기준과 최근 지급 범위 |
+| 시간 | 소정근로시간, 휴일, 휴가 | 마감기 초과근무, 온콜, 교대 | 최근 팀의 실제 빈도와 보상 |
+| 장소 | 근무지, 출근 원칙 | 재택 허용일, 고객사·현장 배치 | 정책 변경 권한과 통근 범위 |
+| 안정성 | 계약 형태, 수습 조건 | 조직 개편, 프로젝트 종료 뒤 배치 | 평가 기준과 계약 종료 조건 |
+| 회복 | 휴가 일수, 병가 제도 | 휴가 승인, 업무 대체 가능성 | 팀에서 실제로 쉬는 방식 |
+| 생활 비용 | 정기 통근 여부, 이사 필요 여부 | 출장, 식비, 돌봄 비용 | 빈도와 본인 부담 범위 |
+
+총보상은 지급 조건을 기준으로 계산한다. 성과급 목표치와 실제 분포를 구분하고, 주식은 현금과 같은 칸에 넣지 않는다. 통근과 무급 대기, 정기적인 야간 대응은 주간 시간표에 올린다. 발생 빈도가 낮더라도 수면이나 주말 계획을 깨뜨린다면, 그 일에 쓰는 평균 시간보다 생활에 주는 부담이 클 수 있다.
+
+이 표의 목적은 모든 것을 돈으로 환산하는 데 있지 않다. 돈으로 보상받아도 바꾸고 싶지 않은 조건을 찾는 것이다. 예를 들어 거주지를 옮길 수 없는 기간, 밤에 반드시 쉬어야 하는 건강상의 이유, 돌봄 시간처럼 먼저 지켜야 할 바닥이 있다. 그다음에 선호를 비교한다. 재택근무가 좋은지 출근이 좋은지 일반적인 답을 찾기보다, 집중·협업·통근·경계 관리 중 내 생활에서 무엇이 달라지는지 본다.
+
+## 평균 효과와 내 근무표
+
+Gajendran과 Harrison은 원격근무에 관한 46개 연구, 12,883명의 자료를 메타분석했다. 원격근무는 지각된 자율성·직무만족·성과와 작은 양의 관련을 보였고, 역할 스트레스·이직 의도와는 음의 관련을 보였다. 동료 관계가 전반적으로 나빠진다는 결과는 없었다. 다만 포함 연구의 상당수는 관찰 자료라 원격근무 자체의 인과 효과만 떼어 내기 어렵고, 2007년 논문이라 오늘날의 상시 화상 협업과 팬데믹 이후 제도를 그대로 반영하지 않는다. 이 평균 효과가 개인의 행복을 보장하지는 않는다. 자율성, 원격근무 강도, 직무 특성에 따라 경험이 달라질 수 있다는 정도로 읽는다.
+
+근무시간은 더 단단한 바닥과 연결된다. WHO와 ILO가 여러 국가 자료를 결합해 산출한 질병 부담 추정에서는 주 55시간 이상 근무가 주 35~40시간 근무보다 뇌졸중과 허혈성 심장질환 위험 증가와 관련되었다. 이 결과는 개인의 이번 달 초과근무가 특정 질환을 일으킨다고 예측하는 실험이 아니다. 장시간 노동 노출과 건강 결과에 대한 관찰 연구, 상대위험, 국가별 노출 자료를 결합한 인구 수준 모형이다. 그렇더라도 상시 장시간 근무를 ‘성장 기회’ 한 항목으로만 처리하기 어렵다는 근거는 된다.
+
+한국에서 계약, 임금, 근로시간, 휴일에 관한 법적 바닥은 국가법령정보센터의 최신 「근로기준법」과 고용노동부의 근로계약서 안내에서 확인한다. 고용노동부의 표준 양식은 임금, 소정근로시간, 휴일, 연차유급휴가 등을 서면으로 분명히 적도록 안내한다. 법이 보장하는 기준과 회사가 실제로 운영하는 방식은 구분해야 한다. 포괄적인 회사 평판이나 익명 후기 한 건은 어느 쪽도 확정하지 못한다.
+
+## 제안을 받은 뒤의 확인 순서
+
+첫 단계는 서면 자료다. 근로계약서, 보상 제안서, 취업규칙에서 확인되는 것만 확정 칸으로 옮긴다. 계약과 보상은 채용 담당자에게, 팀의 실제 시간·장소·긴급 대응은 현업 면접관에게 묻는다. 질문을 누구에게 할지 나누면 ‘아마 그럴 것’이라는 답이 줄어든다.
+
+두 번째는 평시와 예외의 분리다. “보통 몇 시에 퇴근하나요?”에 이어 “지난 석 달 동안 늦게까지 일한 주는 몇 번이었고 무엇 때문이었나요?”라고 묻는다. 재택은 누가 승인하며 평가·승진에서 불이익이 없는지도 확인해야 한다. 온콜에서는 교대 인원부터 호출 빈도, 실제 복구 시간, 다음 날 휴식과 수당까지 묻는다.
+
+마지막에는 두 제안을 한 주 달력에 각각 넣어 본다. 일하는 시간과 통근, 회복, 공부나 관계에 남길 시간까지 실제 칸을 잡으면 연봉 차이가 무엇을 사고 무엇을 밀어내는지 보인다. 선택을 뒤집을 만한 미확인 조건은 서명 전에 답을 받아야 한다. 끝내 확인할 수 없다면 그 불확실성도 조건이다.
+
+OECD 프레임워크와 연구 결과는 빠뜨릴 조건과 위험의 방향을 알려 줄 뿐 특정
+회사의 생활을 대신 보여 주지는 않는다. 최신 법적 기준, 서면 계약, 지원 팀의
+최근 운영 자료로 미확인 조건을 줄이고, 그 결과를 앞서 그린 한 주 달력에
+반영한다. 잠과 통근, 관계, 회복에 남는 시간이 실제 조건이다.
+
+---
+
+**출처.** [OECD, *Measuring and Assessing Job Quality*](https://doi.org/10.1787/5jrp02kjw1mr-en), [Gajendran & Harrison, 2007, telecommuting meta-analysis](https://doi.org/10.1037/0021-9010.92.6.1524), [WHO/ILO, long working hours and disease burden](https://www.who.int/news-room/questions-and-answers/item/global-regional-and-national-burdens-of-ischemic-heart-disease-and-stroke-attributable-to-exposure-to-long-working-hours-for-194-countries-2000-2016), [국가법령정보센터, 「근로기준법」 제17조](https://www.law.go.kr/lsLinkCommonInfo.do?chrClsCd=010202&lsJoLnkSeq=1029728053), [고용노동부, 근로계약서 안내](https://moel.go.kr/mainpop2.do)
+
+# Ch.13 — 같은 직무, 다른 팀
+
+직무 설명이 같아도 팀이 바뀌면 실제 직업이 달라진다. 문제를 발견한 사람이 바로 실험하고 고칠 수 있는 팀이 있는가 하면, 작은 변경도 여러 승인을 기다리는 곳이 있다. 질문과 실수가 어떻게 처리되는지, 상사가 우선순위를 어떤 방식으로 정리하고 바꾸는지가 하루의 속도와 긴장을 결정한다.
+
+이 팀에 들어가면 일을 배우고 고칠 수 있을까, 눈치를 먼저 배우게 될까.
+
+팀을 ‘분위기가 좋다’는 한 문장으로 평가하지 말자. 자율성, 피드백, 심리적 안전, 상사의 역할을 각각 행동 증거로 확인할 수 있다.
+
+## 자율성과 방치 가르기
+
+Humphrey, Nahrgang, Morgeson은 259개 연구, 219,625명의 자료를 모아 직무 설계와 결과의 관계를 분석했다. 자율성, 과업의 중요성과 정체성, 직무 피드백 같은 동기적 특성은 만족, 몰입, 수행 등의 결과와 관련되었다. 사회적 지원과 상호의존 같은 사회적 특성도 별도의 설명력을 보였다. 직무 내용뿐 아니라 일을 조직하는 방식이 경험을 바꾼다는 근거다.
+
+다만 이 메타분석에는 횡단면·자기보고 연구가 많이 포함되어 있다. 자율성이 만족을 높였는지, 만족한 사람이 자율성을 더 크게 지각했는지 인과 방향을 모두 가려 내지는 못한다. 자율성이 언제나 많을수록 좋다는 결론도 아니다. 목표와 권한은 주지 않은 채 결과만 책임지게 하는 방치는 자율성과 다르다.
+
+면접에서는 “자율적인가요?” 대신 최근의 결정 하나를 묻는다.
+
+- 신입이 혼자 결정할 수 있는 변경과 반드시 검토받는 변경은 무엇인가.
+- 우선순위가 충돌하면 누가 정리하고, 그 결정은 어디에 남는가.
+- 필요한 장비·데이터·다른 팀의 협조를 얻는 데 어떤 절차가 있는가.
+- 일을 맡긴 뒤 중간 점검은 언제 하며, 막혔을 때 누구에게 올리는가.
+
+구체적인 경계와 지원 경로가 답에 나오면 자율성의 형태를 볼 수 있다. “알아서 하면 된다”만 반복되면 권한, 정보, 지원이 실제로 따라오는지 더 확인한다.
+
+## 심리적 안전을 발언 가능성으로 보기
+
+Frazier와 동료들의 메타분석은 117개 연구에서 나온 136개 독립 표본, 2만
+2천 명이 넘는 자료를 종합했다. 심리적 안전은 정보 공유, 학습 행동, 발언,
+수행 등과 관련되었고 리더 관계와 조직 지원 같은 선행 조건과도 연결되었다.
+여기서 심리적 안전은 갈등이 없거나 항상 친절하다는 뜻이 아니다. 대인관계상
+위험을 감수하고 질문, 우려, 실수를 말할 수 있다는 믿음에 가깝다.
+
+지원자의 짧은 면접만으로 팀의 심리적 안전을 측정할 수는 없다. 메타분석도 산업과
+측정 방식이 다양하고 자기보고·상관 설계가 많아, 높은 상관만으로 특정 팀의 안전을
+보장하지 않는다. 면접에서는 말하기 어려운 일이 처리된 흔적을 묻는다. “최근 신입이나
+주니어가 계획에 반대한 경우가 있었나요?”, “문제를 늦게 발견했을 때 누구에게 어떤
+순서로 알리나요?”, “최근 회고에서 실제로 바뀐 절차는 무엇인가요?”라는 질문이
+유용하다. 완벽한 성공담보다 반대 의견과 실수 이후의 절차를 구체적으로 설명하는지
+보고, 팀원 간 답의 일치와 공개된 회고·작업 절차도 함께 확인한다.
+
+## 피드백에서 양보다 방향 보기
+
+Kluger와 DeNisi는 131개 연구, 607개 효과크기, 23,663개 관측을 종합한 피드백 개입 메타분석에서 평균적으로 수행 향상을 보고했다. 동시에 3분의 1이 넘는 개입은 수행을 낮췄다. 피드백이 있다는 사실만으로 좋은 환경은 아니라는 뜻이다. 관심을 과업과 개선 방법으로 돌리는 피드백과, 사람의 자존감이나 비교 순위에만 시선을 붙드는 피드백은 같은 효과를 내지 않을 수 있다.
+
+피드백의 빈도를 확인한 뒤에는 아래 네 가지를 더 묻는다.
+
+1. 최근 코드, 설계, 보고서 가운데 무엇을 어떤 기준으로 고쳤는가.
+2. 평가 면담 전에도 수정할 기회가 있는가.
+3. 잘못된 피드백에 이의를 제기하거나 다시 검토받는 통로가 있는가.
+4. 칭찬과 질책을 넘어 다음 작업에서 달라져야 할 행동이 남는가.
+
+주간 1:1이 있다는 제도 설명보다 실제 산출물과 변경을 연결해 말하는 답이 낫다. 상사가 모든 기술 문제의 답을 알아야 하는 것은 아니지만, 우선순위를 정하고 필요한 자원을 연결하며 충돌을 처리할 책임은 확인해야 한다.
+
+## 팀 면접용 증거 카드
+
+면접이 끝난 직후 기억이 섞이기 전에 네 줄만 쓴다.
+
+**결정권:** 내가 맡을 수 있는 결정과 검토 경계가 구체적이었는가.  
+**말하기:** 반대·질문·실수를 다룬 최근 행동이 나왔는가.  
+**피드백:** 기준, 시점, 수정 기회가 연결되어 있었는가.  
+**상사:** 우선순위, 자원, 갈등을 누가 어떻게 처리하는가.
+
+각 줄에는 인상 대신 들은 말이나 관찰한 절차를 적고, 근거가 없는 칸은
+미확인으로 둔다. 지원자가 만나는 면접관은 팀 전체의 표본이 아니며 채용
+상황에서는 좋은 면을 보여 주려 한다. 가능하면 직속 상사, 함께 일할 동료,
+최근 입사자에게 같은 질문을 조금씩 바꾸어 묻자. 한 사람만 만날 수 있다면
+추가 면담이나 서면 답변을 요청하고, 답을 얻지 못한 항목은 입사 뒤 확인할
+목록으로 넘긴다. 답이 다를 때는 역할과 경력에 따라 경험이 갈리는지부터
+확인한다.
+
+경고 신호도 추상적인 인상보다 구조에서 찾는다. 우선순위가 자주 바뀌는데 변경권자가 누구인지 아무도 말하지 못하거나, 검토 기준이 사람마다 달라 결과를 예측할 수 없거나, 문제 보고가 평가상 불이익으로 바로 연결된다면 입사 뒤 개인의 노력만으로 고치기 어렵다. 반대로 현재 문제가 있어도 담당자와 변경 절차, 최근 개선 사례를 설명할 수 있다면 판단할 자료가 생긴다. 판단 대상은 문제를 발견하고 수정하는 통로의 작동 여부다.
+
+이 증거 카드는 세 메타분석의 구분을 채용 조사에 옮긴 도구이며, 좋은 팀을
+판별한다고 검증된 검사는 아니다. 입사 뒤 일을 배우고 문제를 고치는 데
+필요한 구조가 있는지 확인하는 데 쓴다. 직무가 흥미로워도 결정권 없이 책임만
+지거나, 문제를 말할 통로가 없거나, 피드백이 평가일에만 몰리면 그 조건은
+직업 선택표에 따로 올라가야 한다.
+
+---
+
+**출처.** [Humphrey, Nahrgang, & Morgeson, 2007, work design meta-analysis](https://doi.org/10.1037/0021-9010.92.5.1332), [Frazier et al., 2017, psychological safety meta-analysis](https://doi.org/10.1111/peps.12183), [Kluger & DeNisi, 1996, feedback interventions meta-analysis](https://doi.org/10.1037/0033-2909.119.2.254)
+
+# Ch.14 — 엔지니어의 여러 경로
+
+‘엔지니어가 되고 싶다’는 방향만으로는 어느 하루를 원하는지 정해지지 않는다. 제품 기능을 만드는 사람, 서비스와 설비가 멈추지 않게 지키는 사람, 공정과 현장을 개선하는 사람, 아직 답이 없는 기술을 검증하는 사람, 여러 사람의 일을 묶어 결과를 내는 사람은 모두 엔지니어링 조직에 있을 수 있다. 경력 중에 한 경로에서 다른 경로로 옮기기도 한다.
+
+경로를 비교할 때에는 ‘어떤 기술을 좋아하는가’보다 ‘어떤 결과를 반복해서
+책임지고 싶은가’라는 질문이 더 오래 남는다.
+
+경로 이름은 회사마다 다르다. 다음 다섯 경로는 서로 다른 일을 조사할 범위를 잡아 준다.
+
+| 경로 | 반복되는 일 | 잘했을 때 남는 것 | 미리 확인할 숨은 조건 | 진입 전에 만들 수 있는 신호 |
+|---|---|---|---|---|
+| 제품·기능 | 요구를 해석하고 설계·구현·시험 | 사용 가능한 기능, 제품 성능, 변경 기록 | 고객이나 사용자의 반응을 확인하기까지 거치는 단계, 출시 주기, 기존 코드·부품 | 작동하는 작은 제품과 선택 기록 |
+| 인프라·운영 | 상태를 관찰하고 장애를 복구·예방 | 가용성, 자동화, 복구 절차, 용량 계획 | 온콜, 권한, 장애 뒤 개선 시간 | 배포·관측·복구가 포함된 서비스 운영 |
+| 현장·공정 | 장비와 흐름을 측정하고 설치·개선 | 수율, 품질, 안전, 처리시간, 작업 표준 | 교대·출장, 생산 중단 비용, 작업자 협의 | 실제 공정 자료 분석이나 장비 시험 기록 |
+| R&D | 가설을 세우고 실험·분석해 불확실성을 줄임 | 재현 가능한 결과, 프로토타입, 특허·논문·기술 이전 | 성공 기준, 결과가 나오기까지 걸리는 시간, 제품과의 연결, 학위 요구 | 기존 결과 재현과 실패 조건이 적힌 실험 |
+| 기술 관리 | 우선순위와 자원을 정하고 사람 사이를 조정 | 팀 결과, 인력 성장, 위험 관리, 의사결정 | 직접 만드는 시간 감소, 평가·채용·갈등 책임 | 작은 팀의 일정·검토·회고 운영 경험 |
+
+표의 경계는 겹친다. 제품 엔지니어도 운영을 맡고, 현장 엔지니어도 연구 실험을 하며, 관리자가 중요한 기술 판단에 참여한다. 회사가 ‘R&D’라고 부르는 조직이 단기 고객 개발을 할 수도 있고, ‘개발’ 팀이 장기 탐색을 할 수도 있다. 이름보다 반복되는 일, 산출물, 실패 책임을 확인해야 한다.
+
+## 제품과 인프라: 바뀌는 속도와 책임지는 기간
+
+제품·기능 경로는 사용자가 겪을 변화에 가까이 있다. 요구를 해석하고 설계·구현·시험을 거쳐 내보내며, 사용자 반응과 사업 우선순위에 따라 다시 고친다. 새 결과가 눈에 보이는 대신 요구 변경, 일정, 기존 시스템과의 호환이 일을 흔든다. ‘만드는 일’만 기대했다면 리뷰, 문서화, 결함 수정, 출시 조정의 비중을 확인해야 한다.
+
+인프라·운영 경로는 다른 사람이 일을 계속할 수 있는 바닥을 책임진다. 네트워크, 컴퓨팅 자원, 생산 설비, 배포 체계, 관측 도구가 대상이 될 수 있다. 정상 상태에서는 일이 잘 보이지 않고, 이상 상태에서는 즉시성이 커진다. 장애 대응 권한 없이 호출만 받는지, 복구 뒤 원인 제거에 시간을 쓰는지에 따라 같은 운영 직무의 질이 달라진다.
+
+O*NET의 소프트웨어 개발자와 네트워크·시스템 관리자 과업은 이 차이를 살펴볼 출발점이다. 다만 직업 코드의 대표 목록이라 실제 팀의 개발·운영 경계를 알려 주지는 않는다.
+
+## 현장·공정: 기술과 물리적 흐름
+
+현장·공정 경로에서는 모델과 도면이 실제 장비, 작업 순서, 공급망, 안전 규칙과 부딪힌다. 산업공학 엔지니어의 대표 과업에는 생산 흐름 분석, 품질관리, 비용 추정, 공정 개선, 관계자 협의가 들어가며, 메카트로닉스 기술자는 자동화 장비를 설치·시험하고 고장을 진단한다. 결과가 생산량이나 불량률로 빠르게 보이는 장점이 있는 한편 설비를 멈출 수 있는 시간과 현장 접근성이 실험을 제한한다.
+
+이 길을 볼 때 ‘하드웨어를 좋아한다’만으로는 부족하다. 현장 출입과 교대, 소음·안전 장비, 지역 배치, 생산 일정에 맞춘 작업, 숙련 작업자와의 의사소통이 생활에 맞는지 묻는다. 기술적 정답이 있어도 공정을 세울 수 없다면 적용 순서를 다시 설계해야 한다.
+
+## R&D와 기술 관리: 결과의 단위
+
+R&D는 여러 경로 중 하나다. 답이 정해지지 않은 문제에서 가설과 실험으로 불확실성을 줄인다. 논문과 특허가 산출물인 조직도 있고, 제품팀이 채택할 프로토타입이나 측정법이 결과인 조직도 있다. 연구라는 이름보다 성공 기준, 결과가 나오기까지 걸리는 시간, 제품·현장으로 넘기는 방식, 실패한 실험이 어떻게 평가되는지를 확인한다. 컴퓨터·정보 연구과학자에 대한 O*NET 자료는 연구 문제 설정, 실험, 분석, 결과 발표 등의 대표 과업을 보여 주지만 기업 R&D 전체를 대표하지 않으며 학위 요구도 분야와 조직마다 다르다.
+
+기술 관리는 자신이 만든 한 산출물보다 팀 전체의 결과를 책임지는 쪽으로 무게가 이동한다. O*NET의 건축·엔지니어링 관리자 항목에는 계획, 예산, 인력, 기술 활동 조정이 함께 나온다. 회의가 늘어난다는 피상적인 차이보다 채용, 성과 피드백, 갈등, 우선순위와 위험을 결정하는 책임이 핵심이다. 기술을 잘하는 것과 사람의 일을 운영하는 것은 겹치지만 같은 능력은 아니다. 관리자가 되면 승진한 것이라는 단선적인 경로도 모든 조직에 맞지 않는다.
+
+## 경로마다 한 사이클 비교하기
+
+공고의 동사와 하루의 시간표는 9장, 출시 뒤 책임은 10장의 표로 조사할 수
+있다. 여기서는 그 자료를 다시 모으기보다 경로마다 일의 시작과 끝이 어디인지
+나란히 놓는다. 제품은 요구에서 사용자 반응까지, 인프라는 배포에서 관찰·복구까지,
+현장은 측정에서 개선 전후 비교까지, R&D는 가설에서 재현 가능한 결과까지,
+관리는 계획에서 검토와 회고까지를 한 사이클로 볼 수 있다.
+
+모든 사이클을 직접 해 볼 수 있는 것은 아니다. 실제 설비, 온콜, 인사평가에는
+학생이 접근하기 어렵고 함부로 흉내 내서도 안 된다. 이때에는 직접 경험을
+대신할 자료나 과제를 찾는다.
+공개된 장애 회고에서 관찰·복구·예방의 연결을 추적하고, 공정 자료나 캡스톤에서
+개선 전후와 인계를 기록하며, 동아리나 팀 프로젝트에서는 계획·검토·회고까지
+맡아 볼 수 있다. R&D는 기존 결과를 재현하면서 실패 조건을 남긴다.
+
+공공 직무 분류는 경로를 설명할 어휘와 대표 과업을 제시하지만 한 회사 안의 이동 가능성, 보상, 팀 문화, 한국의 자격·학위 관행을 판정하지 못한다. 서로 다른 직업 코드의 응답 자료를 직접 우열처럼 비교해서도 안 된다. 경로 표로 조사 범위를 만들고, 실제 공고와 사람, 작은 실행으로 자신이 책임지고 싶은 결과를 좁힌다.
+
+두 경로를 고른 뒤에는 각 사이클에서 끌리는 시작점만 보지 않는다. 끝까지
+반복해도 괜찮은 일, 실패했을 때 떠맡을 책임, 실제로 접근하지 못해 여전히
+모르는 단계를 적는다. 결과물의 완성도보다 책임의 범위를 보고, 내가 반복해서
+맡을 결과를 고른다.
+
+---
+
+**출처.** [O*NET OnLine, Software Developers](https://www.onetonline.org/link/summary/15-1252.00), [O*NET OnLine, Network and Computer Systems Administrators](https://www.onetonline.org/link/summary/15-1244.00), [O*NET OnLine, Industrial Engineers](https://www.onetonline.org/link/summary/17-2112.00), [O*NET OnLine, Computer and Information Research Scientists](https://www.onetonline.org/link/summary/15-1221.00), [O*NET OnLine, Architectural and Engineering Managers](https://www.onetonline.org/link/summary/11-9041.00)
+
+# Ch.15 — 넓게 볼 때와 깊게 팔 때
+
+아는 도구가 많다고 폭이 넓은 것은 아니다. 같은 튜토리얼을 여러 언어로 따라 한 경험은 서로 다른 이름만 남길 수 있다. 한 도구를 오래 썼다고 깊이가 저절로 생기지도 않는다. 익숙한 문제만 반복했다면 사용 시간은 늘어도 낯선 조건에서 맡길 만한 능력인지는 알 수 없다. 넓이와 깊이는 이력서의 항목 수와 경과 시간이 아니라, 풀 수 있는 문제의 범위와 결과의 신뢰도로 확인해야 한다.
+
+지금 배우는 것들은 서로 연결되고 있으며, 그중 하나는 남에게 맡길 만큼 깊어지고 있는가. 7장과 8장에서는 작은 탐색에 변이를 넣고 언제 한곳에 시간을 쓸지 다뤘다. March의 탐색과 활용도 그 전환을 설명하는 언어로 이미 썼다. 이 장에서는 방향을 다시 고르지 않는다. 한동안은 고른 경로 안에서 어떤 능력을 넓히고, 무엇을 깊게 만들 것인지 본다.
+
+## 폭을 도구 목록보다 연결로 보기
+
+능력의 폭은 전혀 다른 것을 많이 건드리는 방식으로만 생기지 않는다. 하나의 결과를 끝내기 위해 인접한 일을 연결할 때도 넓어진다. 센서 자료를 분석한다면 측정 조건을 이해하고, 코드를 검증하고, 다른 사람이 결과를 재현할 기록까지 남겨야 한다. 제품 기능을 만든다면 요구를 해석하고, 구현하고, 시험하고, 배포 뒤의 반응을 읽는 일이 이어진다. 어느 한 단계만 할 줄 알 때보다 앞뒤 단계의 입력과 실패 조건을 아는 편이 협업 범위를 넓힌다.
+
+폭을 확인할 때는 다음 세 종류를 나눠 적는다.
+
+- **중심 능력:** 지금 결과의 품질을 직접 책임질 수 있는 일
+- **인접 능력:** 중심 능력의 입력을 이해하거나 결과를 다음 사람에게 넘기는 일
+- **공통 능력:** 다른 문제에서도 쓰이는 측정, 디버깅, 설명, 조정 방식
+
+항목을 많이 채우는 것이 목적은 아니다. 각 능력이 실제 산출물에서 어떻게 연결됐는지를 적어야 한다. “Python, C++, ROS를 안다”보다 “센서 로그의 오류를 찾고, 수정 전과 후에 각각 시험해, 다른 사람이 다시 돌릴 수 있게 남겼다”가 범위를 더 잘 보여 준다. 새 도구를 배울 때도 중심 능력과 어떤 연결을 만들지 설명하지 못하면 목록을 늘리는 일인지, 문제 범위를 넓히는 일인지 아직 알 수 없다.
+
+## 깊이를 반복의 구조로 만들기
+
+Macnamara와 동료들의 메타분석에서 의도적 연습은 수행 차이의 일부를 설명했지만 크기는 분야마다 달랐고, 수행 전체를 설명하지 않았다. 2018년 정정에서 전체와 분야별 추정치가 바뀌었어도 이 결론은 유지된다. 포함 연구에는 과거 연습 시간을 회상한 자료가 많고 의도적 연습의 정의도 연구마다 달랐다. “오래 연습하면 전문가가 된다”거나 반대로 “연습은 별 소용이 없다”는 근거가 아니다.
+
+한 능력을 깊게 만들려면 같은 형식의 성공을 복사하기보다 반복할 때마다 확인할 조건이 있어야 한다.
+
+1. **수행을 동사로 정한다.** 분야명 대신 무엇을 어느 조건에서 해낼지 쓴다.
+2. **결과를 남긴다.** 코드, 설계, 분석, 시험 기록처럼 다른 사람이 확인할 산출물을 만든다.
+3. **피드백을 앞당긴다.** 완성 뒤 총평만 받지 말고 오류가 굳기 전에 테스트, 검토자, 사용자 반응을 연결한다.
+4. **조건을 바꿔 반복한다.** 자료, 규모, 시간 제약, 인터페이스 가운데 하나를 바꾸어 같은 원리가 작동하는지 본다.
+5. **수정 전후를 비교한다.** 무엇이 나아졌고 어떤 오류가 남았는지 기준에 따라 기록한다.
+
+Dunlosky와 동료들이 학생 학습 기법을 검토한 연구에서는 연습 시험과 분산 연습이 여러 조건에서 높은 효용을 보였다. 읽은 내용을 덮고 설명하거나 문제를 다시 풀고, 간격을 두고 확인하는 공부에는 직접 쓸 수 있다. 다만 학생의 기억과 시험 수행을 다룬 자료다. 설계 판단, 현장 대응, 팀 협업 전체가 같은 효과를 보인다는 뜻은 아니다. 직무 능력에서는 공부한 내용을 실제 산출물과 피드백으로 이어 붙여야 한다.
+
+## 깊이를 드러내는 외부 기준
+
+혼자 정한 완료 기준만 쓰면 익숙함을 실력으로 오해하기 쉽다. 능력마다 결과가 기준을 통과했는지, 수정이 필요한지 판단할 외부 기준을 하나 이상 둔다. 소프트웨어라면 테스트와 실제 사용 조건, 설계라면 요구사항과 안전 여유, 분석이라면 재현과 새로운 자료, 문서라면 다른 사람이 설명 없이 실행할 수 있는지가 기준이 될 수 있다. 공개 점수나 자격증만 외부 기준인 것은 아니다. 구체적인 규격, 검토자의 반례, 사용자의 실패 기록도 판단 자료가 된다.
+
+다음 ‘능력 포트폴리오’는 폭과 깊이를 한 장에서 확인하는 도구다.
+
+| 능력 | 맡아 해낼 수 있는 일 | 반복한 산출물 | 외부 기준·피드백 | 다음 전이 시험 |
+|---|---|---|---|---|
+| 중심 | 결과 품질을 직접 책임질 일 | 같은 원리를 여러 조건에서 적용한 기록 | 테스트, 규격, 사용자, 검토자 | 자료·규모·제약 하나를 바꾼 과제 |
+| 인접 | 입력을 이해하거나 결과를 넘길 일 | 앞뒤 단계와 연결한 기록 | 다음 단계 담당자의 수정·재작업 | 다른 도구나 팀과의 인터페이스 |
+| 공통 | 여러 문제에서 다시 쓸 방식 | 측정·디버깅·설명·조정의 반복 | 새 문제에 적용했을 때 드러난 반례 | 낯선 분야의 작은 실제 과제 |
+
+빈칸은 다음에 무엇을 배울지 보여 준다. 중심 능력의 산출물이 한 번뿐이면 비슷한 문제를 다시 풀어 본다. 반복은 많지만 외부 기준이 없으면 검토자를 찾거나 테스트를 만든다. 한 환경에서만 성공했다면 다음에는 조건 하나를 바꾼다. 모든 칸을 동시에 채우지 않고, 현재 결과를 막는 빈칸 하나를 고른다. 이 표는 이 장에서 나눈 능력의 연결과 연습·피드백 질문을 한데 모은 저자 도구다. 훈련 효과를 검증한 양식은 아니다.
+
+## 전이를 새 조건에서 시험하기
+
+배운 것이 옮겨 가는지는 새 도구를 설치했다는 사실로 알 수 없다. 같은 원리를 다른 자료, 장비, 사용자, 시간 압력에서 적용해 보아야 한다. 전이 시험이 실패했다면 중심 원리를 이해하지 못했는지, 새 환경의 입력을 읽지 못했는지, 결과를 넘기는 방식이 깨졌는지를 나눈다. 이때 무엇을 바꿔 다시 시험할지는 다음 장의 실패 디버깅으로 이어진다.
+
+폭과 깊이에는 보편적인 비율이 없다. 수업, 생계, 맡은 프로젝트에 따라 당장 중심 능력에 대부분의 시간을 써야 할 수도 있다. 폭은 내가 다룰 수 있는 문제와 협업의 경계를 실제로 넓히는가. 깊이는 낯선 조건에서도 외부 기준을 통과하는 결과를 반복해서 내는가. 두 질문에 답할 자료가 능력 포트폴리오에 남아야 한다.
+
+---
+
+**출처.** [March, 1991, exploration and exploitation](https://doi.org/10.1287/orsc.2.1.71), [Macnamara, Hambrick, & Oswald, 2014, deliberate practice meta-analysis](https://doi.org/10.1177/0956797614535810), [Macnamara, Hambrick, & Oswald, 2018, corrigendum](https://doi.org/10.1177/0956797618769891), [Dunlosky et al., 2013, learning techniques review](https://doi.org/10.1177/1529100612453266)
+
+# Ch.16 — 실패 디버깅하기
+
+시도가 실패하면 설명을 크게 만들기 쉽다. 시험에 떨어졌으니 재능이 없고, 만든 것이 쓰이지 않았으니 아이디어가 나빴으며, 발표에서 막혔으니 이 일을 할 사람이 아니라는 식이다. 사람 전체를 원인으로 쓰면 다음 시도에서 무엇을 바꿔야 할지 알 수 없다. 실패를 디버깅한다는 말은 피해를 좋게 해석하자는 뜻이 아니다. 관찰된 결과에서 원인 후보를 만들고, 다음에 판별할 수 있는 크기로 줄이자는 뜻이다.
+
+이번 실패를 설명하는 가설 가운데 다음 시도에서 하나라도 가려낼 수 있어야 한다.
+
+## 실패의 크기 먼저 제한하기
+
+모든 실패를 환영할 수는 없다. 안전, 건강, 생계, 개인정보, 법적·윤리적 의무를 깨는 실패는 학습비로 미화하지 않는다. 큰 피해를 막는 바닥을 세운 다음, 되돌릴 수 있고 비용이 제한된 범위에서 시도한다.
+
+지원할 직무를 알아볼 때는 바로 퇴사하기 전에 짧은 프로젝트와 직무 인터뷰를 해 볼 수 있다. 새로운 기술은 복제된 자료나 작은 사용 사례에서 먼저 시험한다. 발표 방식을 바꿀 때도 중요한 평가 한 번에 처음 적용하기보다 낮은 비용의 연습에서 반응을 본다. 실패해도 되는 범위를 설계해야 여러 가설을 시험할 수 있다.
+
+시작 전에는 세 줄을 적는다.
+
+- **지킬 바닥:** 사람과 시스템에 허용하지 않을 피해
+- **쓸 수 있는 비용:** 시간, 돈, 평판, 피로의 한도
+- **중단 신호:** 더 진행하면 배움보다 피해가 커지는 관찰값
+
+이 기록은 불편하면 무조건 멈추거나, 이미 쓴 비용 때문에 시도를 계속 끌고 가는 일을 줄인다. 중단 신호가 나타나면 자료를 더 얻을 수 있더라도 시험을 끝낸다.
+
+## 결과를 원인 가설로 바꾸기
+
+4장에서는 결과 편향을 피하려고 당시의 결정 과정과 나중의 결과를 나눠 읽었다. 여기서는 결과를 연 뒤의 작업에 집중한다. 무엇이 실패했는지 관찰하고, 그 결과와 함께 참일 수 있는 원인을 둘 이상 적는다. 한 번의 결과만으로 원인을 확정하지 않는다.
+
+원인 후보는 우선 다섯 곳에서 찾을 수 있다.
+
+| 후보 | 확인할 질문 | 관찰의 예 |
+|---|---|---|
+| 준비 | 필요한 자료·전제·연습이 빠졌는가 | 시작 전에 없었던 정보, 뒤늦게 발견한 요구 |
+| 기술 | 수행 방법을 몰랐거나 반복 가능한 수준이 아니었나 | 특정 단계의 오류, 조건이 바뀔 때 무너진 수행 |
+| 환경 | 시간·장비·자료·생활 조건이 결과를 바꿨나 | 지연, 장비 차이, 수면·통근 변화와 함께 생긴 변동 |
+| 조정 | 인계·권한·의사소통이 끊겼나 | 기다린 승인, 서로 다르게 이해한 역할, 누락된 전달 |
+| 평가 | 성공 기준이나 측정 방법을 잘못 알았나 | 평가자가 본 기준과 준비한 기준의 차이, 측정 누락 |
+
+이 분류는 원인을 찾기 시작할 위치를 정해 준다. “기술이 부족했다”와 “평가 기준을 잘못 읽었다”가 동시에 가능할 수 있다. 각 가설 옆에 **뒷받침하는 관찰**과 **반대되는 관찰**을 하나씩 적는다. 잘된 단계를 보면 기술 부족 가설의 범위가 줄어든다. 같은 조건에서 다른 사람이 성공한 기록은 환경 가설을 좁힐 수 있다. 자료가 전혀 없는 원인은 그럴듯해도 다음 시도의 출발점으로 삼지 않는다.
+
+## 다음에 한 변수만 바꾸기
+
+가설을 고른 뒤에는 무엇을 바꾸면 가장 적은 비용으로 그 가설을 가려낼 수
+있을지 정한다. 지원 결과가 나빴다고 직무, 회사, 포트폴리오, 자기소개, 면접 준비를 한꺼번에 바꾸면 다음 결과가 달라져도 이유를 알 수 없다. 먼저 관찰이 가장 많고 결과를 뒤집을 가능성이 큰 가설 하나를 고른다. 나머지 조건을 가능한 한 유지하고 한 변수를 바꾼다.
+
+다음 ‘실패 디버깅 카드’를 쓸 수 있다.
+
+**관찰된 실패:** 무엇이 언제 기대와 달랐는가.  
+**원인 가설:** 준비·기술·환경·조정·평가 중 어디를 의심하는가.  
+**지지 관찰:** 이 가설이 맞다고 보는 자료는 무엇인가.  
+**반증 관찰:** 맞지 않을 수 있음을 보여 주는 자료는 무엇인가.  
+**한 변수 변경:** 다음 시도에서 무엇 하나만 다르게 할 것인가.  
+**판별값:** 어떤 결과가 나오면 가설을 약하게 하거나 버릴 것인가.  
+**중단 신호:** 더 시험하지 않을 피해와 비용의 경계는 무엇인가.
+
+직무와 생활의 시도는 실험실처럼 조건을 완전히 통제할 수 없다. 한 변수만 바꾼다는 규칙도 인과를 증명하지 않는다. 다만 여러 가지를 동시에 바꿔 아무것도 배우지 못하는 일을 줄인다. 다음 결과가 같으면 가설을 지지하는 자료가 하나 늘어난다. 다르게 나오면 변경한 조건 외에 함께 달라진 것이 없는지 먼저 확인한다.
+
+## 오류관리훈련과 디브리핑이 말하는 범위
+
+Keith와 Frese는 오류관리훈련 연구 24개, 참가자 2,183명을 메타분석했다. 오류를 피하는 절차만 가르치기보다, 훈련 중 오류를 탐색하고 오류 뒤의 전략을 배우게 한 방식은 평균적으로 유리했다. 전체 평균은 `d = 0.44`였고 훈련 중 수행보다 훈련 뒤 전이에서 효과가 컸다. 특히 훈련 과제와 **구조가 다른 새로운 과제**로의 적응적 전이(adaptive transfer)에서 이점이 컸다. 과제가 단순히 더 어려웠다는 뜻은 아니다.
+
+이 연구는 주로 통제된 기술 훈련과 직무 훈련을 다뤘다. 실제 경력의 해고, 건강 악화, 큰 금전 손실을 실험한 것이 아니다. 실패를 많이 겪을수록 좋다는 근거로 쓰면 안 된다. 여기서 가져올 것은 피해가 제한된 훈련에서 오류를 드러내고 처리 전략을 연습한다는 원칙이다.
+
+Tannenbaum과 Cerasoli는 사후 검토와 디브리핑을 다룬 31개 연구의 46개 독립 표본, 개인·팀·집단을 합친 2,136개 분석 단위를 메타분석했다. 평균 효과는 `d = 0.67`이었지만, 포함 자료에는 무작위 배정이 없는 준실험이 많아 인과 해석에 주의해야 한다. 연구 맥락과 디브리핑 방식도 다양했다.
+
+메타분석은 참여자가 능동적으로 관여하고, 평가나 처벌보다 개선을 목적으로
+삼으며, 구체적인 사건과 여러 사람이 제공한 정보나 객관적 자료를 검토한 경우를
+디브리핑으로 포함했다. 이름만 ‘회고’인 대화가 모두 이에 해당하는 것은 아니며,
+혼자 쓰는 일기는 이 연구의 정의에서 제외됐다. 이 연구는 진로 선택에 직접
+적용한 실험도 아니다. 실패 디버깅 카드는 이 구조를 개인의 작은 시도에 옮긴
+저자 도구다. 진로에서의 효과는 별도로 검증되지 않았다.
+
+## 반복 실패에서 문제 정의 다시 열기
+
+한 변수를 바꿔 다시 했는데 같은 지점에서 깨지면 노력의 양만 늘리지 않는다. 관찰 장치가 부족한지, 성공 기준이 모호한지, 애초에 풀 문제를 잘못 잡았는지 확인한다. 실제 사용 환경이나 피드백을 줄 사람이 없어 가설을 구분하지 못할 수도 있다. 이때는 판별할 수 없는 시험을 끝내고 문제 정의로 돌아간다.
+
+반대로 한 번의 거절이나 낮은 점수로 경로 전체를 닫지 않는다. 표본 하나가 말해 주는 범위와 평가 기준을 따로 본다. 같은 실패가 반복되더라도 지지 관찰과 반증 관찰이 쌓이지 않는다면 횟수보다 측정 방법을 먼저 고친다.
+
+회고의 마지막 줄에는 큰 교훈을 쓰지 않는다. 남길 것은 아직 살아 있는 원인 가설, 다음 시도에서 바꿀 한 변수, 판별값, 중단 신호다. 다음 결과가 나오면 이 기록을 다시 읽고 가설을 약하게 하거나 버린다. 이렇게 남긴 실패는 수정 가능한 작업 자료가 된다.
+
+---
+
+**출처.** [Keith & Frese, 2008, error management training meta-analysis](https://doi.org/10.1037/0021-9010.93.1.59), [Tannenbaum & Cerasoli, 2013, debrief meta-analysis](https://doi.org/10.1177/0018720812448394)
+
+# Ch.17 — 헛소리를 잘한다
+
+완성된 생각만 말하려고 하면 시도할 수 있는 생각의 수가 줄어든다. 처음 떠오른 연결은 대개 근거가 부족하고 표현도 엉성하다. 입 밖에 내거나 적어 보아야 빈칸이 보이고, 다른 사람이 질문해야 쓸모가 있는지 알 수 있다. 여기서 필요한 능력을 점잖게 바꾸어 부르지 않겠다. 헛소리를 잘해야 한다.
+
+> 아직 덜 된 생각을 속이지 않고 꺼내어, 시험할 만한 제안으로 바꿀 수 있는가?
+
+‘잘한다’에는 조건이 붙는다. 사실처럼 우기지 않고 가설이라고 표시한다. 말한 사람의 체면을 지키느라 틀린 생각을 끌고 가지 않는다. 아이디어를 많이 낸 뒤 선택과 검증을 따로 한다. 셀링은 빈말로 사람을 이기는 기술이 아니라, 상대가 판단하고 작은 자원을 내줄 수 있게 문제와 시도를 설명하는 일이다.
+
+## 생성할 때와 고를 때 떼어 놓기
+
+Mullen, Johnson, Salas가 브레인스토밍 연구를 메타분석한 결과, 상호작용 집단은 같은 수의 개인이 따로 아이디어를 낸 뒤 합친 명목집단보다 아이디어의 양과 질에서 뒤지는 경향을 보였다. 발언 순서를 기다리는 생산 차단, 평가에 대한 걱정, 다른 사람만큼만 하려는 동기 저하가 가능한 설명으로 제시됐다. 포함된 연구는 주로 짧은 실험실 과제이므로 실제 제품팀의 장기 협업을 그대로 대표하지 않는다. ‘회의하지 말라’는 결론도 아니다. 각자 먼저 적은 다음 모여 공유하면 아이디어를 내는 시간에 생기는 방해를 줄일 수 있다.
+
+Rietzschel, Nijstad, Stroebe의 실험에서는 집단이 낸 아이디어 가운데 창의적인 것을 스스로 고르는 일이 쉽지 않았다. 아이디어를 많이 만드는 과정과 좋은 안을 선택하는 과정이 별도 능력이라는 뜻이다. 학생 집단이 수행한 실험 과제의 결과이므로 현업 투자 결정을 직접 예측하지는 못한다.
+
+실제로는 순서를 다섯 단계로 나눈다.
+
+1. 혼자 짧게 여러 안을 낸다. 문장을 다듬느라 멈추지 않는다.
+2. 관찰, 추측, 모르는 것을 표시한다. 출처가 있는 사실과 내 가설을 섞지 않는다.
+3. 다른 사람에게 질문만 받는다. 첫 반응에서 방어와 채택을 결정하지 않는다.
+4. 선택 기준을 정한 뒤 후보를 줄인다. 재미, 효과, 비용, 되돌림 가능성을 따로 본다.
+5. 가장 싼 시험을 정한다. 결과가 나쁘면 버릴 조건도 함께 쓴다.
+
+헛소리는 1단계의 허용 범위를 넓힌다. 2단계부터는 표시와 책임이 따라온다. 이 구분이 없으면 자유로운 발상이라는 말이 근거 없는 단정의 면허가 된다.
+
+아이디어 장부에는 문장보다 상태를 남긴다. **원석**은 아직 질문도 붙지 않은 생각, **조사 중**은 관찰과 근거를 찾는 생각, **시험 중**은 비용과 중단 조건이 정해진 생각이다. 잠시 멈춘 안과 버린 안도 이유를 한 줄 남긴다. 같은 아이디어를 새것처럼 되풀이하거나, 이미 확인한 실패 조건을 잊는 일을 줄일 수 있다. 모든 원석을 발표 자료로 만들 필요는 없다. 장부에서 조사할 몇 개를 고른 다음에야 다른 사람의 시간을 요청한다.
+
+## 다음 행동을 얻는 설명, 셀링
+
+좋은 아이디어가 저절로 채택되지는 않는다. 조직에서는 시간, 예산, 장비, 검토자, 배포 창구 가운데 누군가의 자원이 필요하다. Dutton과 동료들은 이슈 셀링에 참여한 관리자들의 82개 설명을 질적으로 분석해, 이슈에 대한 의사결정자의 관심을 얻기 위해 사람들이 어떤 방식을 썼고 어떤 맥락을 고려했는지 살폈다. 제안자는 내용뿐 아니라 누구에게, 언제, 어떤 형식으로 말할지와 조직의 수용 가능성을 판단했다. 이것은 표본이 제한된 질적 연구라 특정 전술의 성공률이나 인과 효과를 말해 주지 않는다. 회사 정치에 영리하게 적응하라는 처방으로만 읽어서도 안 된다.
+
+우리에게 필요한 셀링의 최소 단위는 다음 한 장이다.
+
+**문제:** 누가 어떤 상황에서 무엇 때문에 막히는가.  
+**관찰:** 실제로 본 자료와 아직 없는 자료는 무엇인가.  
+**가설:** 바꾸면 어떤 결과가 생길 것으로 예상하는가.  
+**작은 시험:** 며칠이나 몇 주 안에 무엇을 만들어 확인할 수 있는가.  
+**요청:** 상대에게 필요한 시간, 자료, 권한은 정확히 얼마인가.  
+**중단 조건:** 어떤 결과가 나오면 더 밀지 않을 것인가.
+
+“좋은 아이디어가 있습니다” 대신 이 여섯 칸을 보여 주면 상대는 전부 믿지 않아도 작은 시험을 허용할 수 있다. 셀링은 다음 판단에 드는 비용을 낮추어야 한다. 요청도 ‘관심 있으면 알려 주세요’보다 로그 접근 30분, 사용자 세 명과의 인터뷰 연결, 일주일짜리 시범 승인처럼 상대가 답할 수 있게 만든다.
+
+## 목소리를 내는 조건
+
+Chamberlin, Newton, LePine은 직원 발언 연구를 메타분석해 개선을 제안하는 촉진적 발언과 위험·문제를 지적하는 금지적 발언을 구분했다. 두 발언은 관련 요인과 결과가 완전히 같지 않았고, 발언과 수행·평가 사이의 관계도 맥락에 따라 달랐다. 연구 다수가 상관 설계이며 상사 평가가 포함돼 있어, 발언이 성과를 만들었는지 성과가 좋은 사람이 더 안전하게 말할 수 있었는지 단정하기 어렵다.
+
+그래서 ‘무조건 말하라’는 조언은 부족하다. 안전이나 윤리 문제는 조직의 공식 보고 절차와 법적 보호를 먼저 확인해야 한다. 아이디어 제안은 상대의 결정 범위와 시간을 고려하고, 반대 의견을 낼 때는 관찰과 예상 피해, 확인 방법을 분리한다. 권력 차이가 큰 환경에서는 혼자 공개적으로 밀기보다 기록을 남기고 동료나 공식 채널의 지원을 구해야 할 수도 있다.
+
+헛소리를 잘한다는 것은 아무 말이나 많이 한다는 뜻이 아니다. 떠오른 생각을 너무 일찍 죽이지 않되, 꺼낸 뒤에는 가설 표시, 질문, 선택 기준, 작은 시험을 거치게 하는 것이다. 셀링을 잘한다는 것은 포장으로 약점을 감추는 일이 아니다. 무엇을 아는지, 무엇을 모르며, 다음 확인에 얼마가 필요한지를 상대가 판단할 수 있게 내놓는 일이다.
+
+---
+
+**출처.** [Mullen, Johnson, & Salas, 1991, brainstorming meta-analysis](https://doi.org/10.1207/s15324834basp1201_1), [Rietzschel, Nijstad, & Stroebe, 2006, idea generation and selection](https://doi.org/10.1016/j.jesp.2005.04.005), [Dutton et al., 2001, issue selling](https://doi.org/10.2307/3069412), [Chamberlin, Newton, & LePine, 2017, voice meta-analysis](https://doi.org/10.1111/peps.12185)
+
+# Ch.18 — 사람을 통해 선택지 넓히기
+
+진로 정보는 공고와 검색 결과에 모두 적혀 있지 않다. 팀이 실제로 무슨 일을 하는지, 곧 생길 역할이 무엇인지, 어떤 능력을 신뢰하는지는 그 일을 하는 사람이 더 먼저 알 때가 많다. 아는 사람 수만 관계의 목표로 삼으면 대화는 금방 거래처럼 변한다. 서로 다른 정보와 협력을 오갈 수 있어야 선택지가 넓어진다.
+
+내 주변 사람들은 위로와 협력을 주는가, 내가 아직 모르는 선택지도 보여 주는가. 이 역할들은 한 사람이 모두 맡을 필요가 없다.
+
+## 가까운 사람과 약한 연결이 주는 것
+
+Granovetter는 고전적인 이론 논문에서 약한 연결이 서로 떨어진 사회 집단 사이를 잇는 다리가 될 수 있다고 설명했다. 가까운 사람들은 서로를 잘 알고 도움을 주기 쉽지만 정보가 겹칠 수 있다. 자주 만나지 않는 지인, 예전 동료, 다른 학과에서 한 번 함께 일한 사람은 평소 집단 밖의 정보를 가져올 수 있다. 개념과 기존 자료를 결합한 이론적 논의였으며, 연결 강도별 평균 효과를 비교한 실험은 아니었다.
+
+Rajkumar와 동료들의 연구는 LinkedIn의 ‘알 수도 있는 사람’ 추천 알고리즘을 무작위로 달리한 대규모 실험을 이용했다. 약 5년에 걸친 자료에는 2천만 명이 넘는 이용자, 20억 개의 새로운 연결, 플랫폼을 통해 확인된 약 60만 건의 새 일자리가 포함됐다. 비교적 약한 연결이 직업 이동에 미치는 효과는 직선이 아니었으며 가장 약한 연결이 언제나 가장 효과적인 것도 아니었다. 산업별 차이도 있었는데, 디지털 산업처럼 연결을 통해 정보가 전달되기 쉬운 분야에서 효과가 더 크게 나타난 경우가 그 예다.
+
+규모가 크고 무작위 개입이 포함됐다는 장점이 있지만, LinkedIn 연구진이 참여해 자사 플랫폼의 추천과 그 안에서 확인된 이동을 분석한 연구다. 추천 노출이 관계 형성을 바꾸는 효과와 그 연결이 일자리 이동에 미친 평균 효과를 보여 줄 뿐, 특정 학생이 연락 몇 건을 보냈을 때 취업할 확률을 알려 주지는 않는다. 플랫폼을 쓰지 않는 산업, 지역 채용, 비공식 노동시장에 그대로 옮길 수도 없다.
+
+## 관계 지도를 흐름으로 그리기
+
+연락처 목록을 늘리기 전에 현재 관계에서 어떤 정보와 도움을 주고받는지 한 장에 적는다.
+
+| 관계의 기능 | 떠올릴 사람 | 내가 물을 수 있는 것 | 내가 돌려줄 수 있는 것 | 다음에 관계를 이어 갈 방법 |
+|---|---|---|---|---|
+| 지지 | 어려울 때 솔직히 말할 수 있는 가까운 사람 | 감정과 생활의 점검 | 시간, 경청, 실제 도움 | 정기적인 안부와 함께하는 일 |
+| 협력 | 함께 수업·프로젝트·업무를 한 사람 | 작업 방식, 내 강점과 약점 | 약속한 결과, 검토, 자료 공유 | 끝난 일의 후속 결과 알리기 |
+| 연결 | 다른 산업·직무·지역에 있는 지인 | 그 세계의 실제 과업과 진입 조건 | 내가 아는 분야의 정보, 적절한 소개 | 구체적인 질문 하나로 짧게 연락 |
+| 조언 | 내 다음 단계를 이미 지나온 사람 | 선택 기준, 놓친 위험, 연습 방향 | 준비된 질문, 실행 뒤 결과 보고 | 조언을 적용한 뒤 무엇이 달라졌는지 공유 |
+
+빈칸이 많다고 당장 사람을 채우지는 않는다. 어느 기능이 부족한지 보고 활동을 고른다. 다른 직무 정보가 필요하다면 공개 세미나, 동문 행사, 학과 밖 프로젝트처럼 약한 연결이 생길 장소에 간다. 실제 협력의 증거가 부족한 경우에는 작은 일을 함께 끝내는 편이 명함을 많이 받는 것보다 낫다. 지지 관계가 약하면 취업 정보 모임보다 생활을 함께할 시간을 먼저 확보할 수도 있다.
+
+이 표에는 ‘이용할 사람’을 적는 칸이 없다. 요청과 함께 내가 지킬 약속을 적는 이유다. 관계는 매번 같은 양을 즉시 교환하는 거래는 아니지만, 답을 받은 뒤 사라지고 필요할 때만 다시 나타나는 습관은 신뢰를 만들기 어렵다.
+
+## 연락을 작고 구체적으로 하기
+
+낯선 사람에게 “멘토가 되어 주세요”라고 요청하면 범위와 시간이 너무 크다. 다음처럼 연락의 비용을 줄인다.
+
+1. 왜 그 사람에게 묻는지 공개된 작업이나 공통 맥락을 한 문장으로 밝힌다.
+2. 알고 싶은 것을 하나로 줄인다. ‘커리어 조언’보다 ‘신입이 처음 6개월 동안 맡는 운영 책임’이 답하기 쉽다.
+3. 15~20분 대화, 이메일 답변처럼 필요한 시간을 제시한다.
+4. 스스로 이미 조사한 것과 아직 확인하지 못한 것을 구분한다.
+5. 답을 받으면 감사 인사에 그치지 않고 적용 결과를 나중에 알린다.
+
+이 순서와 15~20분이라는 시간은 앞의 연구가 검증한 성공 공식이 아니다. 상대가 답할 부담을 줄이고 요청이 맞지 않을 때 빨리 넘어가기 위한 실행안이다.
+
+답이 없다고 해서 상대가 나를 부정적으로 평가했다고 해석하지 않는다. 바쁘거나, 요청이 맞지 않거나, 모르는 사람에게 답하지 않는 원칙이 있을 수 있다. 한 번 짧게 후속 연락을 한 뒤 다른 자료와 사람으로 넘어간다. 관계를 얻으려고 과장된 친밀감을 만들거나 무리한 선물을 보낼 필요도 없다.
+
+## 멘토 한 사람에게 경력 맡기지 않기
+
+Allen과 동료들은 직장 내 멘토링과 경력 결과에 관한 메타분석에서 멘토링이 보상, 승진 같은 객관적 결과와 직무·경력 만족 같은 주관적 결과에 관련됨을 보고했다. 주관적 결과와의 관계가 대체로 더 컸고 객관적 효과는 작았다. 포함 연구 대부분이 상관 설계라 멘토링이 결과를 만들었는지, 이미 유망하고 적극적인 사람이 멘토를 얻었는지 완전히 분리하기 어렵다. 직장인 표본의 연구를 학부생 관계에 그대로 적용하는 데도 한계가 있다.
+
+그러므로 모든 답을 줄 완벽한 멘토를 찾기보다 기능을 나눈다. 기술 산출물을 엄격하게 볼 사람, 업계 정보를 줄 사람, 조직 문제를 해석해 줄 사람, 생활과 건강을 함께 볼 사람이 다를 수 있다. 조언이 충돌하면 다수결로 정하지 않고 각 사람이 어떤 경험과 조건에서 말했는지 적는다. 선택과 결과의 책임까지 관계에 넘기지는 않는다.
+
+관계 지도를 다시 보면 지금 부족한 것이 드러난다. 생활을 버틸 지지, 함께 끝낸 작업, 다른 산업의 정보 가운데 무엇이 빈칸인지에 따라 다음 접촉을 정할 수 있다. 빈칸 하나를 고른 다음, 한 번에 답할 수 있는 질문이나 함께할 수 있는 작은 일을 건네 보자. 결과도 적어 두면 무엇을 새로 알았고 다음에 어떤 일을 함께할 수 있는지 확인할 수 있다.
+
+---
+
+**출처.** [Granovetter, 1973, *The Strength of Weak Ties*](https://doi.org/10.1086/225469), [Rajkumar et al., 2022, weak ties and job mobility](https://doi.org/10.1126/science.abl4476), [Allen et al., 2004, mentoring meta-analysis](https://doi.org/10.1037/0021-9010.89.1.127)
+
+# Ch.19 — 첫 직장 보는 법
+
+첫 직장을 고를 때에는 아직 해 본 일이 적다. 공고와 면접에서 들은 설명으로
+상사, 동료, 업무 속도, 평가 방식까지 미리 알아내기도 어렵다. 정보가 부족한
+상태에서 내리는 선택인데도 사람들은 첫 회사가 이후 경력을 거의 정해 버릴
+것처럼 말한다. 이 생각이 강해지면 첫 지원부터 평생의 정답을 찾게 된다.
+
+미국 노동통계국이 2024년에 집계한 현재 고용주 근속기간의 중앙값은 전체
+임금근로자 3.9년, 25~34세 2.7년이었다. 25~34세 집단의 값은 전체보다
+짧았다. 다만 한 시점에 현재 직장에서 일한 기간을
+물은 미국 통계이므로, 한 사람이 평생 몇 번 옮기는지나 한국 청년의 평균
+이직 시기를 알려 주지는 않는다.
+
+첫 직장은 영구적이지 않아도 다음 경력에 흔적을 남긴다. 캐나다의 1982~1999년
+대학 졸업 코호트를 행정자료로 추적한 Oreopoulos와 동료들은 불황기에 노동시장에
+들어온 졸업자의 소득 손실이 약 10년 이어졌다고 보고했다. 일부는 더 나은
+고용주로 옮기면서 회복했다. 이 연구가 오늘의 한국 엔지니어에게 같은 손실액과
+기간을 예고하는 것은 아니다. 첫 진입 때의 경기와 고용주가 개인의 노력 밖에서
+경로를 바꿀 수 있고, 이동을 통한 회복도 실제 경력의 일부라는 점을 보여
+준다.
+
+## 첫 자리가 남기는 것
+
+첫 직장의 의미를 회사 이름으로만 보면 경로의 흔적을 제대로 읽기 어렵다.
+다음 지원에서 다시 쓸 수 있는 것은 그곳에서 실제로 한 일이다.
+
+| 남길 것 | 입사 뒤 확인할 내용 | 다음 자리에서 보일 자료 |
+|---|---|---|
+| 익힌 일 | 반복해서 맡은 과업, 사용한 도구, 판단한 범위 | 다른 조직에서도 설명할 수 있는 기술과 문제 해결 과정 |
+| 작업 증거 | 완료한 산출물, 바뀐 결과, 실패 뒤 수정 | 공개 가능한 포트폴리오, 이력서의 구체적인 성과, 면접에서 설명할 사례 |
+| 함께 일한 사람 | 피드백을 준 사람, 협업 상대, 도움을 주고받은 관계 | 추천, 평판, 다른 역할에 관한 정보 |
+| 생활 기반 | 소득, 건강, 주거, 보험, 회복 시간 | 다음 이동을 서두르지 않고 검토할 여유 |
+
+작업 증거는 회사 자료를 가져오라는 뜻이 아니다. 비공개 코드, 고객 정보,
+사내 문서는 회사 밖에 공개할 수 없다. 대신 어떤 문제를 맡았고 누구와 어떤
+결정을 했으며 결과가 어떻게 달라졌는지를 허용된 범위에서 기록할 수 있다.
+코드가 공개되지 않아도 요구를 좁힌 방법, 검토를 거쳐 바꾼 설계, 장애 뒤에
+정리한 재발 방지 과정은 자신의 일로 설명할 수 있다.
+
+첫 직장에서 배울 수 있는 양과 그 일을 계속할 수 있는 조건은 함께 봐야 한다.
+낮은 급여, 긴 통근, 불안정한 계약, 반복되는 야간 대응은 기술을 익히는
+동안에도 삶에 비용을 남긴다. 생활 기반이 무너지면 현재 일을 익힐 힘뿐 아니라
+다음 선택을 준비할 시간과 돈도 줄어든다.
+
+## 입사 초기에 알아내야 할 것
+
+Bauer와 동료들은 신입 구성원의 조직 적응을 다룬 70개 표본을 메타분석했다.
+이들은 적응을 역할 명료성, 자기효능감, 사회적 수용으로 나누었다. 무엇을
+해야 하는지 아는가, 그 일을 해낼 수 있다는 감각이 생기는가, 함께 일하는
+사람들과 관계를 맺는가라는 구분이다. 이 세 측면은 직무만족, 조직몰입,
+수행, 남으려는 의도 같은 결과와 이어졌다.
+
+이 결과로 좋은 온보딩이 장기 경력 성공을 보장한다고 말할 수는 없다. 포함된
+연구의 설계와 조직도 서로 달랐다. 그래도 입사 초기의 막막함을 `내가 이
+직업에 맞지 않는다`로 한꺼번에 해석하지 않게 해 준다. 역할이 불분명한지,
+기술이 아직 부족한지, 질문할 관계가 없는지에 따라 필요한 대응이 달라진다.
+
+역할이 불분명하면 완료 기준과 우선순위를 묻는다. 기술이 부족하면 다음 업무에
+필요한 학습 내용을 좁히고, 어느 단계에서 피드백을 받을지 정한다. 팀에 질문할 사람이 없다면 정기적인
+일대일 면담, 코드·설계 검토, 동료와의 작업처럼 실제 접점을 찾는다. 세
+가지가 모두 비어 있다면 개인의 적응 속도만 탓하기 전에 팀이 신입을 받아들이는
+방식도 살펴야 한다.
+
+## 기간보다 기록으로 판단하기
+
+첫 회사에서 몇 년을 채워야 한다는 보편적인 답은 없다. 분야마다 프로젝트
+주기와 채용 관행이 다르고, 계약·비자·돌봄·건강도 이동 시기를 바꾼다. 짧게
+다녔다고 반드시 성급한 것도 아니고, 오래 다녔다고 반드시 충분히 배운 것도
+아니다.
+
+대신 입사 때부터 석 달이나 반기처럼 자신의 업무 주기에 맞춰 짧은 기록을
+남길 수 있다. 새로 맡게 된 일, 혼자 처리할 수 있게 된 범위, 다른 사람이
+확인할 수 있는 결과, 여전히 권한이나 자원이 없어 막히는 지점을 적는다.
+급여와 근무시간, 수면, 통근, 관계처럼 생활 조건의 변화도 함께 남긴다.
+나중에 이 기록을 보면 단지 익숙해진 것과 실제로 성장한 것을 구분하기
+쉬워진다.
+
+De Vos와 동료들이 정리한 경력 전환 연구는 이동 전후에 쌓은 능력과 관계,
+새 환경에서 그 자원을 쓸 수 있는 조건을 함께 다룬다. 그렇다고 첫 직장에서
+다음 이직을 미리 예약할 필요는 없다. 여기서 남기는 기록은 현재 역할이 어떻게
+달라졌는지를 보는 자료다. 처음에는 도움을 받아 하던 일을 혼자 끝내게 됐는지,
+더 넓은 판단을 맡았는지, 같은 문제가 반복될 때 다른 방식으로 풀게 됐는지를
+확인한다. 회사 이름을 빼고도 이 변화를 설명할 수 있으면 경험의 내용이 보인다.
+
+첫 직장이 평생을 결정하지 않는다는 말은 지금의 조건을 참으라는 위로도,
+가볍게 떠나도 된다는 허가도 아니다. 다음 선택의 조건이 쌓이고 있는지
+보라는 뜻이다. 배우는 일이 줄었거나 생활의 바닥이 깨졌다고 느낄 때에는
+기간을 세는 대신 문제가 일시적인지, 고쳐 볼 수 있는지, 구조적으로 반복되는지
+다시 나눠야 한다.
+
+---
+
+**출처.** [U.S. Bureau of Labor Statistics, *Employee Tenure in 2024*](https://www.bls.gov/news.release/tenure.t01.htm),
+[Oreopoulos, von Wachter, & Heisz (2012), “The Short- and Long-Term Career
+Effects of Graduating in a Recession”](https://doi.org/10.1257/app.4.1.1),
+[Bauer et al. (2007), “Newcomer Adjustment During Organizational
+Socialization”](https://doi.org/10.1037/0021-9010.92.3.707), [De Vos, Jacobs,
+& Verbruggen (2021), “Career Transitions and Employability”](https://doi.org/10.1016/j.jvb.2020.103475)을
+참조했다.
+
+# Ch.20 — 계속할 이유와 그만둘 이유
+
+“일이 힘들다”에는 서로 다른 사실이 들어간다. 새 도구를 익히느라 느릴 수
+있고, 우선순위가 자꾸 바뀌어 일을 끝내지 못할 수도 있다. 직속 상사와
+일하는 방식이 맞지 않거나, 폭언과 보복 때문에 안전을 걱정하는 경우도 있다.
+이 차이를 가르지 않으면 초반의 서툶을 구조적 문제로 읽기도 하고, 해로운
+환경을 성장통이라고 버티기도 한다.
+
+직장과의 적합성도 하나가 아니다. Kristof-Brown과 동료들의 메타분석은
+개인과 직무, 개인과 조직, 개인과 집단, 개인과 상사 사이의 적합성을 나누어 직무 태도와 수행, 이탈
+행동 등과의 관계를 살폈다. 좋아하는 기술을 쓰더라도 상사의 피드백 방식이
+맞지 않을 수 있고, 회사의 목표에는 동의해도 팀의 협업 규칙 때문에 지칠
+수 있다. `나와 회사가 안 맞는다`고 결론 내리기 전에 어디에서 어긋나는지
+찾아야 바꿀 범위도 정해진다.
+
+## 남게 만드는 힘과 남을 이유
+
+사람은 만족도만 보고 직장을 떠나지 않는다. Jiang과 동료들이 65개 표본,
+42,907명을 종합한 메타분석에서 직장 안팎의 직무 배태성(job embeddedness)은
+직무만족, 조직몰입, 다른 일자리가 있다는 인식 등을 고려한 뒤에도 이직 의도와
+실제 이직에 관련됐다. 배태성은 연결, 적합성, 희생으로 설명된다. 회사와
+지역사회에서 맺은 관계가 많고, 자기 생활과 일이 맞으며, 떠날 때 잃는 것이
+크면 사람은 더 단단히 묶인다.
+
+많이 묶였다고 좋은 직장인 것은 아니다. 비자, 보험, 높은 보상, 가까운 동료,
+아이의 학교, 배우자의 직업은 충분히 중요한 조건이지만 업무가 건강하다는
+증거는 아니다. 반대로 떠날 때 잃는 것을 비용이라고 적는다고 해서 그
+관계와 생활을 하찮게 보는 것도 아니다. 판단할 때에는 `왜 이 일이 괜찮은가`와
+`떠나면 무엇을 잃는가`를 다른 칸에 적어야 한다.
+
+이미 쓴 시간도 사람을 붙잡는다. Sleesman과 동료들은 166개 독립 표본을
+모아 실패 가능성이 커진 결정에 자원을 더 투입하는 몰입 상승(escalation of
+commitment)의 선행 요인을 검토했다. 연구의 상당 부분은 조직의 프로젝트와 실험 과제이므로,
+오래 다닌 직장인에게 곧바로 비합리적이라는 딱지를 붙일 근거는 아니다.
+다만 “여기서 4년을 보냈으니 한 해만 더”라는 말이 앞으로 얻을 것보다 과거에
+쓴 시간에 기대고 있는지는 물을 수 있다.
+
+## 문제의 종류에 따라 먼저 할 일
+
+아래 구분은 퇴사 점수를 계산하는 검사가 아니다. 지금 필요한 정보와 대응을
+갈라 놓는 표다.
+
+| 문제의 모습 | 먼저 할 일 | 다시 볼 자료 |
+|---|---|---|
+| 새 업무의 학습 비용 | 기대 수준과 학습 자원, 피드백 시점을 확인한다 | 일정 기간 뒤 속도·오류·도움 없이 할 수 있는 범위의 변화 |
+| 조정할 수 있는 업무 문제 | 우선순위, 역할, 인력, 마감, 근무 방식 가운데 바꿀 항목을 좁힌다 | 누가 무엇을 언제 바꾸기로 했고 실제로 달라졌는지 |
+| 반복되는 구조적 문제 | 같은 문제가 팀·프로젝트가 바뀌어도 이어지는지, 결정권이 어디 있는지 확인한다 | 업무량·이직·휴가·보복·평가 관행의 반복 기록과 제3자의 정보 |
+| 안전·건강·불법·괴롭힘 문제 | 직접 해결을 시험하기보다 거리를 두고 보호·신고·의료·법률 자원을 찾는다 | 공식 규정, 기록, 전문 기관의 안내 |
+
+작은 변화와 안전 문제를 같은 순서로 처리해서는 안 된다. 역할이 모호한
+경우에는 완료 기준을 다시 합의해 볼 수 있다. 그러나 폭력, 괴롭힘, 차별,
+보복, 중대한 안전 위반이 있다면 당사자에게 대화를 먼저 성공시키라고 요구할
+수 없다. 이 경우에는 수정 가능성을 시험하는 일보다 거리를 확보하고 공식
+보호·신고·의료·법률 자원을 확인하는 일이 먼저다.
+
+## 수정 가능성을 실제 변화로 확인하기
+
+안전 문제가 아니고 변경 권한을 가진 사람이 분명하다면 한 가지를 바꿔 볼
+수 있다. 대화 뒤에는 무엇이 언제까지 달라지기로 했는지와 실제 변화를
+확인한다. 우선순위를 정할 사람, 동시에 맡는 일의 수,
+피드백 시점처럼 관찰할 조건과 확인 날짜를 남긴다.
+
+확인 날짜가 왔을 때에는 세 가지를 본다. 같은 문제가 얼마나 자주 되풀이됐는지,
+합의한 변경이 실행됐는지, 업무와 생활의 피해가 줄었는지다. 말만 반복되고
+조건이 그대로라면 `조금만 더 지켜보자`는 기한 없는 유예가 된다. 실제 변화가
+이어지면 처음의 어려움이 조정 가능한 문제였다는 근거가 생긴다. 이 기록으로
+문제의 지속성과 수정 가능성을 확인한다.
+
+## 떠나는 조건
+
+떠나는 선택이 분명해 보여도 바로 실행할 수 없는 사람이 있다. 현금, 건강보험,
+비자, 주거, 돌봄, 다음 구직에 쓸 시간, 치료의 연속성이 이동 가능성을 바꾼다.
+Paul과 Moser가 여러 시대와 국가의 237개 횡단연구와 87개 종단연구를 종합한
+결과, 실업은 평균적으로 더 큰 심리적 고통과 관련됐다. 종단·자연실험
+분석은 실업이 정신건강에 미치는 영향과 정신건강에 따른 선택효과가 함께
+있음을 지지했다. 사회보장과 노동시장이 다른 집단을 합친 결과이므로 한
+사람의 퇴사 결과를 예측하지는 못한다.
+
+이 자료를 퇴사를 겁주는 데 쓰면 안 된다. 해로운 일을 끝내는 이득과 소득·
+보험·생활 리듬을 잃는 비용이 함께 있으므로, 가능한 경우 이행 조건을 먼저
+마련하라는 근거다. 회사 안의 팀 이동, 휴직, 근무 조건 조정이 실제 선택지인지
+확인할 수도 있다. 사용할 수 없다면 없는 선택지라고 기록한다. 서류상 제도가
+있다는 이유로 접근 가능하다고 가정하지 않는다.
+
+마지막 결정에는 현재 문제, 한 번 바꿔 본 결과, 남을 이유, 떠날 때의 비용,
+안전상 기다릴 수 없는 조건을 적는다. 어느 쪽을 골라도 과거의 시간을
+정당화하는 문장으로 끝내지 않는다. 지금부터 달라질 조건이 무엇인지가
+결정의 근거다. 다만 팀 개편과 프로젝트 종료처럼 조직이 먼저 조건을
+바꾸었다면 문제의 출발점이 다르다. 그때에는 개인의 적합성보다 변화한
+사실과 다음 선택지를 먼저 정리해야 한다.
+
+---
+
+**출처.** [Kristof-Brown, Zimmerman, & Johnson (2005), “Consequences of
+Individuals’ Fit at Work”](https://doi.org/10.1111/j.1744-6570.2005.00672.x),
+[Jiang et al. (2012), “When and How Is Job Embeddedness Predictive of
+Turnover?”](https://doi.org/10.1037/a0028610), [Sleesman et al. (2012),
+“Cleaning Up the Big Muddy”](https://doi.org/10.5465/amj.2010.0696), [Paul &
+Moser (2009), “Unemployment Impairs Mental Health”](https://doi.org/10.1016/j.jvb.2009.01.001)을
+참조했다.
+
+# Ch.21 — 조직 변화와 다음 선택지 준비
+
+어제까지 필요하던 프로젝트가 오늘 중단될 수 있다. 인수합병 뒤 누구에게 보고하는지가
+바뀌고, 새 팀장이 우선순위를 다시 정하며, 감원으로 남은 사람의 역할이
+넓어지기도 한다. 이런 변화는 개인의 성과와 무관하게 시작될 수 있다.
+조직이 먼저 조건을 바꿨는데도 당사자는 “내가 부족해서 이런 일이 생겼나”라고
+해석하기 쉽다.
+
+Akkermans와 동료들은 경력 충격(career shock)을 개인이 통제할 수 없는 요인이
+적어도 일부 작용해 경력을 다시 생각하게 만드는 사건으로 설명했다. 사건 자체와 이후의
+경로는 같은 것이 아니다. 팀 해체는 통제 밖에서 일어날 수 있지만 내부
+이동을 알아볼지, 다른 회사로 갈지, 잠시 멈출지에는 개인의 자원과 제도가
+관여한다. 반대로 모든 충격을 성장의 계기라고 부르면 소득 손실과 건강,
+비자와 돌봄 같은 실제 피해를 지우게 된다.
+
+## 공식 결정 전의 고용 불안
+
+고용 불안은 실제 해고와 같지 않다. 현재 일자리의 지속성이 위협받는다고
+느끼는 상태를 가리킨다. Cheng과 Chan은 133개 연구에서 얻은 172개 독립 표본,
+총 132,927명의 자료를 종합했다. 고용 불안은 낮은 직무 수행, 좋지 않은 건강
+상태, 높은 이직 의도와 관련됐다. 고용 불안과 이직 의도·건강 사이의 관련성은
+연령과 근속에 따라 강도가 달랐다. 그러나
+종단 연구도 첫 시점의 상관을 사용한 경우가 있어, 불안이 모든 결과의 원인이라고
+확정하기는 어렵다.
+
+조직 변화에 관한 정보는 세 상태로 나눈다. **공식 사실**은 회사가 대상과
+시행일을 밝혀 알린 내용이다. **관찰 신호**는 사업 중단, 채용 동결, 핵심
+인력의 이탈, 예산 변경처럼 직접 확인했지만 결론은 아직 발표되지 않은
+변화다. **소문**은 출처와 적용 범위를 확인하지 못한 말이다. 관찰 신호를
+무시할 필요는 없지만 소문을 공식 결정처럼 다루면 현재 선택지를 잘못
+그리게 된다.
+
+변화가 보이면 다음 순서로 적는다.
+
+1. 공식 사실, 관찰 신호, 소문을 구분한다.
+2. 시행 날짜, 대상 팀, 보고 관계·인원·프로젝트·계약에서 무엇이 바뀌는지 확인한다.
+3. 자신의 업무, 평가, 근무지, 보상, 비자와 보험에 미치는 영향을 적는다.
+4. 답변할 담당자와 답변 시점을 확인한다. 모르는 항목은 추측으로 채우지
+   않는다.
+5. 기다리는 동안에도 지켜야 할 건강·소득·주거 조건이 있는지 본다.
+
+정보 상태는 한 번 적고 끝내지 않는다. 관찰 신호가 공식 발표로 바뀌거나
+적용 대상에서 자신의 팀이 빠지면 선택지도 달라진다. 확인 날짜를 함께 남겨
+오래된 소문과 새 사실이 한 목록에 섞이지 않게 한다.
+
+공식 답을 기다리는 기간이 길면 `아직 모른다`는 사실 자체가 생활 비용이
+된다. 그 기간에 수면이나 업무 기능이 크게 흔들리면 단지 정보가 나올 때까지
+버티는 문제로만 보지 않는다. 회사의 EAP, 의료기관, 노동·법률 상담처럼
+현재 상황에 맞는 도움을 따로 찾을 수 있다.
+
+## 이미 준비한 것을 바뀐 조건에 맞추기
+
+변화에 대비할 자료를 여기서 새로 정리할 필요는 없다.
+첫 직장에서 맡은 일과 경험의 변화를 기록하는 법은 Ch.19, 조직 밖 관계를
+이어 가는 법은 Ch.18, 소득·보험·주거·돌봄 같은 생활 조건은 Ch.12에서
+다뤘다. 조직 변화가 생기면 이 기록에서 **달라진 것과 끊길 것**만 갱신한다.
+
+중단된 프로젝트에서 어디까지 완료했는지, 앞으로 누구에게 보고하며 어떤 책임과
+권한을 맡는지, 함께 일하던 사람 가운데 실제로 남는 사람이 누구인지 확인한다.
+회사 자료의 공개 범위는 그대로 지키되 자신의 기여와 판단은 설명할 수 있게
+정리한다. 이어 계약 종료일, 보험과 비자, 주거와 돌봄에 변화가 생기는 날짜를
+맞춘다. 평소의 경력 준비를 처음부터 다시 하는 것이 아니라 조직이 바꾼
+조건이 기존 선택지에서 무엇을 지웠는지 찾는 일이다.
+
+## 하나가 아닌 다음 자리
+
+조직이 바뀌면 외부 이직만 떠올리기 쉽지만 실제 경로는 더 나뉜다. 같은
+회사 안에서 팀이나 역할을 옮길 수 있고, 다른 조직으로 갈 수도 있다. 건강·
+돌봄·이주 때문에 잠시 일을 멈추거나, 교육 뒤 다른 분야로 들어가는 경우도
+있다. 모두에게 네 경로가 열려 있는 것은 아니다. 내부 공모가 있어도 상사의
+승인이 필요할 수 있고, 중단은 소득과 비자에 큰 비용을 줄 수 있으며, 재교육이
+채용을 보장하지도 않는다.
+
+De Vos와 동료들의 경력 전환 문헌고찰은 전환과 고용가능성의 관계가 전환의
+종류, 전후 맥락, 개인이 가진 자원에 따라 달라진다고 정리했다. Rudolph와
+동료들은 90개 연구에서 경력 적응성과 여러 적응 관련 변인의 관계를 종합했다.
+여기서 경력 적응성은 미래 과제를 준비하는 관심, 자신의 경력 발달에 책임을
+지는 통제, 가능한 미래를 살피는 호기심, 경력 문제를 해결할 수 있다는
+자신감으로 이루어진 심리사회적 자원이다. 타고난 성격이나 해고를 잘 견디는
+능력과 같은 말은 아니다.
+
+선택지를 비교할 때에는 바뀐 조직에 남았을 때의 실제 역할, 내부 이동 뒤의
+조건, 외부 제안의 업무와 계약, 중단 기간의 생활비와 복귀 경로를 모두 같은
+기준일에 확인한다. 예전 팀이 좋았다는 기억과 앞으로 생길지 모르는 자리를
+비교하면 판단 기준이 어긋난다. 이미 사라진 조건은 현재 선택지에서 빼야
+한다.
+
+조직 변화 뒤에는 자신의 가치를 평가하기 전에 실제로 남은 조건부터 확인한다.
+회사가 바꾼 조건을 확인하고, 지금까지 쌓은 일을 다른 조직에서도 이해할 수
+있게 정리하며, 생활을 지킬 조건을 계산한다. 그 자료를 놓고 기다릴지, 내부에서
+옮길지, 밖으로 나갈지 판단한다.
+
+---
+
+**출처.** [Cheng & Chan (2008), “Who Suffers More from Job Insecurity?”](https://doi.org/10.1111/j.1464-0597.2007.00312.x),
+[Shoss (2017), “Job Insecurity: An Integrative Review and Agenda for Future
+Research”](https://doi.org/10.1177/0149206317691574), [Akkermans, Seibert, &
+Mol (2018), “Tales of the Unexpected”](https://doi.org/10.4102/sajip.v44i0.1503),
+[Rudolph, Lavigne, & Zacher (2017), “Career Adaptability”](https://doi.org/10.1016/j.jvb.2016.09.002),
+[De Vos, Jacobs, & Verbruggen (2021), “Career Transitions and Employability”](https://doi.org/10.1016/j.jvb.2020.103475)을
+참조했다.
+
+# Ch.22 — 번아웃과 조직 조건
+
+며칠 몰아서 일한 뒤 지친 상태, 오래 일하면서 생긴 냉소, 우울과 불안은
+겉으로 일부 비슷할 수 있다. 모두를 번아웃이라고 부르면 원인을 찾기 어렵고,
+번아웃을 단순 피로라고 부르면 업무 조건을 놓친다. 먼저 이 말이 가리키는
+범위를 고정할 필요가 있다.
+
+## WHO가 말하는 번아웃
+
+세계보건기구(WHO)는 ICD-11에서 번아웃을 질병이 아닌 직업 관련 현상으로
+분류한다. 성공적으로 관리되지 않은 만성적인 직장 스트레스에서 비롯된다고
+설명하며, 에너지 고갈이나 탈진, 일과의 심리적 거리 증가 또는 부정적·냉소적
+감정, 직업 효능감 저하의 세 차원을 제시한다. 이 정의는 직업 맥락에만
+적용된다.
+
+세 차원은 온라인 자가진단표가 아니다. 피곤한 하루가 있었다고 번아웃으로
+판정할 수도 없고, 수면 변화나 집중 곤란만으로 다른 정신건강 상태와 구분할
+수도 없다. WHO의 분류가 주는 핵심 정보는 증상 개수가 아니라 **만성적인
+직장 스트레스와의 관계**다. 개인의 의지와 시간관리만 살펴서는 이 정의가
+지목한 원인을 다 볼 수 없다.
+
+## 업무 요구와 자원 같이 보기
+
+직무요구-자원 이론은 업무 요구와 직무 자원을 나누어 본다. 업무 요구는
+지속적인 신체적·심리적 노력이 필요하고, 생리적·심리적 비용과 관련되는 직무
+특성이다. 업무량, 시간 압박, 감정노동, 복잡한 판단, 역할 충돌이 여기에
+들어갈 수 있다. 직무 자원은 목표 달성을 돕고, 업무 요구와 그에 따른 비용을
+줄이거나, 성장·학습·발달을 돕는 직무 특성이다. 업무를 통제할 범위, 상사와
+동료의 지원, 명확한 역할, 피드백, 회복 시간이 여기에 해당한다. 요구가 있다는
+사실만으로 나쁜 직업은 아니다. 적절한 자원 없이
+높은 요구가 만성적으로 이어질 때 소진 위험을 살펴야 한다.
+
+Bakker와 동료들의 2023년 종합 검토는 이 이론의 최근 연구를 정리하면서
+개인과 상황의 상호작용, 팀 수준, 일과 가정의 자원까지 다뤘다. 이 틀은 `업무량이
+많으면 번아웃`이라는 한 줄보다 실제로 손댈 곳을 찾는 데 유용하다. 같은
+업무량이라도 우선순위를 바꿀 권한이 있는지, 질문할 사람이 있는지, 장애
+뒤 회복 시간이 있는지에 따라 일의 조건이 달라진다.
+
+종단연구만 모아 업무환경과 번아웃을 살핀 Aronsson과 동료들의 체계적 고찰·
+메타분석은 기준을 충족한 25편을 검토했다. 높은 통제와 이후의 낮은 정서적
+소진, 낮은 직장 지원과 높은 소진의 관계에는 중간 수준의 근거가 있었다.
+높은 직무 요구와 많은 업무량, 낮은 보상, 낮은 공정성, 고용 불안이 소진과
+관련된다는 데에는 제한된 근거가 보고됐다.
+연구 대부분이 소진에 집중했고 지역도 유럽·북미·호주·뉴질랜드에 치우쳤다.
+위험요인마다 같은 확실성으로 말할 수는 없다.
+
+그래도 이 결과는 “마음가짐을 바꾸면 된다”는 설명이 부족하다는 점을 분명히
+한다. 업무량을 정하는 사람, 인력을 배치하는 조직, 장애 대응 규칙, 괴롭힘과
+차별을 처리하는 절차가 개인 밖에 있기 때문이다.
+
+## 조직이 만든 조건 바꾸기
+
+Ch.20에서는 현재 문제의 지속성과 수정 가능성을 보고 남거나 떠나는 결정을
+다뤘다. 여기서는 번아웃과 관련된 조건의 결정권이 어디에 있는지를 본다.
+
+| 조건 | 주된 결정권 | 확인할 변화 |
+|---|---|---|
+| 업무량·마감·우선순위 | 상사, 팀, 조직 | 동시에 맡는 일과 시간 압박이 실제로 줄었는가 |
+| 역할·권한·지원 | 상사, 팀, 조직 | 책임에 필요한 결정권, 인력, 정보, 피드백이 생겼는가 |
+| 당직·장애 대응·회복 | 팀, 조직 | 호출 빈도와 순번, 보상, 복구 뒤 휴식이 바뀌었는가 |
+| 괴롭힘·차별·불공정·안전 | 조직 | 보호 절차가 작동하고 보복 없이 접근할 수 있는가 |
+| 지속되는 정신·신체 상태와 기능 저하 | 당사자와 보건의료 전문가 | 상태를 평가하고 필요한 도움에 접근할 수 있는가 |
+
+개인이 수면과 휴식을 챙기고 업무 밖의 도움을 찾는 일은 필요할 수 있다.
+그러나 다음 주의 업무량, 야간 호출, 인력과 보호 절차를 정하는 권한까지
+개인에게 있지는 않다. 직속 상사도 우선순위는 조정할 수 있지만 채용 동결이나
+인력 예산은 바꾸지 못할 수 있다. 누가 결정할 수 있는 조건인지 밝혀야 조직의
+책임이 개인의 회복 과제로 넘어가지 않는다.
+
+## 조직 개입의 결과 확인하기
+
+WHO의 2022년 *Guidelines on Mental Health at Work*는 조직 개입, 관리자
+교육, 근로자 교육, 개인 개입, 업무 복귀, 취업 지원을 서로 다른 영역의 권고로
+다룬다. 조직 개입은 유연근무 같은 제도를 추가하는 데서 끝나지 않고 업무
+환경의 심리사회적 위험을 평가하고 줄이거나 없애는 데 초점을 둔다.
+
+Bes와 동료들이 조직 수준의 번아웃 개입을 종합한 메타분석에서는 소진을
+낮추는 효과가 보고됐지만, 연구와 개입의 차이가 컸고 업무량을 직접 바꾼
+연구는 더 필요했다. `웰니스 주간`이나 교육을 열었다는 사실만으로 만성적인
+업무 요구가 줄었다고 볼 수 없는 이유다. 개입 뒤에는 실제 업무량, 통제,
+지원, 회복 시간이 달라졌는지 확인해야 한다.
+
+휴식과 개인 상담은 조직 개입을 기다리는 동안에도 필요할 수 있다. 동시에
+조직이 만들고 유지하는 위험은 업무 재설계와 인력·일정·보호 절차의 문제로
+남는다.
+
+번아웃과 우울·불안은 함께 나타날 수 있지만 같은 개념이 아니다. 어려움이
+오래 이어지거나 악화되고 수면·식사, 일상 기능, 안전에 영향을 준다면 직장
+스트레스라는 설명 안에 머물지 말고 다음 장의 도움 경로를 확인한다.
+
+---
+
+**출처.** [WHO, *Burn-out an occupational phenomenon*](https://www.who.int/standards/classifications/frequently-asked-questions/burn-out-an-occupational-phenomenon),
+[WHO, *Guidelines on Mental Health at Work*](https://www.who.int/publications/i/item/9789240053052),
+[Aronsson et al. (2017), “A Systematic Review Including Meta-analysis of
+Work Environment and Burnout Symptoms”](https://doi.org/10.1186/s12889-017-4153-7),
+[Bakker, Demerouti, & Sanz-Vergel (2023), “Job Demands–Resources Theory:
+Ten Years Later”](https://doi.org/10.1146/annurev-orgpsych-120920-053933),
+[Bes et al. (2023), “Organizational Interventions and Occupational Burnout”](https://doi.org/10.1007/s00420-023-02009-z)을
+참조했다.
+
+# Ch.23 — 도움을 구할 시점과 경로
+
+일이 손에 잡히지 않는 날, 실패 뒤 며칠 동안 가라앉는 일, 계속 자격이
+없다고 느끼는 일, 수면과 식사가 무너진 채 오래 지내는 일은 같은 상태가
+아니다. 시작된 계기와 지속 기간도 다르고 일상에 미치는 영향도 다르다.
+그런데 스스로 정확한 이름을 붙여야 도움을 받을 수 있다고 생각하면 병명을
+찾느라 시간을 보내게 된다.
+
+도움을 구하기 전에 진단을 마칠 필요는 없다. 지금 겪는 괴로움이 얼마나
+심한지, 얼마나 이어졌는지, 평소 하던 일을 얼마나 바꾸었는지, 안전이
+걱정되는지를 말할 수 있으면 출발할 수 있다. 진단과 치료는 그 정보를 함께
+보는 전문가의 역할이다.
+
+## 사건 뒤 반응과 오래 이어지는 어려움
+
+발표를 망치거나 시험에 떨어지고, 지원 결과가 좋지 않았을 때 마음이 크게
+흔들릴 수 있다. 특정 사건이 분명하면 사실과 자기평가를 나눈다. 처리할 일이
+남았다면 기한을 확인하고, 쉬거나 주변 사람에게 도움을 청한다. 사건이
+뚜렷해도 언제나 혼자 회복해야 하는 것은 아니다.
+
+계기가 뚜렷하지 않거나, 사건이 지나간 뒤에도 어려움이 계속될 수 있다.
+수면과 식사, 집중, 수업과 출근, 사람을 만나는 일이 평소와 달라지고 그
+변화가 이어지면 `이번 실패를 잘 해석하면 된다`는 방법만으로는 부족하다.
+무슨 일 때문에 시작됐는지 모른다는 이유로 도움을 미룰 필요도 없다.
+
+상태를 설명할 때에는 다음 내용을 짧게 적어 두면 유용하다.
+
+- 언제 시작됐고 최근에 어떻게 달라졌는가
+- 하루나 한 주에 얼마나 자주 나타나며 어느 때 심해지는가
+- 수면, 식사, 집중, 학업·업무, 관계에 어떤 변화가 생겼는가
+- 최근의 큰 사건, 복용 중인 약, 신체 건강 문제 가운데 함께 알려야 할 것이
+  있는가
+- 지금 자신이나 다른 사람의 안전이 걱정되는가
+
+이 기록은 점수를 합쳐 병명을 정하는 표가 아니다. 상담기관이나 의료진에게
+상황을 전달하고, 자신이 빠뜨린 변화를 확인하기 위한 메모다. 기록하기조차
+어렵다면 그 상태 그대로 도움을 요청할 수 있다.
+
+## 진단명이 아닌 임포스터 현상
+
+새 팀이나 어려운 수업에서 “다른 사람은 이미 아는데 나만 모른다”고 느낄
+수 있다. 성과를 내고도 운이 좋았거나 평가자가 잘못 봤다고 생각하며 자신의
+자격을 계속 의심하기도 한다. 흔히 임포스터 증후군이라고 부르지만, 이
+경험은 정식 임상 진단이 아니다. 이 책에서는 임포스터 현상 또는 임포스터
+감정이라고 부른다.
+
+Bravata와 동료들은 62개 연구, 14,161명을 검토했다. 임포스터 현상을 겪는
+사람의 비율은 사용한 측정도구와 절단점에 따라 9%에서 82%까지 크게 달랐다.
+불안, 우울, 직무만족, 번아웃 등과 관련이 있다는 보고도 있지만 연구가 매우 이질적이고
+상당수가 한 시점의 조사였다. 포함된 연구 가운데 치료 효과를 평가한 연구는
+없었다.
+
+따라서 `대학생 대부분이 겪는다`거나 특정 방법으로 고칠 수 있다고 말할
+근거는 부족하다. 먼저 외부 비교와 자격 의심을 나누어 볼 수 있다. 눈에 띄는
+동료의 최고 성과만 보고 자신의 평균과 비교한다면 비교 자료를 바꿔야 한다.
+이미 통과한 평가와 실제로 끝낸 일까지 우연으로 돌리고 있다면, 자신이 맡은
+작은 기여와 받은 피드백을 기록해 생각과 자료를 대조할 수 있다.
+
+이 방법을 써도 괴로움이 이어지거나 일상 기능이 떨어지면 임포스터라는 이름
+안에서 혼자 해결하려 하지 않는다. 우울·불안 증상이 함께 있는지, 다른
+도움이 필요한지는 전문가와 확인할 문제다.
+
+## 자기관리에서 전문적 도움으로
+
+미국 국립정신건강연구소(NIMH)의 2025년 개정 일반인 안내는 증상의 강도와
+지속 기간, 일상 기능을 함께 보도록 한다. 가벼운 증상이 2주보다 짧게 이어지고
+자신과 다른 사람을 돌보며 평소 활동을 할 수 있을 때에는 수면, 운동, 사람과의
+연결 같은 자기관리를 시도할 수 있다고 안내한다. 심한 증상이 2주 이상
+이어지고 간단한 결정이나 평소 할 일을 수행하기 어렵다면 전문적 도움을
+구하라고 한다. 증상이 악화되거나 자기관리가 도움이 되지 않을 때에도 의료진과
+상담하도록 권한다.
+
+여기서 2주는 모든 정신질환의 진단 기준이 아니며, 상담을 받기 위해 기다려야
+하는 최소 기간도 아니다. 증상이 매우 심하거나 기능이 빠르게 떨어지거나
+안전이 걱정되면 기간과 관계없이 바로 도움을 구한다. NIMH 자료는 미국의
+일반 안내이므로 한국의 진료와 위기 연락처는 국내 공식 자원을 따라야 한다.
+
+어디서 시작할지는 접근 가능한 자원에 따라 다르다. 대학의 학생상담센터는
+학생을 대상으로 상담을 제공할 수 있고, 회사의 근로자 지원 프로그램(EAP)은
+직원에게 외부 상담을 연결하기도 한다. 제공 여부, 비용, 이용 횟수, 비밀보장과
+위기 대응 범위는 학교와 회사마다 다르다. 안내문을 확인하되, 한 곳에서
+필요한 도움을 받지 못했더라도 다른 기관이나 방법을 알아볼 수 있다.
+
+일차의료기관에서 현재 상태를 말하고 정신건강 전문가에게 연결받을 수도
+있다. 정신건강의학과 의사, 임상심리사 등 전문가의 역할과 제공 서비스는
+자격과 기관에 따라 다르므로 예약 전에 확인한다. 지역 정신건강복지센터는
+상담과 지역 자원 연결을 제공한다. 동료와 가족은 예약할 곳이나 절차를 알아보거나 함께
+가고, 일상을 확인하는 데 도움을 줄 수 있지만 진단과 위기 대응을 대신하지는
+않는다.
+
+의료진이나 상담자에게 말할 때 완성된 설명을 준비할 필요는 없다. 앞에서
+적은 시작 시점, 빈도, 기능의 변화, 안전 우려를 보여 주고 어디서부터
+설명해야 할지 모르겠다고 말해도 된다. 치료 방식이나 약물의 시작·중단은
+이 장에서 정하지 않는다. 당사자와 자격을 갖춘 전문가가 상태와 선택지를
+살핀 뒤 결정할 일이다.
+
+## 즉시 도움이 필요한 경우
+
+자해·자살 생각이 있거나 자신 또는 다른 사람에게 즉각적인 생명·신체 위험이
+있다면 자기관리 목록을 더 시험하거나 2주를 기다릴 때가 아니다. 자살 위기는
+109에 연락할 수 있고, 현장에 경찰의 즉시 개입이 필요하면 112, 응급의료·
+구급이 필요하면 119를 이용한다.
+
+> **대한민국 위기 자원 — 2026년 8월 31일 확인**
+>
+> - **자살예방상담전화 109**: 24시간. 보건복지상담센터
+>   [공식 안내](https://www.129.go.kr/109)
+> - **정신건강상담전화 1577-0199**: 24시간. 보건복지상담센터 109 안내와
+>   국가정신건강정보포털
+>   [기관 안내](https://www.mentalhealth.go.kr/portal/health/fac/PotalHealthFacListTab1.do)
+> - **폭력·범죄 등 경찰의 즉시 개입이 필요한 위험**: 경찰 긴급신고 **112**.
+>   [경찰청 112 안내](https://www.police.go.kr/www/agency/intro/intro0601.jsp)
+> - **응급의료·구급이 필요한 상황**: 소방·구급 **119**.
+>   [소방청 119 구급신고 안내](https://www.nfa.go.kr/nfa/safetyinfo/emergencyservice/119emergencydeclaration)
+
+번호와 운영 범위는 바뀔 수 있으므로 이 글을 공개하거나 다시 배포할 때
+공식 페이지에서 재확인해야 한다. 한국 밖에 있다면 현재 있는 국가·지역의
+응급번호와 위기 상담 자원을 이용한다.
+
+도움을 구하는 기준을 완벽하게 판정하려다 도움 요청을 늦출 필요는 없다. 전문가에게
+연락하는 일은 진단을 스스로 확정했다는 뜻도, 바로 특정 치료를 선택했다는
+뜻도 아니다. 지금 겪는 변화와 안전을 다른 사람과 함께 살펴보겠다는 첫
+행동이다.
+
+---
+
+**출처.** [NIMH, *My Mental Health: Do I Need Help?* (revised 2025)](https://www.nimh.nih.gov/health/publications/my-mental-health-do-i-need-help),
+[NIMH, *Tips for Talking With a Health Care Provider About Your Mental
+Health*](https://www.nimh.nih.gov/health/publications/tips-for-talking-with-your-health-care-provider),
+[WHO, *Mental health at work*](https://www.who.int/news-room/fact-sheets/detail/mental-health-at-work),
+[Bravata et al. (2020), “Prevalence, Predictors, and Treatment of Impostor
+Syndrome”](https://doi.org/10.1007/s11606-019-05364-1), [보건복지상담센터
+자살예방상담전화 109](https://www.129.go.kr/109), [국가정신건강정보포털
+정신건강관련기관 안내](https://www.mentalhealth.go.kr/portal/health/fac/PotalHealthFacListTab1.do),
+[경찰청 112 안내](https://www.police.go.kr/www/agency/intro/intro0601.jsp),
+[소방청 119 구급신고 안내](https://www.nfa.go.kr/nfa/safetyinfo/emergencyservice/119emergencydeclaration)를
+참조했다. 이 장은 진단이나 치료 지침을 대신하지 않는다.
+
+# Ch.24 — 직업 하나에 맡기지 않는 행복
+
+직업은 삶의 여러 조건을 한꺼번에 바꾼다. 소득과 사는 곳을 정하고, 하루의
+시간표와 만나는 사람을 바꾸며, 무엇을 잘하는 사람인지 설명할 말도 준다.
+일에서 의미와 소속을 얻는 사람에게 직업은 단순한 생계 수단보다 크다. 그래서
+직업이 흔들리면 삶 전체가 흔들린 것처럼 느끼기도 한다.
+
+일을 덜 중요하게 생각한다고 이 문제가 풀리지는 않는다. 해야 할 일은 직업이
+실제로 맡고 있는 몫을 보고, 직업 하나가 떠맡지 않아도 될 몫까지 가져갔는지
+살피는 것이다.
+
+## 직업이 동시에 움직이는 행복의 칸
+
+Ch.2에서는 행복을 소득·주거·건강·시간·관계 같은 생활 조건과 삶의 평가,
+정서, 의미와 기능으로 나누어 보았다. 여기서는 그 구분을 다시 설명하지 않고,
+한 직업이 여러 칸을 동시에 어떻게 움직이는지만 본다.
+
+연봉 인상은 소득과 주거의 선택 폭을 넓힐 수 있다. 같은 이동에서 긴 통근과
+야간 연락이 생기면 수면과 관계에 쓸 시간이 줄어들기도 한다. 어려운 문제에서
+유능감과 의미를 얻더라도 고용이 불안하면 생활 계획을 세우기 어렵다. 반복
+업무가 지루한 자리에서도 안정된 근무시간과 소득이 건강과 돌봄을 지키는 조건이
+될 수 있다. `좋은 직업`이라는 한 칸으로 합치면 서로 다른 변화가 보이지
+않는다.
+
+일에서 가치와 유능감을 얻는 동안에도 생활의 다른 칸은 따로 움직인다. 의미
+있는 일을 한다는 이유로 매일의 탈진이 사라지지 않고, 요즘 기분이 좋다고
+주거와 고용이 안정되는 것도 아니다. 직업 선택은 일의 만족과 생활의 변화를
+한꺼번에 보되 같은 점수로 뭉개지 않는 일이다.
+
+## 남는 시간이 아닌 일 밖의 시간
+
+여가는 일을 모두 마친 뒤 우연히 남는 시간이 아니다. Kuykendall과 동료들이
+37개 효과크기, 11,834명을 종합한 메타분석에서 여가 참여와 주관적 웰빙은
+중간 정도의 관련을 보였다. 종단 분석에서는 여가 만족이 이후의 웰빙과,
+웰빙이 이후의 여가 만족과 모두 관련됐다. 실험 연구의 수가 적고 여가의
+정의도 다양해, 취미 시간을 늘리면 정해진 만큼 행복해진다고 말할 수는 없다.
+
+Wendsche와 Lohmann-Haislah는 퇴근 뒤 일 생각에서 벗어나는 심리적 분리를
+다룬 86개 출판물의 91개 독립 표본, 총 38,124명의 자료를 종합했다. 자기보고 자료에서는
+심리적 분리 정도가 클수록 소진·피로·신체 불편감이 적었다. 삶의 만족과
+전반적인 안녕감, 긍정 정서는 높고 수면과 회복 상태는 더 좋은 경향이 있었다.
+연구 결과의 차이가 컸고 대부분 상관·자기보고 설계였으므로 연락을 끊으면
+자동으로 행복해진다는 인과 처방은 아니다.
+
+직업마다 심리적 분리가 가능한 조건이 다르다. 당직과 현장
+대응이 있는 일에서는 연락을 완전히 끊기 어렵다. 대신 호출 빈도와 순번,
+보상, 복구 뒤 휴식이 있는지 볼 수 있다. 평일 저녁에 연락이 없더라도 머릿속에서
+계속 해결하지 못한 일을 되풀이한다면 시간표만으로 분리를 판단하기 어렵다.
+자신에게 회복이 시작되는 조건이 무엇인지 확인해야 한다.
+
+## 관계를 일터 하나에 모으지 않기
+
+직장은 사람을 만나는 중요한 장소다. 동료에게서 기술과 도움을 얻고, 함께
+결과를 만들며 소속을 느낄 수 있다. 일을 통해 생긴 관계를 가볍게 볼 이유는
+없다. 다만 상사 교체나 이직, 감원으로 직장 관계가 한꺼번에 바뀔 수 있으므로
+일 밖의 관계가 완전히 사라지지 않게 해야 한다.
+
+Holt-Lunstad와 동료들이 148개 전향 관찰연구, 308,849명을 종합한 결과,
+더 강한 사회적 관계를 가진 집단은 평균적으로 더 높은 생존 가능성을 보였다.
+관찰연구라 개인의 인과 효과나 수명 변화를 예측할 수는 없다. 여기서 관계는
+직업 성과를 위한 도구가 아니라 건강과 삶의 독립된 조건으로 다룬다.
+
+가족이나 파트너가 있는 사람에게는 일과 생활의 침범 방향도 따로 볼 필요가
+있다. Amstad와 동료들은 427개 효과크기를 분석해 일이 가족생활을 방해하는
+갈등과 가족생활이 일을 방해하는 갈등을 구분했다. 두 방향의 갈등은 직무와
+조직생활, 결혼과 가족생활에 관한 결과와 모두 관련됐다. 삶의 만족, 건강,
+심리적 고통처럼 어느 한쪽에만 속하지 않는 결과와도 관련이 있었다. 가족 형태와 성별 역할, 시대와 문화가 다른 연구를 모았기 때문에
+모든 사람에게 같은 균형을 처방하지는 못한다. 그래도 돌봄과 관계를 업무
+밖의 개인 문제로 밀어내면 직업 선택의 실제 비용을 놓친다는 점은 남는다.
+
+## 일 밖의 역할을 일정에 넣기
+
+사람은 직함 하나로만 살지 않는다. 누군가의 친구나 가족이고, 돌보는 사람이나
+배우는 사람이며, 운동·창작·지역 활동처럼 일과 다른 기준으로 계속하는 일이
+있을 수 있다. 어떤 역할을 가져야 한다는 목록은 없다. 다만 중요하다고 말하는
+역할이 실제 달력과 관계에서 완전히 사라졌는지는 확인할 수 있다.
+
+직업 밖 역할은 남는 시간에만 하는 취미라는 뜻이 아니다. 병원에 갈 시간,
+가까운 사람을 만날 시간, 돌봄 약속, 혼자 회복하는 시간처럼 먼저 자리를
+잡아야 유지되는 일도 있다. 새 직업의 시간표를 그릴 때에는 근무와 통근을
+넣고 남은 칸을 보는 데서 끝내지 않는다. 이번 시기에 지키려는 역할 하나나
+둘을 먼저 적고, 그 역할에 필요한 시간과 장소가 실제로 남는지 본다.
+
+직업이 바뀌면 직함과 동료, 잘한다고 인정받던 기준도 함께 바뀔 수 있다.
+직업의 의미를 줄일 필요는 없다. 다만 직함이 바뀌어도 이어 갈 역할과 관계가
+일 밖에 있는지 확인한다.
+
+## 다음 선택표에 생활 다시 넣기
+
+직업 조건이 생활에 번지는 경로를 적으면 막연한 워라밸보다 확인할 것이
+분명해진다.
+
+| 직업에서 볼 조건 | 생활에 번지는 경로 | 확인할 자료 |
+|---|---|---|
+| 보상과 고용 | 주거, 의료, 저축, 실업 때의 여유 | 확정 보상, 계약 기간, 보험, 월 고정비 |
+| 시간과 장소 | 수면, 통근, 돌봄, 중요한 사람을 만날 시간 | 평시·성수기 근무, 출근 빈도, 호출과 출장 |
+| 일의 경계 | 회복, 여가, 퇴근 뒤 정신적 분리 | 연락 규칙, 대기 순번, 휴가 사용, 업무량의 변동 |
+| 사람과 문화 | 소속, 도움, 갈등, 일 밖 관계에 남는 에너지 | 직속 상사, 팀 이동, 갈등 처리, 퇴근 뒤 상태 |
+| 의미와 정체성 | 삶의 만족, 유능감, 일이 흔들릴 때의 자기평가 | 가치 있다고 느끼는 과업과 직업 밖의 역할 |
+
+표의 모든 칸을 좋게 만들 필요는 없다. 시기에 따라 일을 배우는 데 시간을
+더 쓰거나, 소득을 높이기 위해 통근을 감수할 수 있다. 다만 그 비용을
+`지금만`이라고 적었다면 언제 다시 볼지와 무엇이 달라져야 끝나는지도 함께
+정한다. 기한 없는 희생은 선택이라기보다 생활의 기본값으로 굳기 쉽다.
+
+안정도 두 뜻으로 나누어야 한다. 예측 가능한 소득과 일정은 실제로 비교할
+수 있는 생활 조건이다. 어느 자리에 도착하면 불안이 영원히 사라질 것이라는
+기대는 직업이 보장할 수 없다. 승진, 정규직 전환, 더 유명한 회사가 구체적인
+조건을 개선할 수는 있지만 건강과 관계, 삶의 의미까지 한꺼번에 해결하지는
+않는다. 다음 단계가 무엇을 바꾸고 무엇은 그대로 둘지 적어야 한다.
+
+인생은 선택의 연속이고 우리는 행복해지고 싶다. 직업은 그 선택 가운데 시간과
+생활을 크게 바꾸는 하나다. 직업을 고를 때에는 일의 내용과 보상뿐 아니라 건강,
+관계, 사는 곳, 회복 시간, 직업 밖 역할도 적는다. 지킬 바닥과 이번 시기의 방향,
+감수할 비용을 정하고, 모르는 것은 확인한다. 한 번의 선택으로 행복을 완성할 수는
+없다. 고른 뒤에는 실제 경험이 쌓일 시간을 주고, 정해 둔 날짜에 지금 만드는
+생활이 내가 원한 쪽으로 가고 있는지 다시 본다.
+
+---
+
+**출처.** [Kuykendall, Tay, & Ng (2015), “Leisure Engagement and Subjective
+Well-Being”](https://doi.org/10.1037/a0038508), [Wendsche & Lohmann-Haislah
+(2017), “A Meta-analysis on Antecedents and Outcomes of Detachment from
+Work”](https://doi.org/10.3389/fpsyg.2016.02072), [Holt-Lunstad, Smith, &
+Layton (2010), “Social Relationships and Mortality Risk”](https://doi.org/10.1371/journal.pmed.1000316),
+[Amstad et al. (2011), “A Meta-analysis of Work–Family Conflict and Various
+Outcomes”](https://doi.org/10.1037/a0022170)을 참조했다.
+
+</textarea>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.1/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+<script>
+(function() {
+  'use strict';
+
+  var DOC_TITLE = "Life Notes";
+  var TOPBAR_TITLE = "Life Notes";
+  var OVERVIEW_TITLE = "Life Notes";
+  var SEARCH_PLACEHOLDER = "챕터/섹션 검색... (Ctrl+K)";
+  var STORAGE_KEY = "life-notes-lang";
+  var CHAPTER_GROUPS = [
+    {
+      label: "1부 · 무엇을 위해 고르는가",
+      items: [{"kind":"chapter","num":1},{"kind":"chapter","num":2},{"kind":"chapter","num":3},{"kind":"chapter","num":4}]
+    },
+    {
+      label: "2부 · 모를 때의 탐색",
+      items: [{"kind":"chapter","num":5},{"kind":"chapter","num":6},{"kind":"chapter","num":7},{"kind":"chapter","num":8}]
+    },
+    {
+      label: "3부 · 삶의 조건인 직업",
+      items: [{"kind":"chapter","num":9},{"kind":"chapter","num":10},{"kind":"chapter","num":11},{"kind":"chapter","num":12},{"kind":"chapter","num":13},{"kind":"chapter","num":14}]
+    },
+    {
+      label: "4부 · 선택지를 늘리는 사람 되기",
+      items: [{"kind":"chapter","num":15},{"kind":"chapter","num":16},{"kind":"chapter","num":17},{"kind":"chapter","num":18}]
+    },
+    {
+      label: "5부 · 들어간 뒤에 다시 고르기",
+      items: [{"kind":"chapter","num":19},{"kind":"chapter","num":20},{"kind":"chapter","num":21}]
+    },
+    {
+      label: "6부 · 오래 살 수 있는 선택",
+      items: [{"kind":"chapter","num":22},{"kind":"chapter","num":23},{"kind":"chapter","num":24}]
+    }
+  ];
+
+  marked.setOptions({
+    highlight: function(code, lang) {
+      if (lang && hljs.getLanguage(lang)) {
+        try { return hljs.highlight(code, { language: lang }).value; } catch(e) {}
+      }
+      try { return hljs.highlightAuto(code).value; } catch(e) {}
+      return code;
+    },
+    breaks: false,
+    gfm: true
+  });
+  marked.use({ renderer: { del: function(token) { return '~' + (token.text || token) + '~'; } } });
+
+  if (window.mermaid) {
+    mermaid.initialize({ startOnLoad: false, theme: 'default', securityLevel: 'loose' });
+  }
+
+  function protectMath(src) {
+    var placeholders = [];
+    var idx = 0;
+    var codeBlocks = [];
+    src = src.replace(new RegExp('\\x60\\x60\\x60[\\s\\S]*?\\x60\\x60\\x60', 'g'), function(m) {
+      codeBlocks.push(m);
+      return '%%CODEBLOCK' + (codeBlocks.length - 1) + '%%';
+    });
+    var inlineCodes = [];
+    src = src.replace(new RegExp('\\x60[^\\x60\\n]+\\x60', 'g'), function(m) {
+      inlineCodes.push(m);
+      return '%%INLINECODE' + (inlineCodes.length - 1) + '%%';
+    });
+    src = src.replace(/\$\$([\s\S]*?)\$\$/g, function(m, math) {
+      placeholders.push({ display: true, math: math });
+      return '%%MATH' + (idx++) + '%%';
+    });
+    src = src.replace(/\$([^\s$](?:[^$]*[^\s$])?)\$/g, function(m, math) {
+      placeholders.push({ display: false, math: math });
+      return '%%MATH' + (idx++) + '%%';
+    });
+    src = src.replace(/%%CODEBLOCK(\d+)%%/g, function(m, i) { return codeBlocks[parseInt(i, 10)]; });
+    src = src.replace(/%%INLINECODE(\d+)%%/g, function(m, i) { return inlineCodes[parseInt(i, 10)]; });
+    return { src: src, placeholders: placeholders };
+  }
+
+  function restoreAndRenderMath(html, placeholders) {
+    return html.replace(/%%MATH(\d+)%%/g, function(m, i) {
+      var p = placeholders[parseInt(i, 10)];
+      try {
+        return katex.renderToString(p.math, { displayMode: p.display, throwOnError: false, trust: true });
+      } catch(e) {
+        return p.display ? '$$' + p.math + '$$' : '$' + p.math + '$';
+      }
+    });
+  }
+
+  var state = { observer: null, scrollHandler: null };
+  var contentEl = document.getElementById('content');
+  var loadingEl = document.getElementById('loading');
+  var tocContainer = document.getElementById('toc-container');
+
+  function applyChrome() {
+    document.documentElement.lang = 'ko';
+    document.title = DOC_TITLE;
+    document.getElementById('topbar-title').textContent = TOPBAR_TITLE;
+    document.getElementById('search-input').placeholder = SEARCH_PLACEHOLDER;
+    document.getElementById('toc-no-results').textContent = '검색 결과 없음';
+    document.getElementById('loading-text').textContent = '가이드 렌더링 중...';
+    document.querySelectorAll('#lang-toggle a').forEach(function(a) { a.classList.add('active'); });
+    try { localStorage.setItem(STORAGE_KEY, 'ko'); } catch(e) {}
+  }
+
+  function parseHeading(text) {
+    var ch = text.trim().match(/^Ch\.?\s*(\d+)\s*[\u2014\u2013-]\s*(.+)$/);
+    if (ch) return { kind: 'chapter', num: parseInt(ch[1], 10), title: ch[2].trim(), label: 'Ch.' + parseInt(ch[1], 10) };
+    var ex = text.trim().match(/^E\.?\s*(\d+)\s*[\u2014\u2013-]\s*(.+)$/);
+    if (ex) return { kind: 'excerpt', num: parseInt(ex[1], 10), title: ex[2].trim(), label: 'E.' + parseInt(ex[1], 10) };
+    return null;
+  }
+
+  function parseGroupLabel(label) {
+    var parts = label.split('·');
+    if (parts.length < 2) return { kicker: '', title: label.trim() };
+    return { kicker: parts[0].trim(), title: parts.slice(1).join('·').trim() };
+  }
+
+  function findEntryHeading(item) {
+    var h1s = contentEl.querySelectorAll('h1');
+    for (var i = 0; i < h1s.length; i++) {
+      var parsed = parseHeading(h1s[i].textContent);
+      if (parsed && parsed.kind === item.kind && parsed.num === item.num) return h1s[i];
+    }
+    return null;
+  }
+
+  function annotateEntryHeadings() {
+    contentEl.querySelectorAll('h1').forEach(function(h1) {
+      var parsed = parseHeading(h1.textContent);
+      if (!parsed) return;
+      if (!h1.id) h1.id = parsed.kind + '-' + parsed.num;
+      h1.classList.add(parsed.kind === 'excerpt' ? 'excerpt-heading' : 'chapter-heading');
+    });
+  }
+
+  function buildPartIntros() {
+    annotateEntryHeadings();
+    CHAPTER_GROUPS.forEach(function(group, index) {
+      var first = null;
+      for (var i = 0; i < group.items.length; i++) {
+        first = findEntryHeading(group.items[i]);
+        if (first) break;
+      }
+      if (!first) return;
+
+      var meta = parseGroupLabel(group.label);
+      var partId = 'part-' + (index + 1) + '-' + slugify(meta.title);
+      if (document.getElementById(partId)) return;
+
+      var section = document.createElement('section');
+      section.className = 'part-intro';
+
+      var kicker = document.createElement('div');
+      kicker.className = 'part-kicker';
+      kicker.textContent = meta.kicker || 'Part';
+      section.appendChild(kicker);
+
+      var title = document.createElement('h1');
+      title.className = 'part-title';
+      title.id = partId;
+      title.textContent = meta.title;
+      section.appendChild(title);
+
+      if (group.intro) {
+        var intro = document.createElement('p');
+        intro.textContent = group.intro;
+        section.appendChild(intro);
+      }
+
+      first.parentNode.insertBefore(section, first);
+    });
+  }
+
+  function render() {
+    applyChrome();
+    contentEl.style.display = 'none';
+    loadingEl.style.display = 'flex';
+
+    requestAnimationFrame(function() {
+      var src = document.getElementById('md-source-ko').value;
+      src = src.replace(/\*\*([^*\n]+)\*\*(?=[가-힣])/g, '<strong>$1</strong>');
+      var mathData = protectMath(src);
+      var html = marked.parse(mathData.src);
+      html = restoreAndRenderMath(html, mathData.placeholders);
+      contentEl.innerHTML = html;
+      contentEl.querySelectorAll('a[href]').forEach(function(link) {
+        var url = new URL(link.getAttribute('href'), window.location.href);
+        if ((url.protocol === 'http:' || url.protocol === 'https:') && url.origin !== window.location.origin) {
+          link.target = '_blank';
+          link.rel = 'noopener';
+        }
+      });
+
+      if (window.mermaid) {
+        var mermaidBlocks = contentEl.querySelectorAll('pre > code.language-mermaid');
+        mermaidBlocks.forEach(function(code, i) {
+          var pre = code.parentElement;
+          var container = document.createElement('div');
+          container.className = 'mermaid';
+          container.id = 'mermaid-ko-' + i;
+          container.textContent = code.textContent;
+          pre.replaceWith(container);
+        });
+        try { mermaid.run({ querySelector: '.mermaid' }); } catch(e) {}
+      }
+
+      tocContainer.innerHTML = '';
+      buildPartIntros();
+      buildOverview();
+      buildTOC();
+      contentEl.style.display = 'block';
+      loadingEl.style.display = 'none';
+      setupScrollTracking();
+
+      if (window.location.hash) {
+        var initId = window.location.hash.slice(1);
+        var initTarget = document.getElementById(initId);
+        if (initTarget) window.scrollTo(0, initTarget.getBoundingClientRect().top + window.scrollY - 60);
+      }
+    });
+  }
+
+  render();
+  setupSearch();
+  setupProgressBar();
+  setupMobileMenu();
+  setupKeyboard();
+  setupTocDelegation();
+
+  function setupTocDelegation() {
+    tocContainer.addEventListener('click', function(e) {
+      if (e.target.closest('.toc-item')) closeMobileSidebar();
+    });
+  }
+
+  function buildOverview() {
+    var h1s = contentEl.querySelectorAll('h1');
+    var entries = {};
+
+    h1s.forEach(function(h1) {
+      var parsed = parseHeading(h1.textContent);
+      if (!parsed) return;
+      if (!h1.id) h1.id = parsed.kind + '-' + parsed.num;
+      var sections = [];
+      var node = h1.nextElementSibling;
+      while (node && node.tagName !== 'H1') {
+        if (node.tagName === 'H2') {
+          if (!node.id) node.id = slugify(node.textContent);
+          sections.push({ text: node.textContent.trim(), id: node.id });
+        }
+        node = node.nextElementSibling;
+      }
+      entries[parsed.kind + '-' + parsed.num] = {
+        kind: parsed.kind,
+        num: parsed.num,
+        label: parsed.label,
+        title: parsed.title,
+        id: h1.id,
+        sections: sections
+      };
+    });
+
+    if (Object.keys(entries).length === 0) return;
+
+    var overview = document.createElement('section');
+    overview.className = 'guide-overview';
+    var header = document.createElement('div');
+    header.className = 'overview-header';
+    var oTitle = document.createElement('h1');
+    oTitle.className = 'overview-title';
+    oTitle.textContent = OVERVIEW_TITLE;
+    header.appendChild(oTitle);
+    overview.appendChild(header);
+
+    CHAPTER_GROUPS.forEach(function(group) {
+      var valid = group.items.map(function(item) { return entries[item.kind + '-' + item.num]; }).filter(Boolean);
+      if (!valid.length) return;
+      var groupEl = document.createElement('div');
+      groupEl.className = 'overview-group';
+      var label = document.createElement('div');
+      label.className = 'overview-group-label';
+      label.setAttribute('role', 'heading');
+      label.setAttribute('aria-level', '2');
+      label.textContent = group.label;
+      groupEl.appendChild(label);
+      if (group.intro) {
+        var intro = document.createElement('p');
+        intro.className = 'overview-group-intro';
+        intro.textContent = group.intro;
+        groupEl.appendChild(intro);
+      }
+
+      valid.forEach(function(entry) {
+        var wrap = document.createElement('div');
+        wrap.className = 'overview-chapter';
+        var link = document.createElement('a');
+        link.className = 'overview-chapter-link';
+        link.href = '#' + entry.id;
+        var num = document.createElement('span');
+        num.className = 'overview-chapter-num';
+        num.textContent = entry.label;
+        link.appendChild(num);
+        link.appendChild(document.createTextNode(entry.title));
+        wrap.appendChild(link);
+        groupEl.appendChild(wrap);
+      });
+      overview.appendChild(groupEl);
+    });
+
+    var about = contentEl.querySelector('.about-document');
+    if (about) contentEl.insertBefore(overview, about);
+    else contentEl.insertBefore(overview, contentEl.firstChild);
+  }
+
+  function buildTOC() {
+    var headings = contentEl.querySelectorAll('h1, h2');
+    var fragment = document.createDocumentFragment();
+    headings.forEach(function(heading) {
+      if (!heading.id) heading.id = slugify(heading.textContent);
+      if (heading.classList.contains('overview-title')) return;
+
+      var link = document.createElement('a');
+      var parsed = parseHeading(heading.textContent);
+      var tocClass = 'toc-section';
+      if (heading.classList.contains('part-title')) tocClass = 'toc-part';
+      else if (parsed) tocClass = 'toc-chapter' + (parsed.kind === 'excerpt' ? ' toc-excerpt' : '');
+      link.className = 'toc-item ' + tocClass;
+      link.href = '#' + heading.id;
+      if (heading.classList.contains('part-title')) {
+        var kicker = heading.parentElement ? heading.parentElement.querySelector('.part-kicker') : null;
+        link.textContent = (kicker ? kicker.textContent + ' · ' : '') + heading.textContent;
+      } else {
+        link.textContent = heading.textContent;
+      }
+      link.dataset.headingId = heading.id;
+      fragment.appendChild(link);
+    });
+    tocContainer.appendChild(fragment);
+  }
+
+  function slugify(text) {
+    return text.toLowerCase().trim()
+      .replace(/<[^>]+>/g, '')
+      .replace(/[^\w\s가-힣-]/g, '')
+      .replace(/\s+/g, '-')
+      .substring(0, 80) || 'section';
+  }
+
+  function setupScrollTracking() {
+    var headings = contentEl.querySelectorAll('h1, h2');
+    var tocItems = tocContainer.querySelectorAll('.toc-item');
+    if (headings.length === 0) return;
+    if (state.observer) state.observer.disconnect();
+
+    var tocMap = {};
+    tocItems.forEach(function(item) { tocMap[item.dataset.headingId] = item; });
+    var currentActive = null;
+    var observer = new IntersectionObserver(function(entries) {
+      var topHeading = null;
+      var topOffset = Infinity;
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          var rect = entry.target.getBoundingClientRect();
+          if (rect.top < topOffset) { topOffset = rect.top; topHeading = entry.target; }
+        }
+      });
+      if (topHeading) {
+        if (currentActive) currentActive.classList.remove('active');
+        var item = tocMap[topHeading.id];
+        if (item) {
+          item.classList.add('active');
+          currentActive = item;
+          var itemRect = item.getBoundingClientRect();
+          var containerRect = tocContainer.getBoundingClientRect();
+          if (itemRect.top < containerRect.top || itemRect.bottom > containerRect.bottom) item.scrollIntoView({ block: 'center', behavior: 'auto' });
+        }
+      }
+    }, { rootMargin: '-60px 0px -70% 0px', threshold: 0 });
+    headings.forEach(function(h) { observer.observe(h); });
+    state.observer = observer;
+
+    if (!state.scrollHandler) {
+      var ticking = false;
+      state.scrollHandler = function() {
+        if (!ticking) {
+          requestAnimationFrame(function() {
+            var curHeadings = contentEl.querySelectorAll('h1, h2');
+            var curTocItems = tocContainer.querySelectorAll('.toc-item');
+            var curMap = {};
+            curTocItems.forEach(function(item) { curMap[item.dataset.headingId] = item; });
+            var found = null;
+            var scrollTop = window.scrollY + 80;
+            for (var i = curHeadings.length - 1; i >= 0; i--) {
+              if (curHeadings[i].offsetTop <= scrollTop) { found = curHeadings[i]; break; }
+            }
+            if (found) {
+              var active = tocContainer.querySelector('.toc-item.active');
+              if (active) active.classList.remove('active');
+              var item = curMap[found.id];
+              if (item) item.classList.add('active');
+            }
+            ticking = false;
+          });
+          ticking = true;
+        }
+      };
+      window.addEventListener('scroll', state.scrollHandler);
+    }
+  }
+
+  function setupSearch() {
+    var searchInput = document.getElementById('search-input');
+    var noResults = document.getElementById('toc-no-results');
+    searchInput.addEventListener('input', function() {
+      var query = this.value.trim().toLowerCase();
+      var tocItems = tocContainer.querySelectorAll('.toc-item');
+      if (!query) {
+        tocItems.forEach(function(item) { item.classList.remove('toc-hidden'); });
+        noResults.style.display = 'none';
+        return;
+      }
+      var matchCount = 0;
+      tocItems.forEach(function(item) {
+        var text = item.textContent.toLowerCase();
+        if (text.includes(query)) { item.classList.remove('toc-hidden'); matchCount++; }
+        else item.classList.add('toc-hidden');
+      });
+      noResults.style.display = matchCount === 0 ? 'block' : 'none';
+    });
+  }
+
+  function setupProgressBar() {
+    var progressBar = document.getElementById('progress-bar');
+    var ticking = false;
+    function updateProgress() {
+      var scrollTop = window.scrollY;
+      var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      var progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      progressBar.style.width = Math.min(progress, 100) + '%';
+    }
+    window.addEventListener('scroll', function() {
+      if (!ticking) {
+        requestAnimationFrame(function() { updateProgress(); ticking = false; });
+        ticking = true;
+      }
+    });
+    updateProgress();
+  }
+
+  function setupMobileMenu() {
+    var toggle = document.getElementById('menu-toggle');
+    var sidebar = document.getElementById('sidebar');
+    var overlay = document.querySelector('#sidebar-overlay');
+    toggle.addEventListener('click', function() {
+      var isOpen = sidebar.classList.toggle('open');
+      overlay.classList.toggle('visible', isOpen);
+      toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+    overlay.addEventListener('click', closeMobileSidebar);
+  }
+
+  function closeMobileSidebar() {
+    document.getElementById('sidebar').classList.remove('open');
+    document.querySelector('#sidebar-overlay').classList.remove('visible');
+    document.getElementById('menu-toggle').setAttribute('aria-expanded', 'false');
+  }
+
+  function setupKeyboard() {
+    document.addEventListener('keydown', function(e) {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        document.getElementById('search-input').focus();
+      }
+    });
+  }
+})();
+</script>
+<script data-goatcounter="https://alexjunholee.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
