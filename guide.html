@@ -60,6 +60,7 @@ body {
   height: var(--progress-height);
   background: linear-gradient(90deg, #0071e3, #2997ff);
   z-index: 10000;
+  transition: width 0.1s linear;
   width: 0%;
 }
 
@@ -522,7 +523,7 @@ mark.search-highlight {
   font-size: 24px !important;
   line-height: 1.18 !important;
 }
-.about-document h3 {
+.about-document h4 {
   color: var(--link) !important;
   margin-top: 22px !important;
 }
@@ -601,8 +602,7 @@ mark.search-highlight {
   border-bottom: 1px solid var(--border);
 }
 
-.guide-overview + .part-intro,
-.about-document + .part-intro { margin-top: 70px; }
+.guide-overview + .part-intro { margin-top: 70px; }
 
 #content .part-kicker {
   color: var(--accent);
@@ -670,6 +670,7 @@ mark.search-highlight {
 
   #sidebar {
     transform: translateX(-100%);
+    transition: transform 0.3s ease;
     box-shadow: none;
   }
 
@@ -751,9 +752,19 @@ mark.search-highlight {
 <div class="about-document">
 <h2>About This Document</h2>
 
-<h3>범위</h3>
-<p>인생은 선택의 연속이고 우리는 행복해지고 싶다. 어떤 선택을 할 것인가? 한번 전략적으로 접근해 보자.</p>
-<p>이 책은 진로를 정하지 못한 공학계열 학부생과 초기 경력 엔지니어를 위한 자료 기반 요약 안내서다. 정답인 직업을 골라 주는 대신, 행복을 이루는 조건을 나누고 모르는 것을 확인한 뒤 한동안 실행하고 다시 판단하는 방법을 다룬다. 연구직은 제품, 인프라, 현장, 기술 관리와 나란히 놓인 여러 경로 가운데 하나다.</p>
+<h4>출처 자료</h4>
+<p>각 장 끝에는 실제로 사용한 논문과 공공기관 자료를 붙였다. 연구 결과를 소개할 때에는 연구 대상과 설계가 허용하는 범위도 본문에 함께 적었다.</p>
+
+<table>
+<tr><th>출처</th><th>주요 자료</th><th>쓰임</th></tr>
+<tr><td>행복·선택·탐색</td><td>OECD, Keeney, Simon, Baron &amp; Hershey, Gati et al., Hidi &amp; Renninger, Watkins &amp; Dayan, March</td><td>행복의 여러 조건, 선택 기준, 진로 탐색, 결과 편향, 탐색과 실행</td></tr>
+<tr><td>직업·조직</td><td>O*NET, ABET, OECD Job Quality, WHO/ILO, 고용노동부, Humphrey et al., Frazier et al.</td><td>실제 과업과 경로, 제약과 책임, 근무 조건, 팀과 피드백</td></tr>
+<tr><td>학습·관계·경력 이동</td><td>Keith &amp; Frese, Tannenbaum &amp; Cerasoli, Dutton et al., Granovetter, Rajkumar et al., BLS, De Vos et al.</td><td>학습과 실패, 제안과 관계, 첫 직장, 이직과 조직 변화</td></tr>
+<tr><td>정신건강·일 밖의 삶</td><td>WHO, NIMH, Aronsson et al., Bravata et al., Kuykendall et al., Wendsche et al., Holt-Lunstad et al.</td><td>번아웃과 도움 요청, 여가와 회복, 관계와 생활</td></tr>
+</table>
+
+<h4>범위</h4>
+<p>인생은 선택의 연속이고 우리는 행복해지고 싶다. 어떤 선택을 할 것인가? 한번 전략적으로 접근해 보자. 이 책은 진로를 정하지 못한 공학계열 학부생과 초기 경력 엔지니어를 위한 자료 기반 요약 안내서다. 정답인 직업을 골라 주는 대신, 행복을 이루는 조건을 나누고 모르는 것을 확인한 뒤 한동안 실행하고 다시 판단하는 방법을 다룬다. 연구직은 제품, 인프라, 현장, 기술 관리와 나란히 놓인 여러 경로 가운데 하나다.</p>
 
 <p class="source-tag">자매 문서: <a href="../research-notes/guide.html">연구노트</a> · <a href="../grad-notes/guide.html">대학원노트</a></p>
 </div>
@@ -2936,27 +2947,33 @@ Outcomes”](https://doi.org/10.1037/a0022170)을 참조했다.
   var STORAGE_KEY = "life-notes-lang";
   var CHAPTER_GROUPS = [
     {
-      label: "1부 · 무엇을 위해 고르는가",
+      label: "Part 1 · 무엇을 위해 고르는가",
+      intro: "행복은 한 점수로 계산되지 않는다. 선택 앞에서는 먼저 바닥을 적는다. 좋은 과정이 언제나 좋은 결과를 만들지는 않는다.",
       items: [{"kind":"chapter","num":1},{"kind":"chapter","num":2},{"kind":"chapter","num":3},{"kind":"chapter","num":4}]
     },
     {
-      label: "2부 · 모를 때의 탐색",
+      label: "Part 2 · 모를 때의 탐색",
+      intro: "선택을 막는 빈칸은 생각만으로 채워지지 않을 때가 많다. 비슷한 경험만 반복하면 비슷한 정보만 들어온다. 필요한 정보를 어느 정도 모았고 바닥을 넘는 선택지가 있다면 한곳을 고른다.",
       items: [{"kind":"chapter","num":5},{"kind":"chapter","num":6},{"kind":"chapter","num":7},{"kind":"chapter","num":8}]
     },
     {
-      label: "3부 · 삶의 조건인 직업",
+      label: "Part 3 · 삶의 조건인 직업",
+      intro: "직업을 고르면 직무만 따라오는 것도 아니다. 급여, 근무시간, 사는 곳, 함께 일할 사람, 고용 안정성, 퇴근 뒤 남는 체력이 한꺼번에 바뀐다.",
       items: [{"kind":"chapter","num":9},{"kind":"chapter","num":10},{"kind":"chapter","num":11},{"kind":"chapter","num":12},{"kind":"chapter","num":13},{"kind":"chapter","num":14}]
     },
     {
-      label: "4부 · 선택지를 늘리는 사람 되기",
+      label: "Part 4 · 선택지를 늘리는 사람 되기",
+      intro: "역량, 제안, 관계를 통해 다음 선택지를 늘리고 싶다면 15–18장이 이어진다.",
       items: [{"kind":"chapter","num":15},{"kind":"chapter","num":16},{"kind":"chapter","num":17},{"kind":"chapter","num":18}]
     },
     {
-      label: "5부 · 들어간 뒤에 다시 고르기",
+      label: "Part 5 · 들어간 뒤에 다시 고르기",
+      intro: "입사 뒤 남을지 옮길지 고민한다면 19–21장을 먼저 읽어도 된다.",
       items: [{"kind":"chapter","num":19},{"kind":"chapter","num":20},{"kind":"chapter","num":21}]
     },
     {
-      label: "6부 · 오래 살 수 있는 선택",
+      label: "Part 6 · 오래 살 수 있는 선택",
+      intro: "번아웃과 정신건강, 일 밖의 생활은 22–24장에서 다룬다.",
       items: [{"kind":"chapter","num":22},{"kind":"chapter","num":23},{"kind":"chapter","num":24}]
     }
   ];
@@ -3074,7 +3091,7 @@ Outcomes”](https://doi.org/10.1037/a0022170)을 참조했다.
       if (!first) return;
 
       var meta = parseGroupLabel(group.label);
-      var partId = 'part-' + (index + 1) + '-' + slugify(meta.title);
+      var partId = 'part-' + index + '-' + slugify(meta.title);
       if (document.getElementById(partId)) return;
 
       var section = document.createElement('section');
