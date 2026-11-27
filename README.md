@@ -8,43 +8,43 @@
 
 ## 차례
 
-### 1부. 무엇을 위해 고르는가
+### 1부. 선택의 기준 세우기
 
 1. [어떤 선택을 할 것인가](chapter_01_what_to_choose.md)
 2. [행복의 여러 측면](chapter_02_multidimensional_happiness.md)
 3. [내 선택 기준 만들기](chapter_03_decision_criteria.md)
 4. [좋은 선택과 좋은 결과 가르기](chapter_04_decision_vs_outcome.md)
 
-### 2부. 모를 때의 탐색
+### 2부. 직접 시도하며 좁히기
 
 5. [선택지가 비슷해 보일 때](chapter_05_similar_options.md)
 6. [흥미의 변화와 지속](chapter_06_developing_interests.md)
-7. [무작위로 시도해 보기](chapter_07_random_walk.md)
+7. [작고 다양한 시도 해 보기](chapter_07_random_walk.md)
 8. [탐색을 끝내는 기준](chapter_08_commit.md)
 
-### 3부. 직업 들여다보기
+### 3부. 직업과 조건 따져 보기
 
-9. [직업명 뒤의 일과](chapter_09_job_by_day.md)
-10. [만들기, 고치기, 운영하기](chapter_10_build_fix_operate.md)
+9. [직무 이름 대신 하루 일과 보기](chapter_09_job_by_day.md)
+10. [새 기능 개발, 버그 수정, 시스템 운영](chapter_10_build_fix_operate.md)
 11. [제약이 충돌할 때](chapter_11_constraints_tradeoffs.md)
 12. [입사 제안 따져 보기](chapter_12_job_conditions.md)
 13. [같은 직무, 다른 팀](chapter_13_team_conditions.md)
 14. [엔지니어의 여러 경로](chapter_14_engineering_paths.md)
 
-### 4부. 선택지를 늘리는 사람 되기
+### 4부. 선택지를 넓히는 실력과 관계
 
 15. [넓게 볼 때와 깊게 팔 때](chapter_15_breadth_depth.md)
 16. [실패를 디버깅하기](chapter_16_failure_debugging.md)
 17. [아이디어 내기와 설득하기](chapter_17_babble_selling.md)
 18. [관계로 선택지 넓히기](chapter_18_people_options.md)
 
-### 5부. 들어간 뒤에 다시 고르기
+### 5부. 입사 뒤의 선택과 이직
 
 19. [첫 직장 보는 법](chapter_19_first_job.md)
 20. [계속할 이유와 그만둘 이유](chapter_20_stay_or_leave.md)
 21. [조직이 바뀐 뒤의 선택지](chapter_21_organizational_change.md)
 
-### 6부. 지치지 않고 일하기
+### 6부. 소진 예방과 일 밖의 삶
 
 22. [번아웃과 일의 조건](chapter_22_burnout.md)
 23. [도움을 구할 시점과 경로](chapter_23_mental_health_help.md)

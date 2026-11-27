@@ -32,9 +32,9 @@ OECD의 주관적 웰빙 측정 지침에서는 사람들이 느끼는 행복을
 
 겉으로 보이는 학교나 회사의 이름이 똑같아도 이 세 질문의 답은 어떤 팀에서 어떤 역할을 맡느냐에 따라 크게 갈린다. 그래서 직함이나 간판보다 그곳에 들어가 실제로 보내게 될 하루를 구체적으로 물어야 한다.
 
-## 행복 계기판
+## 나의 현재 상태 점검표
 
-앞에서 나눈 측면들을 한눈에 점검할 수 있도록 표로 묶으면 '행복 계기판'이 된다. 이 계기판은 지금 생활에서 이미 금이 간 칸이 어디인지, 그리고 눈앞의 선택이 어느 칸을 움직일지 찾아내는 데 쓴다.
+앞에서 나눈 측면들을 한눈에 점검할 수 있도록 표로 묶으면 '생활 상태 점검표'가 된다. 이 점검표는 지금 생활에서 이미 금이 간 칸이 어디인지, 그리고 눈앞의 선택이 어느 칸을 움직일지 찾아내는 데 쓴다.
 
 | 볼 것 | 적을 질문 |
 |---|---|
@@ -47,10 +47,10 @@ OECD의 주관적 웰빙 측정 지침에서는 사람들이 느끼는 행복을
 
 현실에서 이 모든 칸을 한꺼번에 끌어올리는 선택지는 좀처럼 나오지 않는다. 그러므로 먼저 바닥이 깨진 칸부터 살핀 뒤, 이번 시기에 꼭 올리고 싶은 한두 칸을 고르고 나머지 칸에서는 어느 정도 손실까지 감수할지 함께 적어 둔다. 이렇게 기준을 세워 두면 "어느 쪽이 더 행복한 선택일까"라는 막연한 저울질 대신, 구체적으로 어느 생활 조건을 얻고 무엇을 내주는지 또렷하게 따질 수 있다.
 
-한 가지 분명히 선을 그어 둘 점이 있다. 정신건강 문제는 이 계기판만으로 다루어서는 안 된다. 정신질환의 진단은 공식 진단 기준에 따라 전문가가 내린다. 일상 기능이 무너질 만큼 힘들거나 우울·불안이 오래 이어지고 위기 신호가 보인다면, 선택의 손익 계산과 분리해 공식 기준과 전문적인 도움 경로를 따라야 한다(→ [23장](./chapter_23_mental_health_help.md)).
+한 가지 분명히 선을 그어 둘 점이 있다. 정신건강 문제는 이 점검표만으로 다루어서는 안 된다. 정신질환의 진단은 공식 진단 기준에 따라 전문가가 내린다. 일상 기능이 무너질 만큼 힘들거나 우울·불안이 오래 이어지고 위기 신호가 보인다면, 선택의 손익 계산과 분리해 공식 기준과 전문적인 도움 경로를 따라야 한다(→ [23장](./chapter_23_mental_health_help.md)).
 
 행복이 여러 측면으로 나뉜다는 사실을 확인했다면, 이제 각 측면을 실제 선택지를 고르는 잣대로 바꿀 차례다. 다음 장에서는 매력적인 선택지에 휘둘리지 않고 나만의 선택 기준표를 세우는 방법을 다룬다.
 
 ---
 
-**출처.** [OECD, *How’s Life? 2024*](https://doi.org/10.1787/90ba854a-en), [OECD, *Guidelines on Measuring Subjective Well-being 2025*](https://doi.org/10.1787/9203632a-en), [Busseri (2018), “Examining the Structure of Subjective Well-Being Through Meta-analysis…”](https://doi.org/10.1016/j.paid.2017.10.003), [Diener & Emmons (1984), “The Independence of Positive and Negative Affect”](https://doi.org/10.1037/0022-3514.47.5.1105), [Martela et al. (2023), “Needs and Well-Being Across Europe”](https://doi.org/10.1177/19485506221113678)을 참조했다. 행복 계기판과 항목별 우선순위는 이 자료를 개인 선택에 적용하려고 만든 도구다.
+**출처.** [OECD, *How’s Life? 2024*](https://doi.org/10.1787/90ba854a-en), [OECD, *Guidelines on Measuring Subjective Well-being 2025*](https://doi.org/10.1787/9203632a-en), [Busseri (2018), “Examining the Structure of Subjective Well-Being Through Meta-analysis…”](https://doi.org/10.1016/j.paid.2017.10.003), [Diener & Emmons (1984), “The Independence of Positive and Negative Affect”](https://doi.org/10.1037/0022-3514.47.5.1105), [Martela et al. (2023), “Needs and Well-Being Across Europe”](https://doi.org/10.1177/19485506221113678)을 참조했다. 생활 상태 점검표와 항목별 우선순위는 이 자료를 개인 선택에 적용하려고 만든 도구다.

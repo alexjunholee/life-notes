@@ -590,7 +590,7 @@ mark.search-highlight {
   font-size: 12px;
   font-weight: 700;
   color: var(--accent);
-  margin-right: 10px;
+  margin-right: 6px;
   letter-spacing: 0.02em;
   text-transform: uppercase;
 }
@@ -787,32 +787,32 @@ mark.search-highlight {
   var STORAGE_KEY = "life-notes-lang";
   var CHAPTER_GROUPS = [
     {
-      label: "Part 1 · 무엇을 위해 고르는가",
+      label: "1부 · 선택의 기준 세우기",
       intro: "행복은 점수 하나로 매길 수 없다. 무언가를 고르기 전에 먼저 지켜야 할 바닥부터 짚어 본다. 좋은 과정이 언제나 좋은 결과로 이어지지는 않기 때문이다.",
       items: [{"kind":"chapter","num":1},{"kind":"chapter","num":2},{"kind":"chapter","num":3},{"kind":"chapter","num":4}]
     },
     {
-      label: "Part 2 · 모를 때의 탐색",
+      label: "2부 · 직접 시도하며 좁히기",
       intro: "머릿속 고민만으로는 채워지지 않는 빈칸이 많다. 같은 경험만 되풀이하면 들어오는 정보도 제자리에 머문다. 판단할 재료가 어느 정도 모였다면 이제 한곳을 골라 실행에 옮긴다.",
       items: [{"kind":"chapter","num":5},{"kind":"chapter","num":6},{"kind":"chapter","num":7},{"kind":"chapter","num":8}]
     },
     {
-      label: "Part 3 · 직업 들여다보기",
+      label: "3부 · 직업과 조건 따져 보기",
       intro: "직업을 고른다는 건 직무 이름 하나만 고르는 일이 아니다. 급여와 근무시간, 사는 곳, 함께 일하는 사람, 고용 안정성, 퇴근 뒤 남는 체력까지 하루 전체가 함께 바뀐다.",
       items: [{"kind":"chapter","num":9},{"kind":"chapter","num":10},{"kind":"chapter","num":11},{"kind":"chapter","num":12},{"kind":"chapter","num":13},{"kind":"chapter","num":14}]
     },
     {
-      label: "Part 4 · 선택지를 늘리는 사람 되기",
+      label: "4부 · 선택지를 넓히는 실력과 관계",
       intro: "실력, 설득력, 그리고 사람과의 관계로 다음 선택지를 넓혀 가는 법을 15–18장에서 살핀다.",
       items: [{"kind":"chapter","num":15},{"kind":"chapter","num":16},{"kind":"chapter","num":17},{"kind":"chapter","num":18}]
     },
     {
-      label: "Part 5 · 들어간 뒤에 다시 고르기",
+      label: "5부 · 입사 뒤의 선택과 이직",
       intro: "첫 직장에 들어간 뒤 계속 남을지 옮길지 기로에 섰다면 19–21장을 먼저 펼쳐 보아도 좋다.",
       items: [{"kind":"chapter","num":19},{"kind":"chapter","num":20},{"kind":"chapter","num":21}]
     },
     {
-      label: "Part 6 · 지치지 않고 일하기",
+      label: "6부 · 소진 예방과 일 밖의 삶",
       intro: "번아웃을 다루고 도움을 청하는 법, 그리고 일 바깥의 삶까지 22–24장에서 마무리한다.",
       items: [{"kind":"chapter","num":22},{"kind":"chapter","num":23},{"kind":"chapter","num":24}]
     }
@@ -1087,7 +1087,7 @@ mark.search-highlight {
         num.className = 'overview-chapter-num';
         num.textContent = entry.label;
         link.appendChild(num);
-        link.appendChild(document.createTextNode(entry.title));
+        link.appendChild(document.createTextNode(' ' + entry.title));
         wrap.appendChild(link);
         groupEl.appendChild(wrap);
       });

@@ -41,7 +41,7 @@ def bootstrap_template() -> None:
     match = TEXTAREA_RE.search(shell)
     if not match:
         raise RuntimeError("Korean Markdown textarea not found in guide.html")
-    first_chapter = re.search(r"(?m)^#\s+Ch\.?\s*1\b", match.group(2))
+    first_chapter = re.search(r"(?m)^#\s+(?:1장\b|Ch\.?\s*1\b)", match.group(2))
     if not first_chapter:
         raise RuntimeError("first chapter heading not found in embedded Markdown")
     about = match.group(2)[: first_chapter.start()]
